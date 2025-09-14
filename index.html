@@ -1,137 +1,130 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Anoof K — Profile</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root{
-      --bg:#0f1724;
-      --card:#0b1220;
-      --accent:#7c3aed;
-      --muted:#9aa4b2;
-      --glass: rgba(255,255,255,0.04);
-    }
-    *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial; margin:0; background:linear-gradient(180deg,#061021 0%, #081426 50%, #071022 100%); color:#e6eef6; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
-    .container{max-width:1000px; margin:40px auto; padding:28px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:16px; padding:28px; box-shadow: 0 10px 30px rgba(2,6,23,0.7); display:grid; grid-template-columns:260px 1fr; gap:28px}
-    .photo{width:220px;height:220px;border-radius:12px;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
-    .left{display:flex;flex-direction:column;gap:18px;align-items:center}
-    .name{font-size:22px;font-weight:800; letter-spacing:0.4px;margin-top:12px}
-    .role{font-size:13px;color:var(--muted);margin-top:4px;text-align:center}
-    .meta{background:var(--glass);padding:12px;border-radius:10px;width:100%}
-    .meta div{font-size:13px;color:var(--muted);margin-bottom:8px}
-    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted); margin:4px 4px 0 0}
-    .section{background:transparent;padding:12px;border-radius:10px}
-    h3{margin:0 0 8px 0;font-size:16px}
-    p{margin:0;color:#d6e6f5}
-    .list{margin:10px 0 0 0;padding:0;list-style:none}
-    .list li{padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
-    .pub-title{font-weight:700}
-    .social-icons{display:flex;gap:14px;margin-top:10px}
-    .social-icons a{color:var(--muted);font-size:20px;transition:0.3s}
-    .social-icons a:hover{color:var(--accent)}
-    @media(max-width:880px){.card{grid-template-columns:1fr}.photo{width:160px;height:160px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anoof K — Dynamic Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg: #0f1724;
+  --primary: #7c3aed;
+  --secondary: #06b6d4;
+  --text: #e6eef6;
+  --muted: #9aa4b2;
+  --pill-bg: rgba(124,58,237,0.1);
+  --pill-hover: rgba(124,58,237,0.3);
+}
+* {margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif;}
+body {background: linear-gradient(180deg,#061021,#081426,#071022); color: var(--text); overflow-x:hidden;}
+.container {max-width: 1100px; margin: 40px auto; padding: 20px; display:flex; flex-direction:column; gap:30px;}
+.header {display:flex; flex-wrap:wrap; align-items:center; gap:20px; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(2,6,23,0.7);}
+.photo {width:180px; height:180px; border-radius:50%; background-image:url('photo_6210470930346527443_x.jpg'); background-size:cover; background-position:center; flex-shrink:0; border:3px solid var(--primary);}
+.header-info {flex:1; display:flex; flex-direction:column; gap:10px;}
+.header-info h1 {font-size:28px; color:var(--primary);}
+.header-info h2 {font-size:16px; color:var(--muted);}
+.social-icons {display:flex; gap:15px; margin-top:10px;}
+.social-icons a {color:var(--muted); font-size:20px; transition:0.3s;}
+.social-icons a:hover {color: var(--secondary); transform: scale(1.2);}
+
+.section {background: rgba(255,255,255,0.02); padding:20px; border-radius:16px; box-shadow: 0 10px 25px rgba(2,6,23,0.6); animation: fadeUp 0.8s ease forwards; opacity:0; margin-bottom:20px;}
+@keyframes fadeUp {0% {opacity:0; transform: translateY(20px);} 100% {opacity:1; transform: translateY(0);}}
+.section h3 {color: var(--primary); margin-bottom:10px; font-size:20px; border-left:4px solid var(--secondary); padding-left:10px;}
+.section p, .section li, .section a {color: var(--text); line-height:1.5;}
+.section ul {list-style:none; padding-left:0;}
+.section ul li {margin-bottom:12px; padding-left:10px; border-left:3px solid var(--primary); transition:0.3s;}
+.section ul li:hover {border-left-color: var(--secondary); background: rgba(124,58,237,0.05); border-radius:8px; padding-left:12px;}
+.pill {display:inline-block; padding:8px 14px; margin:5px 5px 0 0; border-radius:999px; background: var(--pill-bg); color: var(--text); cursor:pointer; transition:0.3s;}
+.pill:hover {background: var(--pill-hover); transform: translateY(-2px);}
+
+.contact a {color: var(--text); text-decoration:none; border-bottom:1px dashed var(--muted);}
+.contact a:hover {color: var(--secondary); border-bottom:1px solid var(--secondary);}
+
+@media(max-width:900px) {
+  .header {flex-direction:column; align-items:center; text-align:center;}
+  .header-info h1 {font-size:24px;}
+  .header-info h2 {font-size:14px;}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="card" role="main">
-      <aside class="left">
-        <div class="photo" style="background-image: url('photo_6210470930346527443_x.jpg');"></div>
-        <div class="name">Anoof K</div>
-        <div class="role">Independent Researcher · Web Analyst · Intern · Aspiring Legal Scholar</div>
 
-        <div class="meta">
-          <div><strong>DOB:</strong> 30 April 2004</div>
-          <div><strong>Email:</strong> <a href="mailto:ankpkl500@gmai;.com" style="color:#9aa4b2">ankpkl500@gmai;.com</a></div>
-          <div><strong>Phone:</strong> <a href="tel:+919809438620" style="color:#9aa4b2">+91 98094 38620</a></div>
-          <div><strong>Location:</strong> Malappuram, Kerala</div>
-          <div><strong>Languages:</strong> English, Malayalam, Hindi, German (Beginner), Urdu (Beginner)</div>
-          <div><strong>Education:</strong> Currently pursuing BA B.Ed. (Economics, ITEP) — Central University of Kerala</div>
-        </div>
-
-        <div class="social-icons">
-          <a href="https://www.linkedin.com/in/anoof-k-b69a1a338/" target="_blank"><i class="fab fa-linkedin"></i></a>
-          <a href="https://www.instagram.com/anoof_pulikkal?igsh=MTk4dWh2eDdoanRvag==" target="_blank"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.facebook.com/Anoofpulikkal" target="_blank"><i class="fab fa-facebook"></i></a>
-          <a href="https://wa.me/919809438620" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        </div>
-      </aside>
-
-      <section class="content">
-
-        <article class="section">
-          <h3>Profile Summary</h3>
-          <p>
-            A passionate independent researcher currently pursuing BA B.Ed. (Economics, ITEP) at Central University of Kerala, with a focus on Macroeconomics, Environmental Economics, Gender Economics, Social Inclusion, and Social Policies. Experienced in academic projects, content creation, and digital analysis. Skilled in combining data tools with real-world policy issues, with growing expertise as a web analyst.
-          </p>
-        </article>
-
-        <article class="section">
-          <h3>Experience</h3>
-          <ul class="list">
-            <li>
-              <div class="pub-title">Intern — CDS Trivandrum (Centre for Development Studies)</div>
-              <div class="muted">Project: Social Mobility among Dalits in Tamil Nadu</div>
-            </li>
-            <li>
-              <div class="pub-title">Intern — Q Factory</div>
-              <div class="muted">Content Creation, Academic Support, Documentation.</div>
-            </li>
-            <li>
-              <div class="pub-title">Contributor — THRIVE Project (STDC Kerala)</div>
-              <div class="muted">Worked in the THRIVE project supporting life skills training and educational workshops for tribal students, with a focus on higher education pathways.</div>
-            </li>
-          </ul>
-        </article>
-
-        <article class="section">
-          <h3>Research Papers</h3>
-          <ul class="list">
-            <li>
-              <div class="pub-title">Reason Behind the Rapid Growth of Wellness Industry in the 21st Century</div>
-            </li>
-            <li>
-              <div class="pub-title">Perception Towards Primary School Teachers Towards ICT</div>
-            </li>
-          </ul>
-        </article>
-
-        <article class="section">
-          <h3>Skills &amp; Tools</h3>
-          <div class="pill">Stata</div>
-          <div class="pill">SPSS</div>
-          <div class="pill">Jamovi</div>
-          <div class="pill">Web Analysis</div>
-          <div class="pill">Content Creation</div>
-        </article>
-
-        <article class="section">
-          <h3>Languages</h3>
-          <div class="pill">English</div>
-          <div class="pill">Malayalam</div>
-          <div class="pill">Hindi</div>
-          <div class="pill">German (Beginner)</div>
-          <div class="pill">Urdu (Beginner)</div>
-        </article>
-
-        <article class="section">
-          <h3>Articles &amp; Media</h3>
-          <ul class="list">
-            <li>
-              <a href="https://www.mediaoneonline.com/anoof-k-37740" target="_blank" style="color:#9aa4b2">
-                MediaOne — Profile & Articles by Anoof K
-              </a>
-            </li>
-          </ul>
-        </article>
-
-      </section>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="photo"></div>
+    <div class="header-info">
+      <h1>Anoof K</h1>
+      <h2>Independent Researcher · Web Analyst · Intern · Aspiring Legal Scholar</h2>
+      <div class="social-icons">
+        <a href="https://www.linkedin.com/in/anoof-k-b69a1a338/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.instagram.com/anoof_pulikkal?igsh=MTk4dWh2eDdoanRvag==" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/Anoofpulikkal" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://wa.me/919809438620" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
     </div>
   </div>
+
+  <!-- Profile Summary -->
+  <div class="section">
+    <h3>Profile Summary</h3>
+    <p>
+      A passionate independent researcher currently pursuing BA B.Ed. (Economics, ITEP) at Central University of Kerala, with focus on Macroeconomics, Environmental Economics, Gender Economics, Social Inclusion, and Social Policies. Experienced in academic projects, content creation, and digital analysis. Skilled in combining data tools with real-world policy issues, with growing expertise as a web analyst.
+    </p>
+  </div>
+
+  <!-- Experience -->
+  <div class="section">
+    <h3>Experience</h3>
+    <ul>
+      <li>Intern — CDS Trivandrum (Centre for Development Studies), Project: Social Mobility among Dalits in Tamil Nadu</li>
+      <li>Intern — Q Factory, Content Creation, Academic Support, Documentation</li>
+      <li>Contributor — THRIVE Project (STDC Kerala), Life skills training & educational workshops for tribal students</li>
+    </ul>
+  </div>
+
+  <!-- Research Papers -->
+  <div class="section">
+    <h3>Research Papers</h3>
+    <ul>
+      <li>Reason Behind the Rapid Growth of Wellness Industry in the 21st Century</li>
+      <li>Perception Towards Primary School Teachers Towards ICT</li>
+    </ul>
+  </div>
+
+  <!-- Skills -->
+  <div class="section">
+    <h3>Skills & Tools</h3>
+    <div class="pill">Stata</div>
+    <div class="pill">SPSS</div>
+    <div class="pill">Jamovi</div>
+    <div class="pill">Web Analysis</div>
+    <div class="pill">Content Creation</div>
+  </div>
+
+  <!-- Languages -->
+  <div class="section">
+    <h3>Languages</h3>
+    <div class="pill">English</div>
+    <div class="pill">Malayalam</div>
+    <div class="pill">Hindi</div>
+    <div class="pill">German (Beginner)</div>
+    <div class="pill">Urdu (Beginner)</div>
+  </div>
+
+  <!-- Contact & Articles -->
+  <div class="section contact">
+    <h3>Articles & Media</h3>
+    <ul>
+      <li><a href="https://www.mediaoneonline.com/anoof-k-37740" target="_blank">MediaOne — Profile & Articles by Anoof K</a></li>
+    </ul>
+    <h3>Contact</h3>
+    <p>Email: <a href="mailto:ankpkl500@gmai;.com">ankpkl500@gmai;.com</a></p>
+    <p>Phone: <a href="tel:+919809438620">+91 98094 38620</a></p>
+    <p>Location: Malappuram, Kerala</p>
+  </div>
+</div>
+
 </body>
 </html>
