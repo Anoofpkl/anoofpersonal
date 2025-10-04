@@ -1,130 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anoof K — Dynamic Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --bg: #0f1724;
-  --primary: #7c3aed;
-  --secondary: #06b6d4;
-  --text: #e6eef6;
-  --muted: #9aa4b2;
-  --pill-bg: rgba(124,58,237,0.1);
-  --pill-hover: rgba(124,58,237,0.3);
-}
-* {margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif;}
-body {background: linear-gradient(180deg,#061021,#081426,#071022); color: var(--text); overflow-x:hidden;}
-.container {max-width: 1100px; margin: 40px auto; padding: 20px; display:flex; flex-direction:column; gap:30px;}
-.header {display:flex; flex-wrap:wrap; align-items:center; gap:20px; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(2,6,23,0.7);}
-.photo {width:180px; height:180px; border-radius:50%; background-image:url('photo_6210470930346527443_x.jpg'); background-size:cover; background-position:center; flex-shrink:0; border:3px solid var(--primary);}
-.header-info {flex:1; display:flex; flex-direction:column; gap:10px;}
-.header-info h1 {font-size:28px; color:var(--primary);}
-.header-info h2 {font-size:16px; color:var(--muted);}
-.social-icons {display:flex; gap:15px; margin-top:10px;}
-.social-icons a {color:var(--muted); font-size:20px; transition:0.3s;}
-.social-icons a:hover {color: var(--secondary); transform: scale(1.2);}
-
-.section {background: rgba(255,255,255,0.02); padding:20px; border-radius:16px; box-shadow: 0 10px 25px rgba(2,6,23,0.6); animation: fadeUp 0.8s ease forwards; opacity:0; margin-bottom:20px;}
-@keyframes fadeUp {0% {opacity:0; transform: translateY(20px);} 100% {opacity:1; transform: translateY(0);}}
-.section h3 {color: var(--primary); margin-bottom:10px; font-size:20px; border-left:4px solid var(--secondary); padding-left:10px;}
-.section p, .section li, .section a {color: var(--text); line-height:1.5;}
-.section ul {list-style:none; padding-left:0;}
-.section ul li {margin-bottom:12px; padding-left:10px; border-left:3px solid var(--primary); transition:0.3s;}
-.section ul li:hover {border-left-color: var(--secondary); background: rgba(124,58,237,0.05); border-radius:8px; padding-left:12px;}
-.pill {display:inline-block; padding:8px 14px; margin:5px 5px 0 0; border-radius:999px; background: var(--pill-bg); color: var(--text); cursor:pointer; transition:0.3s;}
-.pill:hover {background: var(--pill-hover); transform: translateY(-2px);}
-
-.contact a {color: var(--text); text-decoration:none; border-bottom:1px dashed var(--muted);}
-.contact a:hover {color: var(--secondary); border-bottom:1px solid var(--secondary);}
-
-@media(max-width:900px) {
-  .header {flex-direction:column; align-items:center; text-align:center;}
-  .header-info h1 {font-size:24px;}
-  .header-info h2 {font-size:14px;}
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Anoof K — Dynamic Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-gradient-to-r from-blue-50 to-green-50 min-h-screen p-6">
 
-<div class="container">
-  <!-- Header -->
-  <div class="header">
-    <div class="photo"></div>
-    <div class="header-info">
-      <h1>Anoof K</h1>
-      <h2>Independent Researcher · Web Analyst · Intern · Aspiring Legal Scholar</h2>
-      <div class="social-icons">
-        <a href="https://www.linkedin.com/in/anoof-k-b69a1a338/" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a href="https://www.instagram.com/anoof_pulikkal?igsh=MTk4dWh2eDdoanRvag==" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/Anoofpulikkal" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="https://wa.me/919809438620" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl p-8 mt-8">
+    <!-- Header -->
+    <div class="flex items-center gap-6">
+      <img src="photo_6210470930346527443_x.jpg" alt="Anoof K" class="w-24 h-24 rounded-full shadow-md border-4 border-blue-100">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900">Anoof K</h1>
+        <p class="text-lg text-gray-600 font-medium mb-2">Independent Researcher & Web Analyst</p>
+        <div class="flex gap-3 text-xl">
+          <a href="https://www.linkedin.com/in/anoof-k-b69a1a338/" target="_blank"><i class="fab fa-linkedin hover:text-blue-700 transition"></i></a>
+          <a href="https://www.instagram.com/anoof_pulikkal" target="_blank"><i class="fab fa-instagram hover:text-pink-500 transition"></i></a>
+          <a href="https://www.facebook.com/Anoofpulikkal" target="_blank"><i class="fab fa-facebook hover:text-blue-600 transition"></i></a>
+          <a href="https://wa.me/919809438620" target="_blank"><i class="fab fa-whatsapp hover:text-green-600 transition"></i></a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Profile Summary -->
-  <div class="section">
-    <h3>Profile Summary</h3>
-    <p>
-      A passionate independent researcher currently pursuing BA B.Ed. (Economics, ITEP) at Central University of Kerala, with focus on Macroeconomics, Environmental Economics, Gender Economics, Social Inclusion, and Social Policies. Experienced in academic projects, content creation, and digital analysis. Skilled in combining data tools with real-world policy issues, with growing expertise as a web analyst.
-    </p>
-  </div>
+    <!-- Profile Summary -->
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold mb-1">Profile Summary</h2>
+      <p class="text-gray-800">
+        BA B.Ed. (Economics, ITEP) student at Central University of Kerala.<br>
+        Focus on Macroeconomics, Social Policy, Environmental & Gender Economics.<br>
+        Passionate about real-world research, content creation, and digital analysis.
+      </p>
+    </section>
 
-  <!-- Experience -->
-  <div class="section">
-    <h3>Experience</h3>
-    <ul>
-      <li>Intern — CDS Trivandrum (Centre for Development Studies), Project: Social Mobility among Dalits in Tamil Nadu</li>
-      <li>Intern — Q Factory, Content Creation, Academic Support, Documentation</li>
-      <li>Contributor — THRIVE Project (STDC Kerala), Life skills training & educational workshops for tribal students</li>
-    </ul>
-  </div>
+    <!-- Experience Section -->
+    <section class="mt-8">
+      <h2 class="text-xl font-semibold mb-4">Experience</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-green-100 p-4 rounded-xl shadow-sm">
+          <h3 class="font-bold text-green-900">Intern – CDS Trivandrum</h3>
+          <p class="text-sm">Project: Social Mobility among Dalits in Tamil Nadu</p>
+        </div>
+        <div class="bg-blue-100 p-4 rounded-xl shadow-sm">
+          <h3 class="font-bold text-blue-900">Intern – Q Factory</h3>
+          <p class="text-sm">Content Creation, Academic Support, Documentation</p>
+        </div>
+        <div class="bg-yellow-100 p-4 rounded-xl shadow-sm md:col-span-2">
+          <h3 class="font-bold text-yellow-800">Contributor — THRIVE Project</h3>
+          <p class="text-sm">Life skills training & educational workshops for tribal students</p>
+        </div>
+      </div>
+    </section>
 
-  <!-- Research Papers -->
-  <div class="section">
-    <h3>Research Papers</h3>
-    <ul>
-      <li>Reason Behind the Rapid Growth of Wellness Industry in the 21st Century</li>
-      <li>Perception Towards Primary School Teachers Towards ICT</li>
-    </ul>
-  </div>
+    <!-- Research Papers -->
+    <section class="mt-8">
+      <h2 class="text-xl font-semibold mb-1">Research Papers</h2>
+      <ul class="list-disc pl-6 text-gray-700">
+        <li>Reason Behind the Rapid Growth of Wellness Industry in the 21st Century</li>
+        <li>Perception Towards Primary School Teachers Towards ICT</li>
+      </ul>
+    </section>
 
-  <!-- Skills -->
-  <div class="section">
-    <h3>Skills & Tools</h3>
-    <div class="pill">Stata</div>
-    <div class="pill">SPSS</div>
-    <div class="pill">Jamovi</div>
-    <div class="pill">Web Analysis</div>
-    <div class="pill">Content Creation</div>
-  </div>
+    <!-- Skills & Languages -->
+    <section class="mt-8 flex flex-col md:flex-row gap-8">
+      <div>
+        <h3 class="font-semibold mb-2">Skills & Tools</h3>
+        <span class="inline-block bg-indigo-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Stata</span>
+        <span class="inline-block bg-pink-200 px-3 py-1 rounded-full m-1 text-sm font-medium">SPSS</span>
+        <span class="inline-block bg-blue-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Jamovi</span>
+        <span class="inline-block bg-green-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Web Analysis</span>
+        <span class="inline-block bg-green-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Content Creation</span>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-2">Languages</h3>
+        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">English</span>
+        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">Malayalam</span>
+        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">Hindi</span>
+        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">German (Beginner)</span>
+        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">Urdu (Beginner)</span>
+      </div>
+    </section>
 
-  <!-- Languages -->
-  <div class="section">
-    <h3>Languages</h3>
-    <div class="pill">English</div>
-    <div class="pill">Malayalam</div>
-    <div class="pill">Hindi</div>
-    <div class="pill">German (Beginner)</div>
-    <div class="pill">Urdu (Beginner)</div>
-  </div>
+    <!-- Articles & Contact -->
+    <section class="mt-8">
+      <a href="https://www.mediaoneonline.com/anoof-k-37740"
+         target="_blank"
+         class="underline text-blue-600 font-semibold">
+        MediaOne — Profile & Articles
+      </a>
+      <div class="mt-3 flex flex-col gap-1 text-gray-700">
+        <span><strong>Email:</strong> ankpkl500@gmail.com</span>
+        <span><strong>Phone:</strong> +91 98094 38620</span>
+        <span><strong>Location:</strong> Malappuram, Kerala</span>
+      </div>
+    </section>
 
-  <!-- Contact & Articles -->
-  <div class="section contact">
-    <h3>Articles & Media</h3>
-    <ul>
-      <li><a href="https://www.mediaoneonline.com/anoof-k-37740" target="_blank">MediaOne — Profile & Articles by Anoof K</a></li>
-    </ul>
-    <h3>Contact</h3>
-    <p>Email: <a href="mailto:ankpkl500@gmai;.com">ankpkl500@gmai;.com</a></p>
-    <p>Phone: <a href="tel:+919809438620">+91 98094 38620</a></p>
-    <p>Location: Malappuram, Kerala</p>
+    <footer class="mt-10 text-gray-500 text-center text-sm">
+      &copy; <span id="year"></span> Anoof K. All rights reserved.
+    </footer>
   </div>
-</div>
-
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
+ 
