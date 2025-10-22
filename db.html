@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ecolens Commodity Market Impact Dashboard — MCX Milestone</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #ede7f6);
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4a148c;
+      color: white;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+    .container {
+      max-width: 950px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #4a148c;
+      text-align: center;
+      margin-top: 10px;
+    }
+    canvas {
+      width: 100%;
+      height: 420px;
+    }
+    .highlight-box {
+      margin-top: 20px;
+      background: #f3e5f5;
+      padding: 20px;
+      border-left: 5px solid #7b1fa2;
+      border-radius: 8px;
+    }
+    .highlight-box h3 {
+      margin-top: 0;
+      color: #6a1b9a;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+      margin: 30px 0;
+      line-height: 1.6;
+    }
+    .btn {
+      display: block;
+      margin: 25px auto 10px;
+      background: #6a1b9a;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #4a148c;
+    }
+  </style>
+</head>
+<body>
+  <header>🌾 ECOLENS — Commodity Market Impact Dashboard</header>
+
+  <div class="container">
+    <h2>Total Market Growth (1980 – 2025) & the MCX Milestone (2023)</h2>
+    <canvas id="impactChart"></canvas>
+
+    <div class="highlight-box">
+      <h3>📈 The MCX Record: ₹1.68 Lakh Crore Turnover — March 15 2023</h3>
+      <p>
+        On <strong>March 15 2023</strong>, the Multi Commodity Exchange (MCX) achieved its
+        <strong>highest-ever single-day turnover of ₹1.68 lakh crore</strong>,
+        led primarily by <em>gold</em> and <em>crude oil options</em>.  
+        This milestone marks the <strong>financial deepening</strong> of India’s commodity
+        market — showing rising liquidity, stronger investor confidence,
+        and integration with global commodity trends.
+      </p>
+      <p>
+        Economically, this reflects a shift from commodities as mere physical goods
+        toward their recognition as <strong>financial assets</strong> for hedging,
+        speculation, and portfolio diversification.
+      </p>
+    </div>
+
+    <button class="btn" onclick="window.print()">📄 Download Report / Print</button>
+  </div>
+
+  <footer>
+    Source: MCX India (2023), SEBI Quarterly Report on Commodity Derivatives (2023 Q1),<br />
+    Ministry of Commerce & Industry, World Bank Commodity Data.<br />
+    © 2025 Ecolens Learnings | Designed for academic presentation purposes.
+  </footer>
+
+  <script>
+    const ctx = document.getElementById("impactChart");
+    const impactChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [
+          "1980",
+          "1985",
+          "1990",
+          "1995",
+          "2000",
+          "2005",
+          "2010",
+          "2015",
+          "2020",
+          "2023",
+          "2025",
+        ],
+        datasets: [
+          {
+            label: "Total Commodity Market Growth Index (Base = 100)",
+            data: [100, 120, 150, 210, 260, 340, 410, 480, 590, 720, 760],
+            borderColor: "#7b1fa2",
+            backgroundColor: "rgba(123, 31, 162, 0.2)",
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointBackgroundColor: "#4a148c",
+          },
+          {
+            label: "MCX Record Turnover (₹ 1.68 Lakh Crore)",
+            data: [null, null, null, null, null, null, null, null, null, 720, null],
+            borderColor: "#d32f2f",
+            backgroundColor: "rgba(211, 47, 47, 0.15)",
+            fill: true,
+            borderDash: [5, 5],
+            pointRadius: 7,
+            pointBackgroundColor: "#d32f2f",
+            pointStyle: "triangle",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "bottom" },
+          title: {
+            display: true,
+            text: "India’s Commodity Market Growth & MCX 2023 Record",
+            font: { size: 16 },
+          },
+          tooltip: {
+            mode: "index",
+            intersect: false,
+            callbacks: {
+              label: function (context) {
+                if (context.dataset.label.includes("MCX")) {
+                  return "₹ 1.68 L crore turnover (Mar 15 2023)";
+                }
+                return (
+                  context.dataset.label +
+                  ": Index " +
+                  context.parsed.y
+                );
+              },
+            },
+          },
+          annotation: {
+            annotations: {
+              mcxLine: {
+                type: "line",
+                scaleID: "x",
+                value: "2023",
+                borderColor: "#d32f2f",
+                borderWidth: 2,
+                label: {
+                  enabled: true,
+                  content: "MCX Record 2023",
+                  position: "start",
+                },
+              },
+            },
+          },
+        },
+        scales: {
+          y: {
+            title: { display: true, text: "Market Growth Index" },
+            beginAtZero: false,
+          },
+          x: {
+            title: { display: true, text: "Year" },
+          },
+        },
+      },
+    });
+  </script>
+</body>
+</html>
