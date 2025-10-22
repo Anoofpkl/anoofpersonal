@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ecolens · Commodity Market Analyzer (Single HTML)</title>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Simple styling (Tailwind-like minimal utilities included) -->
+  <style>
+    :root{--bg:#f7fafc;--card:#ffffff;--muted:#6b7280;--accent:#2563eb}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+    body{background:var(--bg);color:#111827;padding:18px}
+    .container{max-width:1100px;margin:0 auto}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(15,23,42,0.06);margin-bottom:14px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    h1{font-size:20px;margin:0}
+    .muted{color:var(--muted);font-size:13px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    select,input[type="month"]{padding:8px;border-radius:8px;border:1px solid #e6eef8}
+    button{padding:9px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+    button.ghost{background:#eef2ff;color:var(--accent);border:1px solid #e0e7ff}
+    .sidebar{min-width:220px}
+    .flex-between{display:flex;justify-content:space-between;align-items:center}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px;border-bottom:1px solid #f3f4f6;text-align:left}
+    .stat{font-weight:600}
+    .small{font-size:12px;color:var(--muted)}
+    .top-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+    .actions{display:flex;gap:8px;align-items:center}
+    .download-link{display:inline-block;padding:8px 10px;border-radius:8px;background:#f3f4f6;color:#111827;text-decoration:none}
+    footer{font-size:12px;color:var(--muted);margin-top:8px}
+    @media(max-width:880px){ .grid{grid-template-columns:1fr} .sidebar{min-width:unset} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Ecolens · Commodity Market Analyzer</h1>
+        <div class="muted">Interactive single-file dashboard for analyzing commodity price series</div>
+      </div>
+      <div class="small">Powered by <strong>Ecolens</strong> · Sources: World Bank Pink Sheet, TradingEconomics, NCDEX, MCX</div>
+    </header>
+
+    <!-- Controls + Chart -->
+    <div class="card grid">
+      <div>
+        <div class="row top-controls">
+          <label>
+            Commodity
+            <select id="commoditySelect">
+              <option>Wheat</option>
+              <option>Rice</option>
+              <option>Crude Oil</option>
+              <option>Gold</option>
+              <option>Silver</option>
+              <option>Natural Gas</option>
+            </select>
+          </label>
+
+          <button id="genSampleBtn" class="ghost">Load Sample Data</button>
+          <button id="fetchApiBtn">Fetch (placeholder)</button>
+
+          <label title="Upload CSV (date,commodity,price)">
+            <input id="csvInput" type="file" accept=".csv" style="display:none"/>
+            <span class="download-link" onclick="document.getElementById('csvInput').click()">Upload CSV</span>
+          </label>
+
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+            <div class="small">From</div>
+            <input type="month" id="rangeStart" />
+            <div class="small">To</div>
+            <input type="month" id="rangeEnd" />
+            <button id="applyRange" class="ghost">Apply</button>
+          </div>
+        </div>
+
+        <div style="height:420px;margin-top:12px;">
+          <canvas id="chartCanvas" style="max-height:420px"></canvas>
+        </div>
+      </div>
+
+      <aside class="sidebar card" style="padding:12px;">
+        <div class="flex-between">
+          <div>
+            <div class="small">Quick Stats</div>
+            <div style="margin-top:6px">
+              <div>Observations: <span id="obs" class="stat">0</span></div>
+              <div>From: <span id="fromDate">—</span></div>
+              <div>To: <span id="toDate">—</span></div>
+              <div>Avg Price: <span id="avgPrice">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0"/>
+
+        <div class="small">Download / Export</div>
+        <div style="margin-top:8px;display:flex;gap:8px;">
+          <a id="exportBtn" class="download-link">Export CSV</a>
+        </div>
+
+        <hr style="margin:12px 0"/>
+        <div class="small">Data source (example)</div>
+        <div class="muted" style="margin-top:6px">
+          World Bank Pink Sheet · TradingEconomics · NCDEX · MCX
+        </div>
+      </aside>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div><strong>Data Table</strong><div class="small">date · commodity · price</div></div>
+        <div class="small muted">Tip: Upload CSV with header (date,commodity,price)</div>
+      </div>
+      <div style="max-height:220px;overflow:auto">
+        <table id="dataTable">
+          <thead>
+            <tr><th>Date</th><th>Commodity</th><th>Price</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="muted card" style="padding:10px">Scholarly note: For production use, replace the 'Fetch' placeholder with a secure call to TradingEconomics, World Bank Pink Sheet, NCDEX or MCX endpoints (these may require API keys or registration). The CSV format expected: <code>date,commodity,price</code> with date in <em>YYYY-MM</em> or <em>YYYY-MM-DD</em>.</footer>
+  </div>
+
+  <!-- SCRIPT: App logic -->
+  <script>
+  // Single-file commodity dashboard logic
+  (function(){
+    // Utility helpers
+    const qs = id => document.getElementById(id);
+    const commoditySelect = qs('commoditySelect');
+    const csvInput = qs('csvInput');
+    const genSampleBtn = qs('genSampleBtn');
+    const fetchApiBtn = qs('fetchApiBtn');
+    const applyRangeBtn = qs('applyRange');
+    const rangeStart = qs('rangeStart');
+    const rangeEnd = qs('rangeEnd');
+    const obsEl = qs('obs'), fromEl = qs('fromDate'), toEl = qs('toDate'), avgEl = qs('avgPrice');
+    const exportBtn = qs('exportBtn');
+    const dataTableBody = qs('dataTable').querySelector('tbody');
+
+    // State
+    let rawRows = []; // [{date:'YYYY-MM', commodity:'Wheat', price: value}]
+    let filteredRows = [];
+    let chart = null;
+
+    // Chart.js initialization
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: [], datasets: [{ label: 'Price', data: [], tension: 0.25, borderWidth: 2, pointRadius: 0 }] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+        scales: {
+          x: { title: { display: true, text: 'Date' } },
+          y: { title: { display: true, text: 'Price' }, beginAtZero: false }
+        }
+      }
+    });
+
+    // Helpers: parse date to YYYY-MM string
+    function toMonthKey(d) {
+      if (!d) return '';
+      const date = new Date(d);
+      if (isNaN(date)) {
+        // Try parse YYYY-MM
+        if (/^\d{4}-\d{2}$/.test(d)) return d;
+        // Try YYYY-MM-DD
+        const m = d.match(/^(\d{4}-\d{2})-\d{2}$/);
+        if (m) return m[1];
+        return d;
+      }
+      const y = date.getFullYear();
+      const mth = String(date.getMonth()+1).padStart(2,'0');
+      return `${y}-${mth}`;
+    }
+
+    // Build chart from rows
+    function updateVisuals() {
+      // Filter by commodity and range
+      const commodity = commoditySelect.value;
+      let rows = rawRows.filter(r => r.commodity === commodity);
+
+      // Apply range filter if provided
+      const start = rangeStart.value;
+      const end = rangeEnd.value;
+      if (start) rows = rows.filter(r => toMonthKey(r.date) >= start);
+      if (end) rows = rows.filter(r => toMonthKey(r.date) <= end);
+
+      // Sort by date
+      rows.sort((a,b) => toMonthKey(a.date).localeCompare(toMonthKey(b.date)));
+
+      filteredRows = rows;
+
+      // Chart labels and data
+      const labels = rows.map(r => toMonthKey(r.date));
+      const data = rows.map(r => Number(r.price));
+
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = data;
+      chart.update();
+
+      // Table
+      dataTableBody.innerHTML = '';
+      for (const r of rows) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${toMonthKey(r.date)}</td><td>${r.commodity}</td><td>${Number(r.price).toFixed(2)}</td>`;
+        dataTableBody.appendChild(tr);
+      }
+
+      // Stats
+      obsEl.textContent = rows.length;
+      fromEl.textContent = rows.length ? labels[0] : '—';
+      toEl.textContent = rows.length ? labels[labels.length-1] : '—';
+      const avg = rows.length ? (data.reduce((s,x)=>s+x,0)/data.length) : 0;
+      avgEl.textContent = rows.length ? avg.toFixed(2) : '—';
+    }
+
+    // CSV parsing (simple)
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      if (lines.length === 0) return [];
+      const headers = lines[0].split(',').map(h=>h.trim().toLowerCase());
+      const out = [];
+      for (let i=1;i<lines.length;i++){
+        const cols = lines[i].split(',').map(c => c.trim());
+        const obj = {};
+        for (let j=0;j<headers.length;j++){
+          const key = headers[j];
+          obj[key] = cols[j] ?? '';
+        }
+        // normalize
+        const date = obj.date || obj.datetime || obj.month;
+        const commodity = obj.commodity || obj.symbol || 'Unknown';
+        const price = Number(obj.price ?? obj.value ?? obj.close ?? 0);
+        if (!date) continue;
+        out.push({ date: toMonthKey(date), commodity: String(commodity), price });
+      }
+      return out;
+    }
+
+    // Sample data generator (monthly series 2015-2025)
+    function generateSample() {
+      const commodities = ['Wheat','Rice','Crude Oil','Gold','Silver','Natural Gas'];
+      const start = 2015, end = 2025;
+      const rows = [];
+      for (const c of commodities) {
+        let base = 50 + Math.random()*120;
+        for (let y=start;y<=end;y++){
+          for (let m=1;m<=12;m++){
+            const date = `${y}-${String(m).padStart(2,'0')}`;
+            base = base*(1 + (Math.random()-0.48)/20);
+            rows.push({ date, commodity: c, price: +(Math.max(1, base + (Math.random()-0.5)*6)).toFixed(2) });
+          }
+        }
+      }
+      return rows;
+    }
+
+    // Events
+    csvInput.addEventListener('change', async (ev) => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const text = await file.text();
+      const parsed = parseCSV(text);
+      if (parsed.length === 0) { alert('No valid rows parsed. Expect header: date,commodity,price'); return; }
+      rawRows = parsed;
+      updateVisuals();
+    });
+
+    genSampleBtn.addEventListener('click', () => {
+      rawRows = generateSample();
+      // default filter to selected commodity
+      updateVisuals();
+    });
+
+    commoditySelect.addEventListener('change', updateVisuals);
+    applyRangeBtn.addEventListener('click', updateVisuals);
+
+    exportBtn.addEventListener('click', () => {
+      if (!filteredRows || filteredRows.length===0) return alert('No data to export');
+      const header = ['date','commodity','price'];
+      const csv = [header.join(',')].concat(filteredRows.map(r => `${toMonthKey(r.date)},${r.commodity},${r.price}`)).join('\\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'ecolens_commodity_export.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Placeholder for API -- for production, implement secure server-side proxy
+    fetchApiBtn.addEventListener('click', () => {
+      alert('Fetch placeholder — for production, wire TradingEconomics / World Bank / NCDEX / MCX API here and provide API key.');
+    });
+
+    // Initialize with sample data for convenience
+    rawRows = generateSample();
+    updateVisuals();
+
+    // Pre-fill range inputs: set from earliest and latest months in sample
+    (function setInitialRange(){
+      const months = rawRows.map(r=>toMonthKey(r.date)).sort();
+      if (months.length) {
+        rangeStart.value = months[0];
+        rangeEnd.value = months[months.length-1];
+      }
+    })();
+
+    // Expose minor debug on window
+    window._ecolens = { get rawRows(){return rawRows}, get filteredRows(){return filteredRows} };
+  })();
+  </script>
+</body>
+</html>
