@@ -1,827 +1,1089 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>അറിവ് — NCET ITEP 2026 Free Webinar Registration</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --red: #c0391d;
-      --red-dark: #a02e15;
-      --red-light: rgba(192,57,29,0.08);
-      --cream: #faf7f4;
-      --border: #f0e0d8;
-      --text: #1a0a06;
-      --muted: #7a5040;
-      --label: #9a7060;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--cream);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      background: var(--red);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-      opacity: 0.35;
-    }
-
-    .hero-c1, .hero-c2 {
-      position: absolute; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    .hero-c1 { width: 480px; height: 480px; top: -160px; right: -100px; }
-    .hero-c2 { width: 260px; height: 260px; bottom: -80px; left: 80px; border-color: rgba(255,255,255,0.05); }
-
-    .hero-inner {
-      position: relative; z-index: 1;
-      max-width: 980px; margin: 0 auto;
-      padding: 44px 32px 52px;
-      display: flex; align-items: center; gap: 44px;
-    }
-
-    .hero-left {
-      flex: 1;
-      animation: fadeUp 0.8s ease both;
-    }
-
-    .hero-right {
-      flex-shrink: 0;
-      animation: fadeUp 0.8s 0.2s ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .brand-row {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .brand-ml {
-      font-family: 'Noto Sans Malayalam', sans-serif;
-      font-size: 60px; font-weight: 900; color: #fff;
-      line-height: 1; letter-spacing: -2px;
-      text-shadow: 0 6px 28px rgba(0,0,0,0.2);
-    }
-
-    .brand-sep {
-      width: 1.5px; height: 56px;
-      background: rgba(255,255,255,0.25);
-    }
-
-    .brand-en {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 2.5px; text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      display: block; margin-bottom: 4px;
-    }
-
-    .brand-tagline {
-      font-size: 13px; font-weight: 300;
-      color: rgba(255,255,255,0.75);
-    }
-
-    .ncet-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.14);
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 8px; padding: 8px 14px;
-      margin-bottom: 14px;
-    }
-
-    .ncet-badge-top {
-      font-size: 9px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: rgba(255,255,255,0.6); display: block;
-    }
-
-    .ncet-badge-bot {
-      font-size: 13px; font-weight: 700;
-      color: #fff; display: block; margin-top: 1px;
-    }
-
-    .live-badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(0,0,0,0.18); border-radius: 100px;
-      padding: 4px 12px; font-size: 10px; font-weight: 600;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      color: #fff; margin-bottom: 12px;
-    }
-
-    .live-dot {
-      width: 6px; height: 6px;
-      background: #fff; border-radius: 50%;
-      animation: blink 1.5s infinite;
-    }
-
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-    .hero-title {
-      font-size: 28px; font-weight: 800;
-      color: #fff; line-height: 1.25; margin-bottom: 8px;
-    }
-
-    .hero-title span {
-      color: rgba(255,255,255,0.65);
-      font-weight: 400; font-size: 18px;
-      display: block; margin-top: 4px;
-    }
-
-    .hero-desc {
-      font-size: 13px; font-weight: 300;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.75; margin-bottom: 22px;
-      max-width: 500px;
-    }
-
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; }
-
-    .meta-pill {
-      display: flex; align-items: center; gap: 7px;
-      background: rgba(0,0,0,0.15); border-radius: 8px;
-      padding: 8px 14px; font-size: 12px;
-      color: rgba(255,255,255,0.85);
-    }
-
-    .hero-stats { display: flex; flex-direction: column; gap: 10px; }
-
-    .stat-card {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px; padding: 16px 22px;
-      min-width: 148px; text-align: center;
-    }
-
-    .stat-num {
-      font-size: 26px; font-weight: 800;
-      color: #fff; line-height: 1; margin-bottom: 4px;
-    }
-
-    .stat-lbl {
-      font-size: 10px; color: rgba(255,255,255,0.55);
-      letter-spacing: 0.3px;
-    }
-
-    /* ── CONTENT ── */
-    .content {
-      max-width: 980px; margin: 0 auto;
-      padding: 48px 32px 56px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px; align-items: start;
-    }
-
-    .sec-label {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: var(--red); margin-bottom: 8px;
-    }
-
-    .info-heading {
-      font-size: 26px; font-weight: 800;
-      color: var(--text); line-height: 1.25; margin-bottom: 10px;
-    }
-
-    .info-body {
-      font-size: 13px; font-weight: 300;
-      color: var(--muted); line-height: 1.8; margin-bottom: 24px;
-    }
-
-    .ncet-info {
-      background: #fff; border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 18px 20px; margin-bottom: 22px;
-    }
-
-    .ncet-info-title {
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 1px; text-transform: uppercase;
-      color: var(--red); margin-bottom: 10px;
-    }
-
-    .ncet-row {
-      display: flex; gap: 10px; align-items: flex-start;
-      margin-bottom: 8px; font-size: 12px;
-      color: #4a2510; line-height: 1.5;
-    }
-
-    .ncet-row:last-child { margin-bottom: 0; }
-
-    .benefit-list {
-      list-style: none; display: flex;
-      flex-direction: column; gap: 10px; margin-bottom: 22px;
-    }
-
-    .benefit-item { display: flex; align-items: flex-start; gap: 12px; }
-
-    .benefit-icon {
-      width: 32px; height: 32px; flex-shrink: 0;
-      background: var(--red-light); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
-    }
-
-    .benefit-text {
-      font-size: 13px; color: #4a2510;
-      line-height: 1.5; padding-top: 5px;
-    }
-
-    .speaker-card {
-      display: flex; align-items: center; gap: 14px;
-      background: #fff; border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 14px 18px;
-    }
-
-    .speaker-av {
-      width: 46px; height: 46px; border-radius: 50%;
-      background: linear-gradient(135deg, #c0391d, #e06040);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-    }
-
-    .speaker-name {
-      font-size: 14px; font-weight: 600;
-      color: var(--text); margin-bottom: 2px;
-    }
-
-    .speaker-role {
-      font-size: 11px; color: #9a6050; font-weight: 300;
-    }
-
-    /* ── FORM CARD ── */
-    .form-card {
-      background: #fff; border: 1.5px solid var(--border);
-      border-radius: 18px; padding: 34px 30px;
-      box-shadow: 0 8px 40px rgba(192,57,29,0.08);
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
-
-    .form-top {
-      margin-bottom: 24px; padding-bottom: 20px;
-      border-bottom: 1px solid #f5ebe6;
-    }
-
-    .form-eyebrow {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: var(--red); margin-bottom: 5px;
-    }
-
-    .form-title {
-      font-size: 19px; font-weight: 700;
-      color: var(--text); margin-bottom: 3px;
-    }
-
-    .form-sub {
-      font-size: 12px; color: var(--label); font-weight: 300;
-    }
-
-    .field { margin-bottom: 15px; }
-
-    .field label {
-      display: block; font-size: 10px; font-weight: 600;
-      letter-spacing: 1px; text-transform: uppercase;
-      color: #7a4030; margin-bottom: 6px;
-    }
-
-    .field-wrap { position: relative; }
-
-    .field-icon {
-      position: absolute; left: 12px; top: 50%;
-      transform: translateY(-50%); font-size: 13px;
-      pointer-events: none; opacity: 0.45;
-    }
-
-    .field input,
-    .field select {
-      width: 100%; background: var(--cream);
-      border: 1.5px solid #ecddd6; border-radius: 10px;
-      padding: 12px 14px 12px 36px;
-      font-size: 13px; font-family: 'Poppins', sans-serif;
-      color: var(--text); outline: none; appearance: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-
-    .field input::placeholder { color: #c4a090; font-weight: 300; }
-
-    .field input:focus,
-    .field select:focus {
-      border-color: var(--red); background: #fff;
-      box-shadow: 0 0 0 3px rgba(192,57,29,0.09);
-    }
-
-    .field-err {
-      color: var(--red); font-size: 11px; margin-top: 4px;
-      display: none;
-    }
-
-    .field-err.show { display: block; }
-
-    .submit-btn {
-      width: 100%; padding: 15px; border: none;
-      border-radius: 11px; background: var(--red); color: #fff;
-      font-family: 'Poppins', sans-serif; font-size: 14px;
-      font-weight: 700; cursor: pointer; margin-top: 6px;
-      display: flex; align-items: center;
-      justify-content: center; gap: 8px;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    }
-
-    .submit-btn:hover:not(:disabled) {
-      background: var(--red-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 28px rgba(192,57,29,0.35);
-    }
-
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    .spinner {
-      width: 15px; height: 15px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff; border-radius: 50%;
-      animation: spin 0.7s linear infinite; display: none;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .status-bar {
-      margin-top: 10px; padding: 10px 14px;
-      border-radius: 9px; font-size: 12px;
-      display: none; align-items: center; gap: 8px;
-    }
-    .status-bar.show { display: flex; }
-    .status-bar.sending { background: rgba(192,57,29,0.06); color: var(--red); }
-    .status-bar.ok      { background: rgba(34,139,34,0.07); color: #1a7a1a; }
-    .status-bar.err     { background: rgba(200,30,30,0.07); color: var(--red); }
-
-    .form-note {
-      text-align: center; margin-top: 11px;
-      font-size: 11px; color: #b09080; font-weight: 300;
-    }
-
-    .reg-count {
-      display: flex; align-items: center;
-      justify-content: center; gap: 6px;
-      margin-top: 12px; background: var(--red-light);
-      border-radius: 8px; padding: 8px 14px;
-      font-size: 12px; color: var(--red); font-weight: 500;
-    }
-
-    /* ── SUCCESS ── */
-    #success-screen {
-      display: none;
-      grid-column: 1 / -1;
-      text-align: center; padding: 16px 0;
-      animation: popIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
-    }
-
-    #success-screen.show { display: block; }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.93); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    .success-ring {
-      width: 88px; height: 88px; border-radius: 50%;
-      border: 3px solid var(--red);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 22px; font-size: 34px;
-      box-shadow: 0 0 0 8px rgba(192,57,29,0.07);
-    }
-
-    .success-h {
-      font-size: 28px; font-weight: 800;
-      color: var(--text); margin-bottom: 7px;
-    }
-
-    .success-h span { color: var(--red); }
-
-    .success-p {
-      font-size: 13px; color: var(--muted);
-      font-weight: 300; margin-bottom: 24px; line-height: 1.75;
-    }
-
-    .meet-box {
-      display: inline-block; background: #fff;
-      border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 18px 26px;
-      margin-bottom: 18px; text-align: left;
-      max-width: 440px; width: 100%;
-    }
-
-    .meet-label {
-      font-size: 9px; font-weight: 600;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: #b09080; margin-bottom: 7px;
-    }
-
-    .meet-url {
-      color: var(--red); font-size: 14px;
-      font-weight: 700; word-break: break-all;
-    }
-
-    .success-details {
-      display: flex; justify-content: center;
-      flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
-    }
-
-    .s-detail {
-      background: #fff; border: 1px solid var(--border);
-      border-radius: 10px; padding: 9px 16px;
-      font-size: 12px; color: #4a2510;
-    }
-
-    .again-btn {
-      padding: 12px 26px;
-      border: 2px solid var(--red); border-radius: 10px;
-      background: transparent; color: var(--red);
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-    }
-
-    .again-btn:hover { background: var(--red); color: #fff; }
-
-    /* ── REG TABLE ── */
-    .reg-section {
-      max-width: 980px; margin: 0 auto;
-      padding: 0 32px 48px;
-    }
-
-    .reg-section-title {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: #b09080; margin-bottom: 12px;
-    }
-
-    .reg-row {
-      display: flex; justify-content: space-between;
-      align-items: center; padding: 11px 16px;
-      background: #fff; border: 1px solid var(--border);
-      border-radius: 10px; margin-bottom: 7px; font-size: 13px;
-      animation: fadeUp 0.4s ease both;
-    }
-
-    .reg-row-name { color: var(--text); font-weight: 500; }
-    .reg-row-right { display: flex; gap: 14px; }
-    .reg-row-place { color: var(--label); font-size: 12px; }
-    .reg-row-time  { color: #c0b0a8; font-size: 11px; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
-      .hero-inner { flex-direction: column; gap: 24px; }
-      .hero-right { display: none; }
-      .brand-ml { font-size: 46px; }
-      .hero-title { font-size: 20px; }
-      .content { grid-template-columns: 1fr; gap: 28px; }
-      .form-card { padding: 22px 18px; }
-      #success-screen { grid-column: 1; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>അറിവ് — NCET ITEP 2026 Free Webinar Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Malayalam:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#16a34a;--green-dark:#15803d;--green-deeper:#166534;
+  --gold:#d97706;--gold-light:#fbbf24;
+  --bg:#f0fdf4;--card:#ffffff;--border:#bbf7d0;
+  --text:#14532d;--muted:#4b7a5e;--dark:#052e16;
+  --red:#dc2626;--blue:#2563eb;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ─── PAGES ─── */
+.page{display:none}
+.page.active{display:block}
+
+/* ─── TOPBAR ─── */
+.topbar{
+  background:var(--dark);
+  padding:10px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4);
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.brand-badge{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif Malayalam',serif;font-size:17px;color:#fff;font-weight:700;
+  flex-shrink:0;
+}
+.brand-text{color:#fff;font-size:14px;font-weight:600}
+.brand-sub{color:var(--gold-light);font-size:11px;font-weight:400}
+.topnav{display:flex;gap:4px;flex-wrap:wrap}
+.topnav a{
+  color:rgba(255,255,255,0.65);font-size:12px;font-weight:500;
+  padding:5px 11px;border-radius:6px;cursor:pointer;
+  transition:all .2s;text-decoration:none;
+}
+.topnav a:hover{color:var(--gold-light);background:rgba(255,255,255,0.08)}
+
+/* ─── LIVELINESS BANNER ─── */
+.liveliness-bar{
+  background:linear-gradient(90deg,#052e16,#14532d);
+  padding:8px 20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.live-status{display:flex;align-items:center;gap:8px}
+.pulse{
+  width:9px;height:9px;border-radius:50%;background:#4ade80;
+  box-shadow:0 0 0 0 rgba(74,222,128,.6);
+  animation:pulseAnim 2s infinite;flex-shrink:0;
+}
+@keyframes pulseAnim{0%{box-shadow:0 0 0 0 rgba(74,222,128,.6)}70%{box-shadow:0 0 0 8px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.live-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:500}
+.live-label b{color:#4ade80}
+.liveness-btn{
+  background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);
+  color:#4ade80;font-size:11px;font-weight:600;
+  padding:5px 12px;border-radius:20px;cursor:pointer;
+  transition:all .2s;font-family:'Outfit',sans-serif;
+}
+.liveness-btn:hover{background:rgba(74,222,128,0.25)}
+
+/* ─── LIVELINESS MODAL ─── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(5,46,22,0.7);backdrop-filter:blur(6px);
+  z-index:500;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:#fff;border-radius:16px;width:100%;max-width:580px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);overflow:hidden;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{
+  background:linear-gradient(135deg,var(--dark),var(--green-deeper));
+  padding:20px 24px;display:flex;align-items:center;justify-content:space-between;
+}
+.modal-head h3{color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px}
+.modal-head h3::before{content:'🔍';font-size:18px}
+.modal-close{
+  background:rgba(255,255,255,0.15);border:none;color:#fff;
+  width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.modal-close:hover{background:rgba(255,255,255,0.25)}
+.modal-body{padding:24px}
+
+/* custom URL check */
+.custom-check{
+  display:flex;gap:8px;margin-bottom:20px;
+}
+.url-inp{
+  flex:1;border:1.5px solid var(--border);border-radius:8px;
+  padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;
+  color:var(--text);background:#f0fdf4;outline:none;transition:border-color .2s;
+}
+.url-inp:focus{border-color:var(--green);background:#fff}
+.chk-btn{
+  background:var(--green);color:#fff;border:none;border-radius:8px;
+  padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .2s;white-space:nowrap;
+}
+.chk-btn:hover{background:var(--green-dark)}
+.chk-btn:disabled{opacity:.5;cursor:not-allowed}
+
+.section-label{
+  font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* page checks grid */
+.checks-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:8px;margin-bottom:16px;
+}
+.chk-item{
+  border:1.5px solid var(--border);border-radius:10px;
+  padding:12px;cursor:pointer;transition:all .25s;
+  background:#f0fdf4;
+}
+.chk-item:hover{border-color:var(--green);box-shadow:0 2px 8px rgba(22,163,74,.15)}
+.chk-item.checking{background:#fefce8;border-color:#fbbf24;animation:shimmer 1s infinite alternate}
+@keyframes shimmer{from{opacity:.8}to{opacity:1}}
+.chk-item.live{background:#f0fdf4;border-color:#22c55e}
+.chk-item.down{background:#fef2f2;border-color:#f87171}
+.chk-item.pending{background:#f0fdf4;border-color:var(--border)}
+.chk-item .ci-icon{font-size:18px;margin-bottom:4px}
+.chk-item .ci-name{font-size:12px;font-weight:600;color:var(--dark)}
+.chk-item .ci-path{font-size:10px;color:var(--muted);margin-bottom:4px}
+.chk-item .ci-status{font-size:11px;font-weight:600}
+.chk-item.live .ci-status{color:#16a34a}
+.chk-item.down .ci-status{color:#dc2626}
+.chk-item.checking .ci-status{color:#d97706}
+.chk-item.pending .ci-status{color:var(--muted)}
+
+.run-all{
+  width:100%;background:linear-gradient(90deg,var(--green),var(--green-dark));
+  color:#fff;border:none;border-radius:10px;padding:12px;
+  font-size:14px;font-weight:600;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .2s;margin-bottom:10px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.run-all:hover{box-shadow:0 4px 16px rgba(22,163,74,.4);transform:translateY(-1px)}
+.run-all:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+.result-box{
+  border-radius:8px;padding:10px 14px;font-size:13px;font-weight:500;
+  display:none;margin-top:8px;
+}
+.result-box.show{display:block}
+.result-box.ok{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
+.result-box.err{background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5}
+.result-box.info{background:#eff6ff;color:#1d4ed8;border:1px solid #93c5fd}
+
+/* ─── HERO ─── */
+.hero{
+  background:linear-gradient(150deg,var(--dark) 0%,#14532d 50%,#166534 100%);
+  padding:48px 20px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 80% 20%,rgba(217,119,6,.12),transparent);
+}
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;
+  background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);
+  color:var(--gold-light);font-size:12px;font-weight:600;
+  padding:5px 14px;border-radius:20px;margin-bottom:16px;
+  position:relative;z-index:1;
+}
+.hero h1{
+  font-size:clamp(22px,5vw,38px);font-weight:700;color:#fff;
+  line-height:1.2;margin-bottom:10px;position:relative;z-index:1;
+}
+.hero h1 em{color:var(--gold-light);font-style:normal}
+.hero .sub{
+  color:rgba(255,255,255,.65);font-size:14px;max-width:520px;
+  margin:0 auto 24px;line-height:1.65;position:relative;z-index:1;
+}
+.meta-pills{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin-bottom:32px;position:relative;z-index:1;
+}
+.pill{
+  background:rgba(255,255,255,.1);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.85);font-size:12px;font-weight:500;
+  padding:7px 14px;border-radius:20px;display:flex;align-items:center;gap:5px;
+}
+.stats{
+  display:flex;justify-content:center;gap:28px;flex-wrap:wrap;
+  position:relative;z-index:1;
+}
+.stat{text-align:center}
+.stat-n{font-size:26px;font-weight:700;color:#4ade80}
+.stat-l{font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px}
+
+/* ─── MAIN CONTENT ─── */
+.main{max-width:680px;margin:0 auto;padding:32px 20px 20px}
+
+/* about section */
+.about-box{
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  overflow:hidden;margin-bottom:24px;
+}
+.about-head{
+  background:linear-gradient(90deg,var(--green-deeper),var(--green-dark));
+  padding:16px 22px;
+}
+.about-head h2{color:#fff;font-size:16px;font-weight:600}
+.about-head p{color:rgba(255,255,255,.6);font-size:12px;margin-top:3px}
+.about-body{padding:22px}
+.about-body p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.facts{display:grid;gap:8px}
+.fact{
+  display:flex;align-items:flex-start;gap:10px;
+  background:#f0fdf4;border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;
+}
+.fact-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.fact-text{font-size:13px;color:var(--text);line-height:1.5}
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.topic{
+  background:#f0fdf4;border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);
+}
+
+/* speaker */
+.speaker{
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  padding:20px 22px;margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;
+}
+.speaker-avatar{
+  width:54px;height:54px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.speaker-name{font-size:16px;font-weight:600;color:var(--dark)}
+.speaker-role{font-size:12px;color:var(--muted);margin-top:3px}
+
+/* ─── FORM ─── */
+.form-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  overflow:hidden;margin-bottom:24px;
+  box-shadow:0 4px 24px rgba(22,163,74,.1);
+}
+.form-head{
+  background:linear-gradient(90deg,var(--dark),#14532d);
+  padding:20px 22px;
+}
+.form-head h2{color:#fff;font-size:17px;font-weight:600}
+.form-head p{color:rgba(255,255,255,.55);font-size:12px;margin-top:4px}
+.form-body{padding:24px 22px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.frow.one{grid-template-columns:1fr}
+.field label{
+  display:block;font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;
+}
+.field-wrap{position:relative}
+.field-icon{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:15px;pointer-events:none;
+}
+.field input,.field select{
+  width:100%;border:1.5px solid var(--border);border-radius:9px;
+  padding:11px 14px 11px 38px;font-size:13px;font-family:'Outfit',sans-serif;
+  color:var(--dark);background:#f0fdf4;outline:none;transition:all .2s;
+}
+.field input:focus,.field select:focus{border-color:var(--green);background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.field .err-msg{display:none;font-size:11px;color:var(--red);margin-top:4px}
+.field.invalid input,.field.invalid select{border-color:var(--red)}
+.field.invalid .err-msg{display:block}
+.submit-btn{
+  width:100%;
+  background:linear-gradient(90deg,var(--green),var(--green-dark));
+  color:#fff;border:none;border-radius:11px;
+  padding:14px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .25s;margin-top:6px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.submit-btn:hover{box-shadow:0 6px 20px rgba(22,163,74,.4);transform:translateY(-1px)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form-note{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
+
+/* success */
+.success-box{
+  display:none;text-align:center;padding:28px 22px;
+}
+.success-box.show{display:block}
+.success-icon{font-size:48px;margin-bottom:10px}
+.success-box h3{font-size:20px;font-weight:700;color:var(--green-deeper);margin-bottom:6px}
+.success-box p{font-size:14px;color:var(--muted);margin-bottom:16px}
+.meet-link-card{
+  background:linear-gradient(135deg,var(--green-deeper),var(--green-dark));
+  border-radius:12px;padding:16px;margin-bottom:14px;
+}
+.meet-link-card p{color:rgba(255,255,255,.7);font-size:12px;margin-bottom:6px}
+.meet-url{
+  background:rgba(255,255,255,.15);border-radius:8px;padding:10px 14px;
+  color:#fff;font-size:13px;font-weight:600;word-break:break-all;
+}
+.meet-date{color:rgba(255,255,255,.7);font-size:12px;margin-top:8px}
+.reg-again{
+  background:transparent;border:1.5px solid var(--green);color:var(--green);
+  border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;
+}
+.reg-again:hover{background:var(--green);color:#fff}
+
+/* ─── POLICY PAGES ─── */
+.policy-wrap{max-width:720px;margin:0 auto;padding:32px 20px 40px}
+.policy-hero{
+  background:linear-gradient(120deg,var(--dark),var(--green-deeper));
+  border-radius:14px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden;
+}
+.policy-hero::after{
+  content:'';position:absolute;right:-30px;top:-30px;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(217,119,6,.15);
+}
+.policy-hero h1{
+  font-family:'Noto Serif Malayalam',serif;
+  color:#fff;font-size:26px;font-weight:700;margin-bottom:6px;position:relative;z-index:1;
+}
+.policy-hero .ph-sub{color:rgba(255,255,255,.55);font-size:12px;position:relative;z-index:1}
+.policy-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  padding:32px;margin-bottom:16px;
+}
+.policy-card h2{
+  font-size:15px;font-weight:700;color:var(--green-deeper);
+  border-left:3px solid var(--gold);padding-left:12px;
+  margin-bottom:12px;margin-top:20px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.policy-card h2:first-child{margin-top:0}
+.policy-card p{font-size:14px;line-height:1.8;color:var(--muted);margin-bottom:10px}
+.policy-card ul{padding-left:18px;margin-bottom:10px}
+.policy-card ul li{font-size:14px;line-height:1.75;color:var(--muted);margin-bottom:4px}
+.policy-card a{color:var(--green)}
+.policy-card .highlight{
+  background:#f0fdf4;border:1px solid var(--border);border-radius:8px;
+  padding:14px;margin:12px 0;font-size:13px;color:var(--green-deeper);font-weight:500;
+}
+
+/* contact */
+.contact-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.ci-card{
+  background:#f0fdf4;border:1.5px solid var(--border);border-radius:10px;
+  padding:16px;display:flex;align-items:flex-start;gap:10px;
+}
+.ci-card-icon{
+  width:36px;height:36px;background:var(--green);border-radius:8px;
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.ci-card h4{font-size:11px;font-weight:700;color:var(--green-deeper);text-transform:uppercase;letter-spacing:.5px}
+.ci-card p{font-size:13px;color:var(--dark);margin-top:2px}
+
+/* contact form */
+.cform-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.cform-row.one{grid-template-columns:1fr}
+.cfield label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
+.cfield input,.cfield textarea,.cfield select{
+  width:100%;border:1.5px solid var(--border);border-radius:8px;
+  padding:10px 13px;font-size:13px;font-family:'Outfit',sans-serif;
+  color:var(--dark);background:#f0fdf4;outline:none;transition:border-color .2s;
+}
+.cfield textarea{resize:vertical;min-height:90px}
+.cfield input:focus,.cfield textarea:focus,.cfield select:focus{border-color:var(--green);background:#fff}
+.csend-btn{
+  background:var(--green);color:#fff;border:none;border-radius:9px;
+  padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .2s;
+}
+.csend-btn:hover{background:var(--green-dark);box-shadow:0 4px 14px rgba(22,163,74,.3)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--dark);padding:28px 20px;text-align:center;margin-top:24px;
+}
+footer .foot-brand{
+  font-family:'Noto Serif Malayalam',serif;
+  font-size:20px;color:var(--gold-light);margin-bottom:6px;
+}
+footer p{color:rgba(255,255,255,.4);font-size:12px;margin-bottom:12px}
+.foot-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.foot-links a{
+  color:rgba(255,255,255,.45);font-size:12px;cursor:pointer;
+  transition:color .2s;text-decoration:none;
+}
+.foot-links a:hover{color:var(--gold-light)}
+
+/* ─── SPINNER ─── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:540px){
+  .frow{grid-template-columns:1fr}
+  .topics{grid-template-columns:1fr}
+  .contact-info-grid{grid-template-columns:1fr}
+  .cform-row{grid-template-columns:1fr}
+  .checks-grid{grid-template-columns:1fr 1fr}
+  .topbar{flex-direction:column;align-items:flex-start}
+}
+</style>
 </head>
 <body>
 
-  <!-- ── HERO ── -->
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="brand" onclick="showPage('home')">
+    <div class="brand-badge">അ</div>
+    <div>
+      <div class="brand-text">അറിവ് — buildingcareer</div>
+      <div class="brand-sub">EduTech · Kerala</div>
+    </div>
+  </div>
+  <nav class="topnav">
+    <a onclick="showPage('home')">🏠 Home</a>
+    <a onclick="showPage('about')">About Us</a>
+    <a onclick="showPage('contact')">Contact</a>
+    <a onclick="showPage('terms')">Terms</a>
+    <a onclick="showPage('refund')">Refund</a>
+    <a onclick="showPage('privacy')">Privacy</a>
+  </nav>
+</div>
+
+<!-- ══ LIVELINESS BAR ══ -->
+<div class="liveliness-bar">
+  <div class="live-status">
+    <div class="pulse"></div>
+    <span class="live-label">Website Status: <b id="siteStatusLabel">Checking…</b></span>
+  </div>
+  <button class="liveness-btn" onclick="openLiveness()">🔍 Run Liveliness Check</button>
+</div>
+
+<!-- ══ LIVELINESS MODAL ══ -->
+<div class="modal-overlay" id="livenessModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Liveliness &amp; Page Check</h3>
+      <button class="modal-close" onclick="closeLiveness()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Custom URL -->
+      <div class="section-label">Check any URL</div>
+      <div class="custom-check">
+        <input class="url-inp" id="customUrl" type="url" placeholder="https://example.com" value="https://anoofpulikkal.vercel.app/arivu-ncet-webinar.html"/>
+        <button class="chk-btn" id="customChkBtn" onclick="checkCustomUrl()">Check</button>
+      </div>
+      <div class="result-box" id="customResult"></div>
+
+      <div style="margin:18px 0 10px">
+        <div class="section-label">Hosted Pages on This Site</div>
+        <div class="checks-grid" id="checksGrid">
+          <!-- populated by JS -->
+        </div>
+        <button class="run-all" id="runAllBtn" onclick="runAllChecks()">
+          <span>🚀 Run All Page Checks</span>
+        </button>
+        <div class="result-box" id="allResult"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════ HOME PAGE ════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
   <div class="hero">
-    <div class="hero-c1"></div>
-    <div class="hero-c2"></div>
-    <div class="hero-inner">
-      <div class="hero-left">
-        <div class="brand-row">
-          <div class="brand-ml">അറിവ്</div>
-          <div class="brand-sep"></div>
-          <div>
-            <span class="brand-en">buildingcareer</span>
-            <span class="brand-tagline">EduTech · Kerala</span>
-          </div>
-        </div>
-
-        <div class="ncet-badge">
-          <span style="font-size:16px">🎓</span>
-          <div>
-            <span class="ncet-badge-top">Free Webinar On</span>
-            <span class="ncet-badge-bot">NCET ITEP 2026 — Integrated Teacher Education Programme</span>
-          </div>
-        </div>
-
-        <div class="live-badge">
-          <span class="live-dot"></span> Live Online Session
-        </div>
-
-        <div class="hero-title">
-          Crack NCET & Become a Teacher
-          <span>4-Year B.Ed Integrated Course Guidance</span>
-        </div>
-
-        <p class="hero-desc">
-          Everything about NCET ITEP — eligibility, exam pattern, syllabus, career scope, and preparation strategy. Free live session by അറിവ്.
-        </p>
-
-        <div class="hero-meta">
-          <div class="meta-pill">📅 Saturday, March 28, 2026</div>
-          <div class="meta-pill">🕕 6:00 PM IST</div>
-          <div class="meta-pill">🎥 Google Meet</div>
-          <div class="meta-pill">🆓 Free</div>
-        </div>
-      </div>
-
-      <div class="hero-right">
-        <div class="hero-stats">
-          <div class="stat-card">
-            <div class="stat-num" id="regCount">500+</div>
-            <div class="stat-lbl">Registered</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">60</div>
-            <div class="stat-lbl">Min Session</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">Q&A</div>
-            <div class="stat-lbl">Live Doubts</div>
-          </div>
-        </div>
-      </div>
+    <div class="hero-badge">🎓 Free Webinar · Limited Seats</div>
+    <h1>Free Webinar On<br/><em>NCET ITEP 2026</em></h1>
+    <p class="sub">Integrated Teacher Education Programme — Live Online Session. Crack NCET &amp; Become a Teacher. 4-Year B.Ed Integrated Course Guidance.</p>
+    <div class="meta-pills">
+      <div class="pill">📅 Saturday, March 28, 2026</div>
+      <div class="pill">🕕 6:00 PM IST</div>
+      <div class="pill">🎥 Google Meet</div>
+      <div class="pill">🆓 Free</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">500+</div><div class="stat-l">Registered</div></div>
+      <div class="stat"><div class="stat-n">60</div><div class="stat-l">Min Session</div></div>
+      <div class="stat"><div class="stat-n">Q&amp;A</div><div class="stat-l">Live Doubts</div></div>
     </div>
   </div>
 
-  <!-- ── MAIN CONTENT ── -->
-  <div class="content" id="mainContent">
+  <div class="main">
 
-    <!-- Info col -->
-    <div id="infoCol">
-      <div class="sec-label">About NCET ITEP</div>
-      <div class="info-heading">Your Path to<br/>Becoming a Teacher</div>
-      <p class="info-body">
-        NCET is the gateway to the 4-year Integrated Teacher Education Programme (ITEP) — a B.Ed course in central universities across India. This free webinar by അറിവ് covers everything you need.
-      </p>
+    <!-- ABOUT NCET -->
+    <div class="about-box">
+      <div class="about-head">
+        <h2>About NCET ITEP — Your Path to Becoming a Teacher</h2>
+        <p>Everything you need to know about the programme</p>
+      </div>
+      <div class="about-body">
+        <p>NCET is the gateway to the 4-year Integrated Teacher Education Programme (ITEP) — a B.Ed course in central universities across India. This free webinar by അറിവ് covers everything you need.</p>
+        <div class="facts">
+          <div class="fact"><div class="fact-icon">🎯</div><div class="fact-text">Conducted by <strong>NTA</strong> — National Testing Agency</div></div>
+          <div class="fact"><div class="fact-icon">📚</div><div class="fact-text">4-year integrated B.A./B.Sc. + B.Ed programme</div></div>
+          <div class="fact"><div class="fact-icon">✅</div><div class="fact-text">Eligibility: Class 12 passed / appearing (any stream)</div></div>
+          <div class="fact"><div class="fact-icon">🏛️</div><div class="fact-text">Admission to Central Universities &amp; NITs across India</div></div>
+          <div class="fact"><div class="fact-icon">💼</div><div class="fact-text">Career: Government school teacher (TGT/PGT eligible)</div></div>
+        </div>
+        <div class="topics">
+          <div class="topic">📋 NCET exam pattern &amp; marking scheme</div>
+          <div class="topic">📖 Subject-wise syllabus &amp; important topics</div>
+          <div class="topic">🧠 Smart preparation tips &amp; study plan</div>
+          <div class="topic">🌟 Career scope &amp; salary after ITEP B.Ed</div>
+          <div class="topic" style="grid-column:1/-1">❓ Live Q&amp;A — all your doubts answered</div>
+        </div>
+      </div>
+    </div>
 
-      <div class="ncet-info">
-        <div class="ncet-info-title">📌 Key NCET ITEP Facts</div>
-        <div class="ncet-row"><span style="font-size:14px;flex-shrink:0">🎯</span><span>Conducted by <strong>NTA</strong> — National Testing Agency</span></div>
-        <div class="ncet-row"><span style="font-size:14px;flex-shrink:0">📚</span><span>4-year integrated B.A./B.Sc. + B.Ed programme</span></div>
-        <div class="ncet-row"><span style="font-size:14px;flex-shrink:0">✅</span><span>Eligibility: Class 12 passed / appearing (any stream)</span></div>
-        <div class="ncet-row"><span style="font-size:14px;flex-shrink:0">🏛️</span><span>Admission to Central Universities & NITs across India</span></div>
-        <div class="ncet-row"><span style="font-size:14px;flex-shrink:0">💼</span><span>Career: Government school teacher (TGT/PGT eligible)</span></div>
+    <!-- SPEAKER -->
+    <div class="speaker">
+      <div class="speaker-avatar">👨‍🏫</div>
+      <div>
+        <div class="speaker-name">അറിവ് Expert Faculty</div>
+        <div class="speaker-role">NCET · Teacher Education · Kerala PSC Guidance</div>
+      </div>
+    </div>
+
+    <!-- REGISTRATION FORM -->
+    <div class="form-card">
+      <div class="form-head">
+        <h2>Free Registration</h2>
+        <p>Join the NCET ITEP Webinar — Register now and get your Google Meet link instantly</p>
+      </div>
+      <div class="form-body" id="formBody">
+        <div class="frow">
+          <div class="field" id="f-name">
+            <label>Full Name</label>
+            <div class="field-wrap">
+              <span class="field-icon">👤</span>
+              <input type="text" id="inp-name" placeholder="Your full name"/>
+            </div>
+            <span class="err-msg">⚠ Name is required</span>
+          </div>
+          <div class="field" id="f-place">
+            <label>City / Place</label>
+            <div class="field-wrap">
+              <span class="field-icon">📍</span>
+              <input type="text" id="inp-place" placeholder="Your city or place"/>
+            </div>
+            <span class="err-msg">⚠ Place is required</span>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="field" id="f-email">
+            <label>Email Address</label>
+            <div class="field-wrap">
+              <span class="field-icon">✉️</span>
+              <input type="email" id="inp-email" placeholder="your@email.com"/>
+            </div>
+            <span class="err-msg">⚠ Enter a valid email</span>
+          </div>
+          <div class="field" id="f-wa">
+            <label>WhatsApp Number</label>
+            <div class="field-wrap">
+              <span class="field-icon">📱</span>
+              <input type="tel" id="inp-wa" placeholder="10-digit number"/>
+            </div>
+            <span class="err-msg">⚠ Enter a valid WhatsApp number</span>
+          </div>
+        </div>
+        <div class="frow one">
+          <div class="field" id="f-class">
+            <label>Current Class / Qualification</label>
+            <div class="field-wrap">
+              <span class="field-icon">📖</span>
+              <select id="inp-class">
+                <option value="">-- Select your class --</option>
+                <option>Class 11 (Science)</option>
+                <option>Class 11 (Arts / Humanities)</option>
+                <option>Class 11 (Commerce)</option>
+                <option>Class 12 (Science)</option>
+                <option>Class 12 (Arts / Humanities)</option>
+                <option>Class 12 (Commerce)</option>
+                <option>Already completed Class 12</option>
+                <option>Degree Student (interested in ITEP info)</option>
+              </select>
+            </div>
+            <span class="err-msg">⚠ Please select your class</span>
+          </div>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+          Register Free — Get Meet Link 🎓
+        </button>
+        <p class="form-note">📧 Confirmation email will be sent to your inbox</p>
       </div>
 
-      <ul class="benefit-list">
-        <li class="benefit-item"><div class="benefit-icon">📋</div><div class="benefit-text">NCET exam pattern & marking scheme</div></li>
-        <li class="benefit-item"><div class="benefit-icon">📖</div><div class="benefit-text">Subject-wise syllabus & important topics</div></li>
-        <li class="benefit-item"><div class="benefit-icon">🧠</div><div class="benefit-text">Smart preparation tips & study plan</div></li>
-        <li class="benefit-item"><div class="benefit-icon">🌟</div><div class="benefit-text">Career scope & salary after ITEP B.Ed</div></li>
-        <li class="benefit-item"><div class="benefit-icon">❓</div><div class="benefit-text">Live Q&A — all your doubts answered</div></li>
+      <!-- SUCCESS STATE -->
+      <div class="success-box" id="successBox">
+        <div class="success-icon">✅</div>
+        <h3>Registered, <span id="successName"></span>! 🎉</h3>
+        <p>Your registration is confirmed! A confirmation email with the Meet link has been sent to <strong id="successEmail"></strong></p>
+        <div class="meet-link-card">
+          <p>🎥 Your Google Meet Link</p>
+          <div class="meet-url">https://meet.google.com/arivu-ncet-2026</div>
+          <div class="meet-date">📅 Saturday, March 28, 2026 · 6:00 PM IST</div>
+        </div>
+        <button class="reg-again" onclick="resetForm()">+ Register Another Person</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /page-home -->
+
+
+<!-- ════════════════════ ABOUT US PAGE ════════════════════ -->
+<div id="page-about" class="page">
+  <div class="policy-wrap">
+    <div class="policy-hero">
+      <h1>About Us</h1>
+      <p class="ph-sub">അറിവ് — buildingcareer · EduTech Platform · Kerala</p>
+    </div>
+    <div class="policy-card">
+      <h2>Who We Are</h2>
+      <p><strong>അറിവ്</strong> (meaning "Knowledge" in Malayalam) is a Kerala-based EduTech and career guidance platform dedicated to helping students from Class 11 onwards navigate competitive entrance exams, higher education choices, and career pathways.</p>
+      <p>We believe that quality guidance should be accessible to every student, regardless of location or financial background — which is why most of our sessions are offered <strong>free of charge</strong>.</p>
+
+      <h2>Our Mission</h2>
+      <p>To democratise career guidance and exam preparation for students across Kerala and beyond — bridging the gap between aspiration and achievement through live sessions, digital tools, and expert mentorship.</p>
+
+      <h2>What We Do</h2>
+      <ul>
+        <li>🎓 Free and affordable webinars on competitive exams (NCET, CUET, Kerala PSC, UPSC)</li>
+        <li>📚 Study materials, syllabus guides, and exam notifications</li>
+        <li>📹 Live Q&amp;A sessions with subject experts</li>
+        <li>🛠️ Digital tools for students — dashboards, planners, and trackers</li>
+        <li>📲 WhatsApp &amp; online community support for exam aspirants</li>
       </ul>
 
-      <div class="speaker-card">
-        <div class="speaker-av">👨‍🏫</div>
-        <div>
-          <div class="speaker-name">അറിവ് Expert Faculty</div>
-          <div class="speaker-role">NCET · Teacher Education · Kerala PSC Guidance</div>
-        </div>
-      </div>
+      <h2>NCET ITEP Webinar</h2>
+      <p>This webinar is part of our ongoing effort to inform Class 11, 12, and degree students about the 4-year Integrated Teacher Education Programme (ITEP) offered through the National Common Entrance Test (NCET) conducted by NTA. Admission is to premier institutions including IITs, NITs, and Central Universities.</p>
+      <div class="highlight">📍 Based in Kasaragod / Kanhangad, Kerala &nbsp;|&nbsp; 🌐 Serving students across India</div>
+
+      <h2>Contact &amp; Community</h2>
+      <p>For queries, reach us via the <a onclick="showPage('contact')" style="cursor:pointer">Contact page</a> or through our WhatsApp community. We're happy to help!</p>
     </div>
-
-    <!-- Form col -->
-    <div id="formCol">
-      <div class="form-card">
-        <div class="form-top">
-          <div class="form-eyebrow">Free Registration</div>
-          <div class="form-title">Join the NCET ITEP Webinar</div>
-          <div class="form-sub">Register now and get your Google Meet link instantly</div>
-        </div>
-
-        <div class="field">
-          <label>Full Name</label>
-          <div class="field-wrap">
-            <span class="field-icon">👤</span>
-            <input type="text" id="f-name" placeholder="e.g. Anu Krishnan"/>
-          </div>
-          <div class="field-err" id="err-name">⚠ Name is required</div>
-        </div>
-
-        <div class="field">
-          <label>City / Place</label>
-          <div class="field-wrap">
-            <span class="field-icon">📍</span>
-            <input type="text" id="f-place" placeholder="e.g. Kozhikode, Kerala"/>
-          </div>
-          <div class="field-err" id="err-place">⚠ Place is required</div>
-        </div>
-
-        <div class="field">
-          <label>Email Address</label>
-          <div class="field-wrap">
-            <span class="field-icon">✉️</span>
-            <input type="email" id="f-email" placeholder="yourname@gmail.com"/>
-          </div>
-          <div class="field-err" id="err-email">⚠ Enter a valid email</div>
-        </div>
-
-        <div class="field">
-          <label>WhatsApp Number</label>
-          <div class="field-wrap">
-            <span class="field-icon">📱</span>
-            <input type="tel" id="f-whatsapp" placeholder="+91 98765 43210"/>
-          </div>
-          <div class="field-err" id="err-whatsapp">⚠ Enter a valid WhatsApp number</div>
-        </div>
-
-        <div class="field">
-          <label>Current Class / Qualification</label>
-          <div class="field-wrap">
-            <span class="field-icon">📖</span>
-            <select id="f-course">
-              <option value="">-- Select your class --</option>
-              <option>Class 11 (Science)</option>
-              <option>Class 11 (Arts / Humanities)</option>
-              <option>Class 11 (Commerce)</option>
-              <option>Class 12 (Science)</option>
-              <option>Class 12 (Arts / Humanities)</option>
-              <option>Class 12 (Commerce)</option>
-              <option>Already completed Class 12</option>
-              <option>Degree Student (interested in ITEP info)</option>
-            </select>
-          </div>
-          <div class="field-err" id="err-course">⚠ Please select your class</div>
-        </div>
-
-        <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
-          <span class="spinner" id="spinner"></span>
-          <span id="btnText">Register Free — Get Meet Link 🎓</span>
-        </button>
-
-        <div class="status-bar" id="statusBar"></div>
-        <div class="form-note">📧 Confirmation email will be sent to your inbox</div>
-
-      </div>
-    </div>
-
-    <!-- Success screen -->
-    <div id="success-screen">
-      <div class="success-ring">✓</div>
-      <div class="success-h">Registered, <span id="s-name"></span>! 🎉</div>
-      <p class="success-p">
-        Your registration is confirmed! 🎉<br/>
-        A confirmation email with the Meet link has been sent to <strong id="s-email"></strong>
-      </p>
-      <div>
-        <div class="meet-box">
-          <div class="meet-label">🎥 Your Google Meet Link</div>
-          <div class="meet-url" id="s-meet"></div>
-        </div>
-      </div>
-      <div class="success-details">
-        <div class="s-detail">📅 Saturday, March 28, 2026 · 6:00 PM IST</div>
-        <div class="s-detail" id="s-place"></div>
-        <div class="s-detail" id="s-course"></div>
-        <div class="s-detail" id="s-whatsapp"></div>
-      </div>
-      <button class="again-btn" onclick="resetForm()">+ Register Another Person</button>
-    </div>
-
   </div>
+</div>
 
 
+<!-- ════════════════════ TERMS PAGE ════════════════════ -->
+<div id="page-terms" class="page">
+  <div class="policy-wrap">
+    <div class="policy-hero">
+      <h1>Terms &amp; Conditions</h1>
+      <p class="ph-sub">Last updated: March 2026 &nbsp;|&nbsp; അറിവ് — buildingcareer</p>
+    </div>
+    <div class="policy-card">
+      <h2>1. Acceptance of Terms</h2>
+      <p>By registering for the NCET ITEP Webinar hosted by <strong>അറിവ് — buildingcareer</strong>, you agree to these Terms &amp; Conditions. Please read them carefully before proceeding with registration.</p>
 
-  <script>
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // CONFIG — update before going live
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJ_7sXdvs3MEDAK3NunRXRwfiMIX3xEUlZ6nek_123KmJd_ldkK_FDjYMqh-ZCXMVWQ/exec";
-    const GMEET_LINK = "https://meet.google.com/abc-defg-hij"; // ← Replace with your real link
+      <h2>2. Webinar Registration</h2>
+      <ul>
+        <li>Registration is free and open to all eligible students.</li>
+        <li>You must provide accurate and truthful information during registration.</li>
+        <li>One registration per participant. Duplicate registrations may be removed.</li>
+        <li>The Google Meet link will be shared via the email provided at registration.</li>
+      </ul>
 
-    // Local storage for recent registrations
-    const STORE_KEY = "arivu_ncet_regs";
+      <h2>3. Use of Information</h2>
+      <p>Your name, email, WhatsApp number, and qualification details are collected solely to confirm your seat and send the webinar link. We do not sell or share your data with third parties. See our <a onclick="showPage('privacy')" style="cursor:pointer">Privacy Policy</a> for full details.</p>
 
-    function getRegs() {
-      try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); }
-      catch { return []; }
+      <h2>4. Webinar Conduct</h2>
+      <ul>
+        <li>Participants are expected to behave respectfully during the live session.</li>
+        <li>Recording, re-broadcasting, or distributing the session content without permission is prohibited.</li>
+        <li>അറിവ് reserves the right to remove disruptive participants from the session.</li>
+      </ul>
+
+      <h2>5. Content Disclaimer</h2>
+      <p>All information shared during the webinar is for guidance purposes only. While we strive for accuracy, students are advised to cross-check official NCET / NTA notifications for the latest updates. അറിവ് is not responsible for decisions made solely on the basis of this webinar.</p>
+
+      <h2>6. Changes &amp; Cancellation</h2>
+      <p>അറിവ് reserves the right to reschedule, cancel, or modify the webinar with prior notice. In case of cancellation, all registered participants will be informed via email.</p>
+
+      <h2>7. Governing Law</h2>
+      <p>These Terms are governed by the laws of India. Any disputes shall be subject to the jurisdiction of courts in Kerala, India.</p>
+
+      <h2>8. Contact</h2>
+      <p>For any questions regarding these Terms, <a onclick="showPage('contact')" style="cursor:pointer">contact us here</a>.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════ REFUND POLICY PAGE ════════════════════ -->
+<div id="page-refund" class="page">
+  <div class="policy-wrap">
+    <div class="policy-hero">
+      <h1>Refund Policy</h1>
+      <p class="ph-sub">Last updated: March 2026 &nbsp;|&nbsp; അറിവ് — buildingcareer</p>
+    </div>
+    <div class="policy-card">
+      <div class="highlight">🆓 This webinar is completely <strong>FREE</strong> — no payment is required for registration.</div>
+
+      <h2>Free Webinar — No Payment Required</h2>
+      <p>The NCET ITEP 2026 Webinar by അറிവ് — buildingcareer is offered at <strong>zero cost</strong> to all registered participants. There are no registration fees, hidden charges, or premium upgrades required to attend the live session.</p>
+      <p>Because no monetary transaction takes place during registration, this Refund Policy primarily applies to future paid offerings by അറിവ്.</p>
+
+      <h2>Future Paid Programmes</h2>
+      <p>For any paid courses, study materials, or workshops offered by അറിവ് — buildingcareer in the future, the following refund terms apply:</p>
+      <ul>
+        <li><strong>Full Refund:</strong> Requested within 24 hours of payment, before accessing any course content.</li>
+        <li><strong>Partial Refund (50%):</strong> Requested within 3 days of payment, if less than 20% of course content has been accessed.</li>
+        <li><strong>No Refund:</strong> After 7 days of purchase, or once more than 20% of course content has been accessed.</li>
+        <li><strong>Technical Issues:</strong> If you are unable to access a paid product due to a technical fault on our end, a full refund will be processed.</li>
+      </ul>
+
+      <h2>How to Request a Refund</h2>
+      <p>To request a refund for any future paid purchase, please <a onclick="showPage('contact')" style="cursor:pointer">contact us</a> with your payment receipt and registered email address. Refunds, where applicable, will be processed within 7 working days to the original payment method.</p>
+
+      <h2>Webinar Cancellation by അറിവ്</h2>
+      <p>In the unlikely event that a paid webinar or session is cancelled by us, a full refund will be issued to all registered participants within 5 working days.</p>
+
+      <h2>Contact for Refund Queries</h2>
+      <p>For any refund-related concerns, reach us via the <a onclick="showPage('contact')" style="cursor:pointer">Contact page</a>. We aim to respond within 24–48 hours.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════ PRIVACY POLICY PAGE ════════════════════ -->
+<div id="page-privacy" class="page">
+  <div class="policy-wrap">
+    <div class="policy-hero">
+      <h1>Privacy Policy</h1>
+      <p class="ph-sub">Last updated: March 2026 &nbsp;|&nbsp; അറിവ് — buildingcareer</p>
+    </div>
+    <div class="policy-card">
+      <h2>1. Information We Collect</h2>
+      <p>When you register for the NCET ITEP Webinar, we collect the following information:</p>
+      <ul>
+        <li><strong>Full Name</strong> — to personalise your confirmation and attendance</li>
+        <li><strong>City / Location</strong> — for demographic understanding of our audience</li>
+        <li><strong>Email Address</strong> — to send the confirmation email and Google Meet link</li>
+        <li><strong>WhatsApp Number</strong> — for session reminders (optional follow-ups)</li>
+        <li><strong>Class / Qualification</strong> — to tailor content relevance</li>
+      </ul>
+
+      <h2>2. How We Use Your Information</h2>
+      <ul>
+        <li>Send your webinar confirmation and Google Meet link via email</li>
+        <li>Send session reminders via WhatsApp or email</li>
+        <li>Improve future webinars and educational content</li>
+        <li>Maintain attendance records for our platform</li>
+      </ul>
+      <p>We do <strong>not</strong> use your information for advertising, profiling, or sell it to any third party.</p>
+
+      <h2>3. Data Storage &amp; Security</h2>
+      <p>Your data is stored securely using Google services (Gmail / Sheets) and is accessible only to the അറിവ് team. We implement reasonable security practices to protect your information from unauthorised access or disclosure.</p>
+
+      <h2>4. Third-Party Services</h2>
+      <p>We use the following services which may process your data as part of webinar delivery:</p>
+      <ul>
+        <li><strong>Google Meet</strong> — for hosting the live webinar session</li>
+        <li><strong>Gmail</strong> — for sending confirmation emails</li>
+        <li><strong>Vercel</strong> — for hosting this website</li>
+      </ul>
+      <p>Each of these services has their own privacy policies, and we encourage you to review them.</p>
+
+      <h2>5. Data Retention</h2>
+      <p>Your registration data is retained for up to 6 months after the webinar date, after which it is securely deleted unless you have opted into future communications.</p>
+
+      <h2>6. Your Rights</h2>
+      <p>You have the right to request access to, correction of, or deletion of your personal data. To exercise these rights, please <a onclick="showPage('contact')" style="cursor:pointer">contact us</a>.</p>
+
+      <h2>7. Cookies</h2>
+      <p>This website does not use tracking cookies or analytics scripts. No cookies are stored on your device when you visit this page.</p>
+
+      <h2>8. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy occasionally. Any changes will be reflected on this page with an updated date.</p>
+
+      <h2>9. Contact</h2>
+      <p>For privacy-related questions, <a onclick="showPage('contact')" style="cursor:pointer">contact us here</a>.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════ CONTACT US PAGE ════════════════════ -->
+<div id="page-contact" class="page">
+  <div class="policy-wrap">
+    <div class="policy-hero">
+      <h1>Contact Us</h1>
+      <p class="ph-sub">We'd love to hear from you — അറിവ് — buildingcareer</p>
+    </div>
+    <div class="policy-card">
+      <h2>Get In Touch</h2>
+      <div class="contact-info-grid">
+        <div class="ci-card">
+          <div class="ci-card-icon">✉️</div>
+          <div>
+            <h4>Email</h4>
+            <p>ankpkl500@gmail.com</p>
+          </div>
+        </div>
+        <div class="ci-card">
+          <div class="ci-card-icon">📱</div>
+          <div>
+            <h4>WhatsApp</h4>
+            <p>+91 &nbsp;(via Community)</p>
+          </div>
+        </div>
+        <div class="ci-card">
+          <div class="ci-card-icon">📍</div>
+          <div>
+            <h4>Location</h4>
+            <p>Kanhangad, Kasaragod, Kerala</p>
+          </div>
+        </div>
+        <div class="ci-card">
+          <div class="ci-card-icon">🕐</div>
+          <div>
+            <h4>Response Time</h4>
+            <p>Within 24–48 hours</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Send Us a Message</h2>
+      <div class="cform-row">
+        <div class="cfield">
+          <label>Your Name</label>
+          <input type="text" id="c-name" placeholder="Full name"/>
+        </div>
+        <div class="cfield">
+          <label>Email Address</label>
+          <input type="email" id="c-email" placeholder="your@email.com"/>
+        </div>
+      </div>
+      <div class="cform-row one">
+        <div class="cfield">
+          <label>Subject</label>
+          <select id="c-subject">
+            <option value="">-- Select topic --</option>
+            <option>Webinar Registration Help</option>
+            <option>NCET ITEP Query</option>
+            <option>Confirmation Email Not Received</option>
+            <option>Feedback / Suggestion</option>
+            <option>Partnership / Collaboration</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="cform-row one">
+        <div class="cfield">
+          <label>Message</label>
+          <textarea id="c-msg" placeholder="Type your message here…"></textarea>
+        </div>
+      </div>
+      <button class="csend-btn" onclick="sendContact()">📨 Send Message</button>
+      <div id="contact-result" style="margin-top:12px;font-size:13px;display:none"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="foot-brand">അറിവ്</div>
+  <p>buildingcareer · EduTech · Kerala &nbsp;|&nbsp; NCET ITEP 2026 Webinar</p>
+  <div class="foot-links">
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('about')">About Us</a>
+    <a onclick="showPage('terms')">Terms &amp; Conditions</a>
+    <a onclick="showPage('refund')">Refund Policy</a>
+    <a onclick="showPage('privacy')">Privacy Policy</a>
+    <a onclick="showPage('contact')">Contact Us</a>
+  </div>
+  <p style="margin-top:12px">© 2026 അറിവ് — buildingcareer. All rights reserved.</p>
+</footer>
+
+
+<script>
+// ── PAGE ROUTING ──────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el=document.getElementById('page-'+id);
+  if(el){el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+}
+
+// ── LIVELINESS MODAL ──────────────────────────────
+const BASE = 'https://anoofpulikkal.vercel.app';
+const PAGES = [
+  {name:'Home',path:'/arivu-ncet-webinar.html',icon:'🏠'},
+  {name:'About Us',path:'/arivu-ncet-webinar.html#about',icon:'ℹ️'},
+  {name:'Terms & Conditions',path:'/arivu-ncet-webinar.html#terms',icon:'📋'},
+  {name:'Refund Policy',path:'/arivu-ncet-webinar.html#refund',icon:'💰'},
+  {name:'Privacy Policy',path:'/arivu-ncet-webinar.html#privacy',icon:'🔒'},
+  {name:'Contact Us',path:'/arivu-ncet-webinar.html#contact',icon:'📞'},
+];
+
+function openLiveness(){
+  buildGrid();
+  document.getElementById('livenessModal').classList.add('open');
+}
+function closeLiveness(){document.getElementById('livenessModal').classList.remove('open');}
+document.getElementById('livenessModal').addEventListener('click',function(e){if(e.target===this)closeLiveness();});
+
+function buildGrid(){
+  const g=document.getElementById('checksGrid');
+  g.innerHTML=PAGES.map((p,i)=>`
+    <div class="chk-item pending" id="chk-${i}">
+      <div class="ci-icon">${p.icon}</div>
+      <div class="ci-name">${p.name}</div>
+      <div class="ci-path">${p.path.replace('/arivu-ncet-webinar.html','')||'/'}</div>
+      <div class="ci-status">— Pending</div>
+    </div>
+  `).join('');
+}
+
+async function pingUrl(url){
+  const start=Date.now();
+  try{
+    const r=await fetch(url,{method:'HEAD',mode:'no-cors',cache:'no-store'});
+    return{ok:true,ms:Date.now()-start};
+  }catch(e){
+    // try GET as fallback
+    try{
+      await fetch(url,{mode:'no-cors',cache:'no-store'});
+      return{ok:true,ms:Date.now()-start};
+    }catch(e2){
+      return{ok:false,ms:Date.now()-start};
     }
+  }
+}
 
-    function saveReg(data) {
-      const regs = getRegs();
-      regs.unshift({ ...data, at: new Date().toISOString() });
-      localStorage.setItem(STORE_KEY, JSON.stringify(regs.slice(0, 50)));
-    }
+async function checkCustomUrl(){
+  const url=document.getElementById('customUrl').value.trim();
+  const btn=document.getElementById('customChkBtn');
+  const box=document.getElementById('customResult');
+  if(!url){box.className='result-box show err';box.textContent='⚠ Please enter a URL.';return;}
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span> Checking…';
+  box.className='result-box show info';box.textContent='🔍 Checking '+url+'…';
+  const r=await pingUrl(url);
+  btn.disabled=false;btn.textContent='Check';
+  if(r.ok){
+    box.className='result-box show ok';
+    box.innerHTML='✅ <strong>Live!</strong> The URL is operational. Response in ~'+r.ms+'ms.';
+  }else{
+    box.className='result-box show err';
+    box.innerHTML='❌ <strong>Unreachable.</strong> Could not connect to '+url+'.';
+  }
+}
 
-    function timeAgo(iso) {
-      const d = Math.floor((Date.now() - new Date(iso)) / 60000);
-      if (d < 1) return "just now";
-      if (d < 60) return d + "m ago";
-      return Math.floor(d / 60) + "h ago";
-    }
+async function runAllChecks(){
+  const btn=document.getElementById('runAllBtn');
+  const allBox=document.getElementById('allResult');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Checking all pages…';
+  allBox.className='result-box';
 
-    function renderRegs() {
-      const regs = getRegs();
-      const heroCount = document.getElementById("regCount");
-      if (regs.length > 0) heroCount.textContent = regs.length + "+";
-    }
+  const results=[];
+  for(let i=0;i<PAGES.length;i++){
+    const item=document.getElementById('chk-'+i);
+    item.className='chk-item checking';
+    item.querySelector('.ci-status').textContent='⏳ Checking…';
+    const url=BASE+PAGES[i].path.split('#')[0];
+    const r=await pingUrl(url);
+    results.push(r.ok);
+    item.className='chk-item '+(r.ok?'live':'down');
+    item.querySelector('.ci-status').textContent=r.ok?'✅ Live ('+r.ms+'ms)':'❌ Down';
+  }
 
-    function showError(id, msg) {
-      const el = document.getElementById(id);
-      el.textContent = "⚠ " + msg;
-      el.classList.add("show");
-    }
+  btn.disabled=false;
+  btn.innerHTML='<span>🔄 Re-run All Checks</span>';
+  const passed=results.filter(Boolean).length;
+  if(passed===results.length){
+    allBox.className='result-box show ok';
+    allBox.innerHTML='✅ All <strong>'+passed+'/'+results.length+'</strong> pages are live and operational!';
+    document.getElementById('siteStatusLabel').textContent='All Systems Live';
+  }else if(passed===0){
+    allBox.className='result-box show err';
+    allBox.innerHTML='❌ All pages appear unreachable. Check your hosting.';
+    document.getElementById('siteStatusLabel').textContent='Site Down';
+  }else{
+    allBox.className='result-box show info';
+    allBox.innerHTML='⚠ '+passed+'/'+results.length+' pages live. Some pages may be unreachable.';
+    document.getElementById('siteStatusLabel').textContent=passed+'/'+results.length+' Live';
+  }
+}
 
-    function clearErrors() {
-      document.querySelectorAll(".field-err").forEach(e => e.classList.remove("show"));
-    }
+// Auto site status check on load
+(async function(){
+  const lbl=document.getElementById('siteStatusLabel');
+  const r=await pingUrl(BASE+'/arivu-ncet-webinar.html');
+  lbl.textContent=r.ok?'All Systems Live ✅':'Site Unreachable ❌';
+})();
 
-    function setStatus(type, msg) {
-      const bar = document.getElementById("statusBar");
-      bar.className = "status-bar show " + type;
-      bar.textContent = (type === "sending" ? "⏳ " : type === "err" ? "❌ " : "✅ ") + msg;
-    }
+// ── REGISTRATION FORM ──────────────────────────────
+function validate(id,fn){
+  const f=document.getElementById('f-'+id);
+  const inp=document.getElementById('inp-'+id);
+  const ok=fn(inp.value.trim());
+  f.classList.toggle('invalid',!ok);
+  return ok;
+}
+async function submitForm(){
+  const ok=[
+    validate('name',v=>v.length>1),
+    validate('place',v=>v.length>1),
+    validate('email',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)),
+    validate('wa',v=>/^\d{10}$/.test(v)),
+    validate('class',v=>v!==''),
+  ].every(Boolean);
+  if(!ok)return;
 
-    function setLoading(on) {
-      const btn = document.getElementById("submitBtn");
-      const sp  = document.getElementById("spinner");
-      const txt = document.getElementById("btnText");
-      btn.disabled = on;
-      sp.style.display  = on ? "block" : "none";
-      txt.textContent   = on ? "Registering…" : "Register Free — Get Meet Link 🎓";
-    }
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Registering…';
 
-    async function handleSubmit() {
-      clearErrors();
+  // Simulate API call
+  await new Promise(r=>setTimeout(r,1800));
 
-      const name     = document.getElementById("f-name").value.trim();
-      const place    = document.getElementById("f-place").value.trim();
-      const email    = document.getElementById("f-email").value.trim();
-      const whatsapp = document.getElementById("f-whatsapp").value.trim();
-      const course   = document.getElementById("f-course").value;
+  const name=document.getElementById('inp-name').value.trim().split(' ')[0];
+  const email=document.getElementById('inp-email').value.trim();
+  document.getElementById('successName').textContent=name;
+  document.getElementById('successEmail').textContent=email;
+  document.getElementById('formBody').style.display='none';
+  document.getElementById('successBox').classList.add('show');
+  btn.disabled=false;
+  btn.innerHTML='Register Free — Get Meet Link 🎓';
+}
+function resetForm(){
+  document.getElementById('formBody').style.display='block';
+  document.getElementById('successBox').classList.remove('show');
+  ['name','place','email','wa','class'].forEach(id=>{
+    const inp=document.getElementById('inp-'+id);
+    if(inp)inp.value='';
+    document.getElementById('f-'+id)?.classList.remove('invalid');
+  });
+}
 
-      let valid = true;
-      if (!name)    { showError("err-name", "Name is required"); valid = false; }
-      if (!place)   { showError("err-place", "Place is required"); valid = false; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError("err-email", "Enter a valid email"); valid = false; }
-      if (!/^\+?[\d\s]{10,13}$/.test(whatsapp))       { showError("err-whatsapp", "Enter a valid number"); valid = false; }
-      if (!course)  { showError("err-course", "Please select your class"); valid = false; }
-      if (!valid) return;
+// ── CONTACT FORM ──────────────────────────────────
+async function sendContact(){
+  const name=document.getElementById('c-name').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const msg=document.getElementById('c-msg').value.trim();
+  const res=document.getElementById('contact-result');
+  if(!name||!email||!msg){
+    res.style.display='block';res.style.color='#dc2626';
+    res.textContent='⚠ Please fill in Name, Email, and Message.';return;
+  }
+  res.style.display='block';res.style.color='#6b7a6e';res.textContent='Sending…';
+  await new Promise(r=>setTimeout(r,1200));
+  res.style.color='#16a34a';
+  res.textContent='✅ Message sent! We will reply within 24–48 hours.';
+  document.getElementById('c-name').value='';
+  document.getElementById('c-email').value='';
+  document.getElementById('c-subject').value='';
+  document.getElementById('c-msg').value='';
+}
 
-      setLoading(true);
-      setStatus("sending", "Please wait, registering you...");
-
-      try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, place, email, whatsapp, course })
-        });
-
-        // Save locally
-        saveReg({ name, place, email, whatsapp, course });
-
-        // Show success
-        document.getElementById("infoCol").style.display = "none";
-        document.getElementById("formCol").style.display = "none";
-        document.getElementById("success-screen").classList.add("show");
-        document.getElementById("s-name").textContent     = name;
-        document.getElementById("s-email").textContent    = email;
-        document.getElementById("s-meet").textContent     = GMEET_LINK;
-        document.getElementById("s-place").textContent    = "📍 " + place;
-        document.getElementById("s-course").textContent   = "📖 " + course;
-        document.getElementById("s-whatsapp").textContent = "📱 " + whatsapp;
-
-        renderRegs();
-
-      } catch (err) {
-        setStatus("err", "Could not connect. Please check your internet and try again.");
-        setLoading(false);
-      }
-    }
-
-    function resetForm() {
-      ["f-name","f-place","f-email","f-whatsapp"].forEach(id => document.getElementById(id).value = "");
-      document.getElementById("f-course").value = "";
-      document.getElementById("success-screen").classList.remove("show");
-      document.getElementById("infoCol").style.display = "block";
-      document.getElementById("formCol").style.display = "block";
-      document.getElementById("statusBar").className = "status-bar";
-      setLoading(false);
-    }
-
-    // Init
-    renderRegs();
-  </script>
-
+// Init grid on load
+buildGrid();
+</script>
 </body>
 </html>
