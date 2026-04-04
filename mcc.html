@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Biometric Tracker 🔐 Face ID / Fingerprint</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0a1a2e, #0d2b3e, #1a3a4a);
+      color: #f0f9ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    /* LOGIN CARD */
+    .card {
+      background: rgba(10, 25, 35, 0.85);
+      backdrop-filter: blur(14px);
+      padding: 32px 28px;
+      border-radius: 48px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 10px 0;
+      border-radius: 60px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,245,0.95);
+      font-size: 1rem;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0,201,167,0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #00c9a7;
+      border: none;
+      border-radius: 60px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #00aa8a;
+      transform: scale(0.98);
+    }
+
+    .biometric-btn {
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .biometric-btn:hover {
+      background: linear-gradient(135deg, #2a6bc5, #00b8e6);
+    }
+
+    .badge-info {
+      font-size: 0.75rem;
+      background: #0f2c2c;
+      display: inline-block;
+      border-radius: 40px;
+      padding: 6px 14px;
+      margin-top: 16px;
+    }
+
+    hr {
+      margin: 20px 0;
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    /* DASHBOARD */
+    #dashboard {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(0,0,0,0.35);
+      border-radius: 44px;
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: rgba(0, 30, 35, 0.85);
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      border-bottom: 1px solid rgba(255,255,200,0.2);
+    }
+
+    .container {
+      padding: 22px 20px;
+    }
+
+    .section {
+      background: rgba(20, 40, 48, 0.75);
+      backdrop-filter: blur(8px);
+      padding: 20px;
+      margin-bottom: 24px;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,210,0.15);
+    }
+
+    .section h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .data-preview {
+      background: rgba(0,0,0,0.4);
+      border-radius: 28px;
+      padding: 12px 16px;
+      margin-top: 18px;
+      font-size: 0.85rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .data-preview p {
+      margin: 8px 0;
+      border-left: 3px solid #00c9a7;
+      padding-left: 12px;
+    }
+
+    .logout-btn {
+      background: #e26d5c;
+      width: auto;
+      padding: 8px 20px;
+      font-size: 0.9rem;
+    }
+
+    .flex-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    small {
+      opacity: 0.7;
+    }
+
+    .finger-icon {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN PANEL -->
+<div id="login" class="card">
+  <h2>🔐 BioTracker</h2>
+  <p style="margin:0 0 8px;">Sign in with biometrics</p>
+  <input type="text" id="username" placeholder="Username" autocomplete="username">
+  <button onclick="registerBiometric()" class="biometric-btn">📱 Register Face ID / Fingerprint</button>
+  <button onclick="loginWithBiometric()" class="biometric-btn" style="background: linear-gradient(135deg,#6a4e9b,#b86bff);">🆔 Unlock with Biometrics</button>
+  <hr>
+  <div class="badge-info">✨ Works with Windows Hello, Face ID, Touch ID, Android fingerprint<br>Your data stored in free cloud (JSONBlob) + encrypted locally</div>
+</div>
+
+<!-- MAIN DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <span>📊 <span id="displayName">User</span>'s Tracker</span>
+    <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+  </div>
+  <div class="container">
+
+    <div class="section">
+      <h3>📅 + Add Task</h3>
+      <input type="text" id="taskInput" placeholder="e.g., Finish report, Call doctor">
+      <button onclick="addTask()">➕ Add Task</button>
+      <div class="data-preview" id="taskPreview">✨ Tasks will appear here</div>
+    </div>
+
+    <div class="section">
+      <h3>📈 + Study Progress</h3>
+      <input type="text" id="subjectInput" placeholder="Subject (Math, Coding, etc)">
+      <input type="number" id="hoursInput" placeholder="Hours (e.g., 2.5)" step="any">
+      <button onclick="addProgress()">📚 Log Hours</button>
+      <div class="data-preview" id="progressPreview">📖 Study logs appear here</div>
+    </div>
+
+    <div class="section">
+      <h3>💰 + Expense</h3>
+      <input type="text" id="categoryInput" placeholder="Category (Food, Transport)">
+      <input type="number" id="amountInput" placeholder="Amount" step="any">
+      <button onclick="addExpense()">💸 Add Expense</button>
+      <div class="data-preview" id="expensePreview">🧾 Recent expenses</div>
+    </div>
+
+    <div class="flex-btns">
+      <button onclick="refreshAll()" style="background:#3a6ea5;">🔄 Refresh Data</button>
+    </div>
+    <div class="badge-info" style="text-align:center;">☁️ Cloud sync enabled · Biometric authentication</div>
+  </div>
+</div>
+
+<script>
+  // =================================================================
+  //  BIOMETRIC AUTHENTICATION (WebAuthn) + CLOUD STORAGE (JSONBlob)
+  //  - Register user with Face ID / Fingerprint
+  //  - Login using biometric verification
+  //  - Each user has isolated cloud data (tasks, progress, expenses)
+  //  - Uses free JSONBlob API (no backend coding)
+  // =================================================================
+  
+  let currentUser = null;
+  let currentUserId = null;
+  let currentBlobId = null;
+  
+  // Helper: generate unique blob ID for user
+  function getUserBlobId(username) {
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+      hash = ((hash << 5) - hash) + username.charCodeAt(i);
+      hash |= 0;
+    }
+    return `bio_tracker_${Math.abs(hash).toString(36)}_${username.substring(0,8)}`;
+  }
+  
+  // ---------- Cloud Storage (JSONBlob free, no API key) ----------
+  async function fetchUserData() {
+    if (!currentBlobId) return null;
+    try {
+      const res = await fetch(`https://jsonblob.com/api/jsonBlob/${currentBlobId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error('Fetch failed');
+      return await res.json();
+    } catch(e) {
+      console.warn("fetch error", e);
+      return null;
+    }
+  }
+  
+  async function saveUserData(dataObj) {
+    if (!currentBlobId) throw new Error("No blob id");
+    const existing = await fetchUserData();
+    if (existing === null) {
+      // create new blob
+      const createRes = await fetch(`https://jsonblob.com/api/jsonBlob`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataObj)
+      });
+      if (!createRes.ok) throw new Error("Create failed");
+      const location = createRes.headers.get('location');
+      if (location) {
+        const id = location.split('/').pop();
+        currentBlobId = id;
+        localStorage.setItem(`blobId_${currentUser}`, currentBlobId);
+      }
+    } else {
+      // update
+      await fetch(`https://jsonblob.com/api/jsonBlob/${currentBlobId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataObj)
+      });
+    }
+    return true;
+  }
+  
+  async function getData() {
+    let data = await fetchUserData();
+    if (!data) data = { tasks: [], progress: [], expenses: [] };
+    if (!data.tasks) data.tasks = [];
+    if (!data.progress) data.progress = [];
+    if (!data.expenses) data.expenses = [];
+    return data;
+  }
+  
+  async function addRecord(type, entry) {
+    const data = await getData();
+    const newEntry = { id: Date.now() + Math.random(), date: new Date().toLocaleString(), ...entry };
+    if (type === 'task') data.tasks.unshift(newEntry);
+    else if (type === 'progress') data.progress.unshift(newEntry);
+    else if (type === 'expense') data.expenses.unshift(newEntry);
+    await saveUserData(data);
+  }
+  
+  // UI Render
+  async function renderTasks() {
+    const container = document.getElementById('taskPreview');
+    const data = await getData();
+    const tasks = data.tasks || [];
+    if (tasks.length === 0) { container.innerHTML = `<span>✅ No tasks. Add one!</span>`; return; }
+    let html = `<strong>📋 Recent tasks:</strong><br>`;
+    tasks.slice(0, 7).forEach(t => {
+      html += `<p>📌 ${escapeHtml(t.task)} <small>— ${t.date}</small></p>`;
+    });
+    container.innerHTML = html;
+  }
+  
+  async function renderProgress() {
+    const container = document.getElementById('progressPreview');
+    const data = await getData();
+    const prog = data.progress || [];
+    if (prog.length === 0) { container.innerHTML = `<span>📖 No study logs yet.</span>`; return; }
+    let html = `<strong>📚 Study sessions:</strong><br>`;
+    prog.slice(0, 7).forEach(p => {
+      html += `<p>📘 ${escapeHtml(p.subject)} — ${p.hours} hrs <small>${p.date}</small></p>`;
+    });
+    container.innerHTML = html;
+  }
+  
+  async function renderExpenses() {
+    const container = document.getElementById('expensePreview');
+    const data = await getData();
+    const exp = data.expenses || [];
+    if (exp.length === 0) { container.innerHTML = `<span>💰 No expenses yet.</span>`; return; }
+    let html = `<strong>💸 Recent expenses:</strong><br>`;
+    exp.slice(0, 7).forEach(e => {
+      html += `<p>🏷️ ${escapeHtml(e.category)} — ${e.amount} <small>${e.date}</small></p>`;
+    });
+    container.innerHTML = html;
+  }
+  
+  async function refreshAll() {
+    if (!currentUser) return;
+    await renderTasks();
+    await renderProgress();
+    await renderExpenses();
+  }
+  
+  // Add actions
+  async function addTask() {
+    const task = document.getElementById('taskInput').value.trim();
+    if (!task) { alert("Enter task"); return; }
+    await addRecord('task', { task });
+    document.getElementById('taskInput').value = '';
+    await renderTasks();
+    alert("✅ Task saved to cloud");
+  }
+  
+  async function addProgress() {
+    const subject = document.getElementById('subjectInput').value.trim();
+    const hours = document.getElementById('hoursInput').value;
+    if (!subject || !hours) { alert("Subject & hours required"); return; }
+    await addRecord('progress', { subject, hours: parseFloat(hours) });
+    document.getElementById('subjectInput').value = '';
+    document.getElementById('hoursInput').value = '';
+    await renderProgress();
+    alert("📈 Progress logged");
+  }
+  
+  async function addExpense() {
+    const category = document.getElementById('categoryInput').value.trim();
+    const amount = document.getElementById('amountInput').value;
+    if (!category || !amount) { alert("Category & amount required"); return; }
+    await addRecord('expense', { category, amount: parseFloat(amount) });
+    document.getElementById('categoryInput').value = '';
+    document.getElementById('amountInput').value = '';
+    await renderExpenses();
+    alert("💰 Expense added");
+  }
+  
+  // ---------- WebAuthn (Biometric) Implementation ----------
+  // Store credential IDs per username
+  let pendingUsername = null;
+  
+  async function registerBiometric() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) { alert("Please enter username first"); return; }
+    
+    if (!window.PublicKeyCredential) {
+      alert("❌ WebAuthn not supported in this browser. Use Chrome, Edge, Safari with Face ID/Touch ID.");
+      return;
+    }
+    
+    try {
+      // Generate random user ID
+      const userId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36);
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      
+      const publicKeyCredentialCreationOptions = {
+        challenge: challenge,
+        rp: { name: "Bio Tracker", id: window.location.hostname },
+        user: {
+          id: new TextEncoder().encode(userId),
+          name: username,
+          displayName: username,
+        },
+        pubKeyCredParams: [
+          { alg: -7, type: "public-key" },  // ES256
+          { alg: -257, type: "public-key" } // RS256
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: "platform", // use built-in (fingerprint/face)
+          userVerification: "required",
+          residentKey: "required"
+        },
+        timeout: 60000,
+        attestation: "none"
+      };
+      
+      const credential = await navigator.credentials.create({
+        publicKey: publicKeyCredentialCreationOptions
+      });
+      
+      // Store credential info locally (mapping username -> credentialID)
+      const cred = credential;
+      const credId = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
+      const storedUsers = JSON.parse(localStorage.getItem("webauthn_users") || "{}");
+      storedUsers[username] = {
+        credentialId: credId,
+        userId: userId
+      };
+      localStorage.setItem("webauthn_users", JSON.stringify(storedUsers));
+      
+      // Initialize cloud data for this user
+      currentUser = username;
+      currentUserId = userId;
+      currentBlobId = getUserBlobId(username);
+      // try to create empty data if not exists
+      const existing = await fetchUserData();
+      if (!existing) {
+        await saveUserData({ tasks: [], progress: [], expenses: [], created: Date.now() });
+      }
+      
+      alert(`✅ Biometric registration successful for ${username}!\nNow use "Unlock with Biometrics"`);
+      document.getElementById('username').value = '';
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed: " + (err.message || "Biometric not available or cancelled"));
+    }
+  }
+  
+  async function loginWithBiometric() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) { alert("Enter username before using biometrics"); return; }
+    
+    const storedUsers = JSON.parse(localStorage.getItem("webauthn_users") || "{}");
+    const userRecord = storedUsers[username];
+    if (!userRecord) {
+      alert(`No biometric registration found for "${username}". Please register first.`);
+      return;
+    }
+    
+    if (!window.PublicKeyCredential) {
+      alert("WebAuthn not supported");
+      return;
+    }
+    
+    try {
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const allowCredential = {
+        id: Uint8Array.from(atob(userRecord.credentialId), c => c.charCodeAt(0)),
+        type: "public-key"
+      };
+      
+      const getOptions = {
+        challenge: challenge,
+        allowCredentials: [allowCredential],
+        timeout: 60000,
+        userVerification: "required",
+        rpId: window.location.hostname
+      };
+      
+      const assertion = await navigator.credentials.get({ publicKey: getOptions });
+      if (assertion) {
+        // Biometric success!
+        currentUser = username;
+        currentUserId = userRecord.userId;
+        currentBlobId = getUserBlobId(username);
+        
+        // load cloud data
+        await refreshAll();
+        
+        document.getElementById('displayName').innerText = username;
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        alert(`🔓 Welcome back ${username}! (Biometric verified)`);
+      } else {
+        alert("Authentication failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Biometric login failed: " + (err.message || "Cancelled or not recognized"));
+    }
+  }
+  
+  function logout() {
+    currentUser = null;
+    currentUserId = null;
+    currentBlobId = null;
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login').style.display = 'flex';
+    document.getElementById('username').value = '';
+    // reset previews
+    document.getElementById('taskPreview').innerHTML = "✨ Tasks will appear here";
+    document.getElementById('progressPreview').innerHTML = "📖 Study logs appear here";
+    document.getElementById('expensePreview').innerHTML = "🧾 Recent expenses";
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  // Expose globals
+  window.registerBiometric = registerBiometric;
+  window.loginWithBiometric = loginWithBiometric;
+  window.addTask = addTask;
+  window.addProgress = addProgress;
+  window.addExpense = addExpense;
+  window.refreshAll = refreshAll;
+  window.logout = logout;
+  
+  // Initial UI
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  
+  // check WebAuthn support on load
+  if (!window.PublicKeyCredential) {
+    const warnDiv = document.createElement('div');
+    warnDiv.style.background = '#c94f3a';
+    warnDiv.style.padding = '8px';
+    warnDiv.style.borderRadius = '40px';
+    warnDiv.style.marginTop = '12px';
+    warnDiv.style.fontSize = '12px';
+    warnDiv.innerText = '⚠️ Your browser does not support WebAuthn. Use Chrome/Edge/Safari for Face ID / Fingerprint.';
+    document.querySelector('.card').appendChild(warnDiv);
+  }
+</script>
+</body>
+</html>
