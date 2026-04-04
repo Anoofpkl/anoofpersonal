@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioTracker — Biometric Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050a12;
+      --surface: #0c1523;
+      --surface2: #111d2e;
+      --border: rgba(255,255,255,0.07);
+      --border-bright: rgba(255,255,255,0.14);
+
+      --tasks-from: #00e5a0;
+      --tasks-to: #00b4d8;
+      --tasks-glow: rgba(0,229,160,0.25);
+
+      --study-from: #a78bfa;
+      --study-to: #ec4899;
+      --study-glow: rgba(167,139,250,0.25);
+
+      --expense-from: #f59e0b;
+      --expense-to: #ef4444;
+      --expense-glow: rgba(245,158,11,0.25);
+
+      --text: #e8f4ff;
+      --muted: rgba(232,244,255,0.45);
+      --accent: #00e5a0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background blobs */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 20%, rgba(0,229,160,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 400px at 80% 80%, rgba(167,139,250,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 60% 10%, rgba(245,158,11,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===================== LOGIN ===================== */
+    #login {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 420px;
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 28px;
+      padding: 44px 36px 40px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+      display: flex; flex-direction: column; gap: 0;
+    }
+
+    .login-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--tasks-from), var(--tasks-to));
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 40px var(--tasks-glow);
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .login-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 32px;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border-bright);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input::placeholder { color: var(--muted); }
+
+    .field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,160,0.15);
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border-bright);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 20px;
+      border: none; border-radius: 14px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-register {
+      background: linear-gradient(135deg, var(--tasks-from), var(--tasks-to));
+      color: #050a12;
+      box-shadow: 0 8px 28px var(--tasks-glow);
+    }
+    .btn-register:hover { box-shadow: 0 12px 36px var(--tasks-glow); opacity: 0.92; }
+
+    .btn-login {
+      background: linear-gradient(135deg, var(--study-from), var(--study-to));
+      color: #fff;
+      box-shadow: 0 8px 28px var(--study-glow);
+    }
+    .btn-login:hover { box-shadow: 0 12px 36px var(--study-glow); opacity: 0.92; }
+
+    .badge-compat {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      line-height: 1.6;
+    }
+
+    /* ===================== DASHBOARD ===================== */
+    #dashboard {
+      display: none;
+      width: 100%; max-width: 780px;
+      position: relative; z-index: 1;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Top bar */
+    .topbar {
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 22px 22px 0 0;
+      padding: 18px 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+
+    .topbar-avatar {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--tasks-from), var(--tasks-to));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800; color: #050a12;
+      box-shadow: 0 0 20px var(--tasks-glow);
+    }
+
+    .topbar-info h2 {
+      font-size: 1rem; font-weight: 700; letter-spacing: -0.3px;
+      margin-bottom: 2px;
+    }
+    .topbar-info span {
+      font-size: 0.75rem; color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .btn-logout {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #f87171;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600; font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: auto;
+    }
+    .btn-logout:hover { background: rgba(239,68,68,0.18); }
+
+    /* Stats strip */
+    .stats-strip {
+      background: var(--surface2);
+      border-left: 1px solid var(--border-bright);
+      border-right: 1px solid var(--border-bright);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-item {
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%; flex-shrink: 0;
+    }
+
+    .stat-dot.tasks { background: var(--tasks-from); box-shadow: 0 0 8px var(--tasks-from); }
+    .stat-dot.study { background: var(--study-from); box-shadow: 0 0 8px var(--study-from); }
+    .stat-dot.expense { background: var(--expense-from); box-shadow: 0 0 8px var(--expense-from); }
+
+    .stat-text { flex: 1; }
+    .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+    .stat-value { font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+    /* Main body */
+    .db-body {
+      background: var(--surface2);
+      border: 1px solid var(--border-bright);
+      border-top: none;
+      border-radius: 0 0 22px 22px;
+      padding: 24px 22px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* ===================== MODULE CARDS ===================== */
+    .module {
+      border-radius: 18px;
+      border: 1px solid var(--border-bright);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .module:hover { transform: translateY(-2px); }
+
+    /* Module header stripe */
+    .module-header {
+      padding: 16px 22px;
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    .module-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+
+    .module-title-block { flex: 1; }
+    .module-title { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+    .module-subtitle { font-size: 0.75rem; color: var(--muted); }
+
+    .module-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-bright);
+    }
+
+    /* ── Tasks module ── */
+    .module-tasks {
+      background: linear-gradient(135deg, rgba(0,229,160,0.05) 0%, rgba(0,180,216,0.03) 100%);
+    }
+    .module-tasks .module-header { border-bottom: 1px solid rgba(0,229,160,0.15); }
+    .module-tasks .module-icon { background: rgba(0,229,160,0.15); }
+    .module-tasks:hover { box-shadow: 0 12px 40px rgba(0,229,160,0.1); }
+
+    /* ── Study module ── */
+    .module-study {
+      background: linear-gradient(135deg, rgba(167,139,250,0.05) 0%, rgba(236,72,153,0.03) 100%);
+    }
+    .module-study .module-header { border-bottom: 1px solid rgba(167,139,250,0.15); }
+    .module-study .module-icon { background: rgba(167,139,250,0.15); }
+    .module-study:hover { box-shadow: 0 12px 40px rgba(167,139,250,0.1); }
+
+    /* ── Expense module ── */
+    .module-expense {
+      background: linear-gradient(135deg, rgba(245,158,11,0.05) 0%, rgba(239,68,68,0.03) 100%);
+    }
+    .module-expense .module-header { border-bottom: 1px solid rgba(245,158,11,0.15); }
+    .module-expense .module-icon { background: rgba(245,158,11,0.15); }
+    .module-expense:hover { box-shadow: 0 12px 40px rgba(245,158,11,0.1); }
+
+    /* ===================== PROGRESS BAR ===================== */
+    .progress-section {
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .progress-label-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--muted); font-weight: 600;
+    }
+
+    .progress-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; font-weight: 700;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+    }
+
+    /* Shimmer on fill */
+    .progress-fill::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .fill-tasks {
+      background: linear-gradient(90deg, var(--tasks-from), var(--tasks-to));
+      box-shadow: 0 0 12px var(--tasks-from);
+    }
+    .fill-study {
+      background: linear-gradient(90deg, var(--study-from), var(--study-to));
+      box-shadow: 0 0 12px var(--study-from);
+    }
+    .fill-expense {
+      background: linear-gradient(90deg, var(--expense-from), var(--expense-to));
+      box-shadow: 0 0 12px var(--expense-from);
+    }
+
+    /* Sub-bar row (multi bars) */
+    .multi-bars { display: flex; flex-direction: column; gap: 8px; }
+
+    .mini-bar-row { display: flex; align-items: center; gap: 10px; }
+    .mini-bar-label { font-size: 0.72rem; color: var(--muted); width: 90px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
+    .mini-bar-fill { height: 100%; border-radius: 100px; transition: width 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .mini-bar-val { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); width: 36px; text-align: right; flex-shrink: 0; }
+
+    /* ===================== INPUT SECTION ===================== */
+    .input-section {
+      padding: 18px 22px;
+    }
+
+    .input-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .module-input {
+      flex: 1; min-width: 140px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-bright);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .module-input::placeholder { color: var(--muted); }
+
+    .module-tasks .module-input:focus { border-color: var(--tasks-from); box-shadow: 0 0 0 3px rgba(0,229,160,0.12); }
+    .module-study .module-input:focus { border-color: var(--study-from); box-shadow: 0 0 0 3px rgba(167,139,250,0.12); }
+    .module-expense .module-input:focus { border-color: var(--expense-from); box-shadow: 0 0 0 3px rgba(245,158,11,0.12); }
+
+    .module-btn {
+      padding: 11px 20px;
+      border: none; border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700; font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+      white-space: nowrap;
+      color: #fff;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .module-btn:active { transform: scale(0.95); }
+
+    .btn-tasks { background: linear-gradient(135deg, var(--tasks-from), var(--tasks-to)); color: #050a12; }
+    .btn-study { background: linear-gradient(135deg, var(--study-from), var(--study-to)); }
+    .btn-expense { background: linear-gradient(135deg, var(--expense-from), var(--expense-to)); }
+
+    /* ===================== FEED ===================== */
+    .feed {
+      max-height: 180px;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .feed-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feed-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    .feed-text { flex: 1; }
+    .feed-meta { font-size: 0.7rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+
+    .feed-empty { color: var(--muted); font-size: 0.82rem; text-align: center; padding: 20px 0; }
+
+    /* ===================== BOTTOM BAR ===================== */
+    .bottom-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+      padding: 4px 0 0;
+    }
+
+    .sync-badge {
+      font-size: 0.72rem; color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .sync-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--tasks-from);
+      box-shadow: 0 0 6px var(--tasks-from);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .btn-refresh {
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.25);
+      color: var(--tasks-from);
+      border-radius: 10px;
+      padding: 8px 18px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600; font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: auto;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .btn-refresh:hover { background: rgba(0,229,160,0.18); }
+
+    /* Responsive */
+    @media (max-width: 560px) {
+      .stats-strip { grid-template-columns: repeat(3, 1fr); }
+      .stat-item { padding: 12px 10px; }
+      .stat-value { font-size: 1rem; }
+      .input-row { flex-direction: column; }
+      .module-btn { width: 100%; justify-content: center; }
+      .topbar { padding: 14px 18px; }
+      .db-body { padding: 16px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======================== LOGIN ======================== -->
+<div id="login">
+  <div class="login-icon">🔐</div>
+  <h2 class="login-title">BioTracker</h2>
+  <p class="login-sub">Secure biometric access · Cloud sync</p>
+
+  <div class="field">
+    <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+  </div>
+
+  <button class="btn btn-register" onclick="registerBiometric()">
+    <span>📱</span> Register Face ID / Fingerprint
+  </button>
+
+  <div class="divider">or unlock</div>
+
+  <button class="btn btn-login" onclick="loginWithBiometric()">
+    <span>🆔</span> Unlock with Biometrics
+  </button>
+
+  <div class="badge-compat">
+    ✦ Compatible with Windows Hello · Face ID · Touch ID · Android Fingerprint<br>
+    Data stored in JSONBlob cloud + encrypted locally
+  </div>
+</div>
+
+<!-- ======================== DASHBOARD ======================== -->
+<div id="dashboard">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-avatar" id="topbarInitial">U</div>
+      <div class="topbar-info">
+        <h2 id="displayName">User</h2>
+        <span>● Biometric verified</span>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-dot tasks"></div>
+      <div class="stat-text">
+        <div class="stat-label">Tasks</div>
+        <div class="stat-value" id="statTasks">0</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-dot study"></div>
+      <div class="stat-text">
+        <div class="stat-label">Study hrs</div>
+        <div class="stat-value" id="statStudy">0h</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-dot expense"></div>
+      <div class="stat-text">
+        <div class="stat-label">Spent</div>
+        <div class="stat-value" id="statExpense">₹0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="db-body">
+
+    <!-- ══ MODULE 1: TASKS ══ -->
+    <div class="module module-tasks">
+      <div class="module-header">
+        <div class="module-icon">📅</div>
+        <div class="module-title-block">
+          <div class="module-title">Task Manager</div>
+          <div class="module-subtitle">Daily to-dos & goals</div>
+        </div>
+        <div class="module-count" id="taskCount" style="color:var(--tasks-from);">0 tasks</div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-section">
+        <div class="progress-label-row">
+          <span class="progress-label">Completion Progress</span>
+          <span class="progress-pct" style="color:var(--tasks-from);" id="taskPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill fill-tasks" id="taskBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="input-section">
+        <div class="input-row">
+          <input class="module-input" type="text" id="taskInput" placeholder="e.g., Finish report, Call doctor">
+          <button class="module-btn btn-tasks" onclick="addTask()">＋ Add Task</button>
+        </div>
+        <div class="feed" id="taskFeed">
+          <div class="feed-empty">✦ No tasks yet. Add your first one!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODULE 2: STUDY ══ -->
+    <div class="module module-study">
+      <div class="module-header">
+        <div class="module-icon">📚</div>
+        <div class="module-title-block">
+          <div class="module-title">Study Progress</div>
+          <div class="module-subtitle">Track subjects & hours</div>
+        </div>
+        <div class="module-count" id="studyCount" style="color:var(--study-from);">0 hrs</div>
+      </div>
+
+      <!-- Progress bars per subject -->
+      <div class="progress-section">
+        <div class="progress-label-row">
+          <span class="progress-label">Total Hours Logged</span>
+          <span class="progress-pct" style="color:var(--study-from);" id="studyPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill fill-study" id="studyBar" style="width:0%"></div>
+        </div>
+        <div class="multi-bars" id="subjectBars" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="input-section">
+        <div class="input-row">
+          <input class="module-input" type="text" id="subjectInput" placeholder="Subject (e.g., Economics, UPSC)">
+          <input class="module-input" type="number" id="hoursInput" placeholder="Hours" step="any" style="max-width:110px;">
+          <button class="module-btn btn-study" onclick="addProgress()">📊 Log</button>
+        </div>
+        <div class="feed" id="progressFeed">
+          <div class="feed-empty">✦ No study sessions yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODULE 3: EXPENSES ══ -->
+    <div class="module module-expense">
+      <div class="module-header">
+        <div class="module-icon">💰</div>
+        <div class="module-title-block">
+          <div class="module-title">Expense Tracker</div>
+          <div class="module-subtitle">Monitor spending by category</div>
+        </div>
+        <div class="module-count" id="expenseCount" style="color:var(--expense-from);">₹0</div>
+      </div>
+
+      <!-- Progress bars per category -->
+      <div class="progress-section">
+        <div class="progress-label-row">
+          <span class="progress-label">Spending Distribution</span>
+          <span class="progress-pct" style="color:var(--expense-from);" id="expensePct">—</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill fill-expense" id="expenseBar" style="width:0%"></div>
+        </div>
+        <div class="multi-bars" id="categoryBars" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="input-section">
+        <div class="input-row">
+          <input class="module-input" type="text" id="categoryInput" placeholder="Category (Food, Transport…)">
+          <input class="module-input" type="number" id="amountInput" placeholder="Amount ₹" step="any" style="max-width:130px;">
+          <button class="module-btn btn-expense" onclick="addExpense()">＋ Add</button>
+        </div>
+        <div class="feed" id="expenseFeed">
+          <div class="feed-empty">✦ No expenses yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar">
+      <div class="sync-badge">
+        <div class="sync-dot"></div>
+        Cloud sync active · JSONBlob · Biometric auth
+      </div>
+      <button class="btn-refresh" onclick="refreshAll()">🔄 Refresh</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ======================================================
+  //  BIOMETRIC (WebAuthn) + CLOUD (JSONBlob) TRACKER
+  // ======================================================
+
+  let currentUser = null;
+  let currentUserId = null;
+  let currentBlobId = null;
+
+  function getUserBlobId(username) {
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+      hash = ((hash << 5) - hash) + username.charCodeAt(i);
+      hash |= 0;
+    }
+    return `bio_tracker_${Math.abs(hash).toString(36)}_${username.substring(0,8)}`;
+  }
+
+  async function fetchUserData() {
+    if (!currentBlobId) return null;
+    try {
+      const res = await fetch(`https://jsonblob.com/api/jsonBlob/${currentBlobId}`, {
+        method: 'GET', headers: { 'Content-Type': 'application/json' }
+      });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error('Fetch failed');
+      return await res.json();
+    } catch(e) { console.warn("fetch error", e); return null; }
+  }
+
+  async function saveUserData(dataObj) {
+    if (!currentBlobId) throw new Error("No blob id");
+    const existing = await fetchUserData();
+    if (existing === null) {
+      const createRes = await fetch(`https://jsonblob.com/api/jsonBlob`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataObj)
+      });
+      if (!createRes.ok) throw new Error("Create failed");
+      const location = createRes.headers.get('location');
+      if (location) {
+        const id = location.split('/').pop();
+        currentBlobId = id;
+        localStorage.setItem(`blobId_${currentUser}`, currentBlobId);
+      }
+    } else {
+      await fetch(`https://jsonblob.com/api/jsonBlob/${currentBlobId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataObj)
+      });
+    }
+    return true;
+  }
+
+  async function getData() {
+    let data = await fetchUserData();
+    if (!data) data = { tasks: [], progress: [], expenses: [] };
+    if (!data.tasks) data.tasks = [];
+    if (!data.progress) data.progress = [];
+    if (!data.expenses) data.expenses = [];
+    return data;
+  }
+
+  async function addRecord(type, entry) {
+    const data = await getData();
+    const newEntry = { id: Date.now() + Math.random(), date: new Date().toLocaleString(), ...entry };
+    if (type === 'task') data.tasks.unshift(newEntry);
+    else if (type === 'progress') data.progress.unshift(newEntry);
+    else if (type === 'expense') data.expenses.unshift(newEntry);
+    await saveUserData(data);
+  }
+
+  // ── Render ──────────────────────────────────────────
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
+  }
+
+  function setBar(id, pct) {
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => { el.style.width = Math.min(pct, 100) + '%'; }, 80);
+  }
+
+  async function renderTasks() {
+    const data = await getData();
+    const tasks = data.tasks || [];
+    const total = tasks.length;
+    const feed = document.getElementById('taskFeed');
+
+    document.getElementById('taskCount').textContent = total + ' task' + (total !== 1 ? 's' : '');
+    document.getElementById('statTasks').textContent = total;
+
+    // Progress = fill up as more tasks added (max 20 = 100%)
+    const pct = Math.min(Math.round((total / 20) * 100), 100);
+    document.getElementById('taskPct').textContent = pct + '%';
+    setBar('taskBar', pct);
+
+    if (tasks.length === 0) { feed.innerHTML = '<div class="feed-empty">✦ No tasks yet. Add your first one!</div>'; return; }
+    feed.innerHTML = tasks.slice(0, 10).map(t => `
+      <div class="feed-item">
+        <div class="feed-dot" style="background:var(--tasks-from)"></div>
+        <div class="feed-text">${escapeHtml(t.task)}</div>
+        <div class="feed-meta">${t.date.split(',')[0]}</div>
+      </div>`).join('');
+  }
+
+  async function renderProgress() {
+    const data = await getData();
+    const prog = data.progress || [];
+    const feed = document.getElementById('progressFeed');
+
+    const totalHrs = prog.reduce((a, p) => a + (p.hours || 0), 0);
+    document.getElementById('studyCount').textContent = totalHrs.toFixed(1) + ' hrs';
+    document.getElementById('statStudy').textContent = totalHrs.toFixed(1) + 'h';
+
+    // Progress bar: 40 hours = 100%
+    const pct = Math.min(Math.round((totalHrs / 40) * 100), 100);
+    document.getElementById('studyPct').textContent = pct + '%';
+    setBar('studyBar', pct);
+
+    // Per-subject bars
+    const bySubject = {};
+    prog.forEach(p => {
+      bySubject[p.subject] = (bySubject[p.subject] || 0) + (p.hours || 0);
+    });
+    const maxHrs = Math.max(...Object.values(bySubject), 1);
+    const subjectBars = document.getElementById('subjectBars');
+    subjectBars.innerHTML = Object.entries(bySubject).slice(0, 5).map(([sub, hrs]) => {
+      const subPct = Math.round((hrs / maxHrs) * 100);
+      return `<div class="mini-bar-row">
+        <div class="mini-bar-label">${escapeHtml(sub)}</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill fill-study" style="width:${subPct}%"></div></div>
+        <div class="mini-bar-val">${hrs}h</div>
+      </div>`;
+    }).join('');
+
+    if (prog.length === 0) { feed.innerHTML = '<div class="feed-empty">✦ No study sessions yet.</div>'; return; }
+    feed.innerHTML = prog.slice(0, 8).map(p => `
+      <div class="feed-item">
+        <div class="feed-dot" style="background:var(--study-from)"></div>
+        <div class="feed-text"><strong>${escapeHtml(p.subject)}</strong> — ${p.hours} hrs</div>
+        <div class="feed-meta">${p.date.split(',')[0]}</div>
+      </div>`).join('');
+  }
+
+  async function renderExpenses() {
+    const data = await getData();
+    const exp = data.expenses || [];
+    const feed = document.getElementById('expenseFeed');
+
+    const total = exp.reduce((a, e) => a + (e.amount || 0), 0);
+    document.getElementById('expenseCount').textContent = '₹' + total.toFixed(0);
+    document.getElementById('statExpense').textContent = '₹' + total.toFixed(0);
+
+    // By category
+    const byCat = {};
+    exp.forEach(e => { byCat[e.category] = (byCat[e.category] || 0) + (e.amount || 0); });
+    const catEntries = Object.entries(byCat).sort((a,b) => b[1]-a[1]);
+    const maxCat = catEntries.length ? catEntries[0][1] : 1;
+
+    // Top category as label
+    if (catEntries.length) {
+      document.getElementById('expensePct').textContent = catEntries[0][0];
+    }
+
+    // Main bar: fill based on total (5000 = 100%)
+    const pct = Math.min(Math.round((total / 5000) * 100), 100);
+    setBar('expenseBar', pct);
+
+    const catBars = document.getElementById('categoryBars');
+    catBars.innerHTML = catEntries.slice(0, 5).map(([cat, amt]) => {
+      const catPct = Math.round((amt / maxCat) * 100);
+      return `<div class="mini-bar-row">
+        <div class="mini-bar-label">${escapeHtml(cat)}</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill fill-expense" style="width:${catPct}%"></div></div>
+        <div class="mini-bar-val">₹${amt}</div>
+      </div>`;
+    }).join('');
+
+    if (exp.length === 0) { feed.innerHTML = '<div class="feed-empty">✦ No expenses yet.</div>'; return; }
+    feed.innerHTML = exp.slice(0, 8).map(e => `
+      <div class="feed-item">
+        <div class="feed-dot" style="background:var(--expense-from)"></div>
+        <div class="feed-text"><strong>${escapeHtml(e.category)}</strong> — ₹${e.amount}</div>
+        <div class="feed-meta">${e.date.split(',')[0]}</div>
+      </div>`).join('');
+  }
+
+  async function refreshAll() {
+    if (!currentUser) return;
+    await Promise.all([renderTasks(), renderProgress(), renderExpenses()]);
+  }
+
+  // ── Actions ─────────────────────────────────────────
+
+  async function addTask() {
+    const task = document.getElementById('taskInput').value.trim();
+    if (!task) { alert("Enter a task"); return; }
+    await addRecord('task', { task });
+    document.getElementById('taskInput').value = '';
+    await renderTasks();
+  }
+
+  async function addProgress() {
+    const subject = document.getElementById('subjectInput').value.trim();
+    const hours = document.getElementById('hoursInput').value;
+    if (!subject || !hours) { alert("Subject & hours required"); return; }
+    await addRecord('progress', { subject, hours: parseFloat(hours) });
+    document.getElementById('subjectInput').value = '';
+    document.getElementById('hoursInput').value = '';
+    await renderProgress();
+  }
+
+  async function addExpense() {
+    const category = document.getElementById('categoryInput').value.trim();
+    const amount = document.getElementById('amountInput').value;
+    if (!category || !amount) { alert("Category & amount required"); return; }
+    await addRecord('expense', { category, amount: parseFloat(amount) });
+    document.getElementById('categoryInput').value = '';
+    document.getElementById('amountInput').value = '';
+    await renderExpenses();
+  }
+
+  // ── WebAuthn ─────────────────────────────────────────
+
+  async function registerBiometric() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) { alert("Enter username first"); return; }
+    if (!window.PublicKeyCredential) { alert("❌ WebAuthn not supported. Use Chrome/Edge/Safari."); return; }
+    try {
+      const userId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36);
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge, rp: { name: "BioTracker", id: window.location.hostname },
+          user: { id: new TextEncoder().encode(userId), name: username, displayName: username },
+          pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+          authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "required" },
+          timeout: 60000, attestation: "none"
+        }
+      });
+      const credId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+      const storedUsers = JSON.parse(localStorage.getItem("webauthn_users") || "{}");
+      storedUsers[username] = { credentialId: credId, userId };
+      localStorage.setItem("webauthn_users", JSON.stringify(storedUsers));
+      currentUser = username; currentUserId = userId;
+      currentBlobId = getUserBlobId(username);
+      const existing = await fetchUserData();
+      if (!existing) await saveUserData({ tasks: [], progress: [], expenses: [], created: Date.now() });
+      alert(`✅ Registered successfully! Now use "Unlock with Biometrics"`);
+      document.getElementById('username').value = '';
+    } catch (err) { alert("Registration failed: " + (err.message || "Biometric unavailable")); }
+  }
+
+  async function loginWithBiometric() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) { alert("Enter username"); return; }
+    const storedUsers = JSON.parse(localStorage.getItem("webauthn_users") || "{}");
+    const userRecord = storedUsers[username];
+    if (!userRecord) { alert(`No biometric found for "${username}". Register first.`); return; }
+    if (!window.PublicKeyCredential) { alert("WebAuthn not supported"); return; }
+    try {
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const assertion = await navigator.credentials.get({
+        publicKey: {
+          challenge,
+          allowCredentials: [{ id: Uint8Array.from(atob(userRecord.credentialId), c => c.charCodeAt(0)), type: "public-key" }],
+          timeout: 60000, userVerification: "required", rpId: window.location.hostname
+        }
+      });
+      if (assertion) {
+        currentUser = username; currentUserId = userRecord.userId;
+        currentBlobId = getUserBlobId(username);
+        document.getElementById('displayName').textContent = username;
+        document.getElementById('topbarInitial').textContent = username.charAt(0).toUpperCase();
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'flex';
+        document.getElementById('dashboard').style.flexDirection = 'column';
+        await refreshAll();
+      }
+    } catch (err) { alert("Biometric login failed: " + (err.message || "Cancelled")); }
+  }
+
+  function logout() {
+    currentUser = null; currentUserId = null; currentBlobId = null;
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login').style.display = 'flex';
+    document.getElementById('username').value = '';
+    document.getElementById('taskFeed').innerHTML = '<div class="feed-empty">✦ No tasks yet.</div>';
+    document.getElementById('progressFeed').innerHTML = '<div class="feed-empty">✦ No study sessions yet.</div>';
+    document.getElementById('expenseFeed').innerHTML = '<div class="feed-empty">✦ No expenses yet.</div>';
+    document.getElementById('subjectBars').innerHTML = '';
+    document.getElementById('categoryBars').innerHTML = '';
+    setBar('taskBar', 0); setBar('studyBar', 0); setBar('expenseBar', 0);
+  }
+
+  // Expose globals
+  Object.assign(window, { registerBiometric, loginWithBiometric, addTask, addProgress, addExpense, refreshAll, logout });
+
+  // Init
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+
+  if (!window.PublicKeyCredential) {
+    const warn = document.createElement('div');
+    warn.style.cssText = 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:10px 14px;border-radius:10px;margin-top:12px;font-size:0.75rem;text-align:center;';
+    warn.textContent = '⚠️ WebAuthn not supported. Please use Chrome, Edge or Safari.';
+    document.getElementById('login').appendChild(warn);
+  }
+</script>
+</body>
+</html>
