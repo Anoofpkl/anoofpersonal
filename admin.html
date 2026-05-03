@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard - Kerala Election 2026</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #fff;
+  text-align: center;
+}
+
+/* HEADER */
+.header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  height: 40px;
+}
+
+/* LOGIN */
+.login-box {
+  margin-top: 50px;
+}
+
+input, select {
+  padding: 10px;
+  margin: 10px;
+  width: 260px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* PANEL */
+.panel {
+  display: none;
+  margin-top: 30px;
+}
+
+.card {
+  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* PARTY COLORS */
+.ldf { color: #e53935; }
+.udf { color: #1e88e5; }
+.nda { color: #fb8c00; }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <img class="logo" src="https://maktoobmedia.com/assets/main/maktoob/img/logo.svg">
+  <h3>ADMIN DASHBOARD</h3>
+</div>
+
+<!-- LOGIN -->
+<div id="loginBox" class="login-box">
+  <input type="password" id="password" placeholder="Enter Password"><br>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- PANEL -->
+<div id="panel" class="panel">
+
+  <div class="card">
+
+    <select id="constituency"></select><br>
+
+    <div id="candidates"></div>
+
+    <input type="number" id="ldf" placeholder="LDF Votes"><br>
+    <input type="number" id="udf" placeholder="UDF Votes"><br>
+    <input type="number" id="nda" placeholder="NDA Votes"><br>
+
+    <button onclick="updateVotes()">Update Votes</button>
+
+  </div>
+
+</div>
+
+<script>
+
+// 🔐 CHANGE PASSWORD HERE
+const PASSWORD = "admin123";
+
+// 🔗 YOUR API
+const API = "https://script.google.com/macros/s/AKfycbyPv2d4xyyVrT7ZGpw-v_Wjbl02oW04Xymoaco-Hedvs6t8rkQeuDuwAumCSh2u10ichA/exec";
+
+let dataStore = [];
+
+// LOGIN
+function login() {
+  let pass = document.getElementById("password").value;
+
+  if (pass === PASSWORD) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("panel").style.display = "block";
+    loadData();
+  } else {
+    alert("Wrong password");
+  }
+}
+
+// LOAD DATA
+function loadData() {
+  fetch(API)
+  .then(res => res.json())
+  .then(data => {
+
+    dataStore = data;
+
+    let dropdown = document.getElementById("constituency");
+    dropdown.innerHTML = "";
+
+    data.forEach(row => {
+      let opt = document.createElement("option");
+      opt.value = row.Constituency;
+      opt.text = row.Constituency + " (" + row.District + ")";
+      dropdown.appendChild(opt);
+    });
+
+    fillData();
+  });
+}
+
+// ON CHANGE
+document.getElementById("constituency").addEventListener("change", fillData);
+
+// FILL CURRENT DATA
+function fillData() {
+
+  let selected = document.getElementById("constituency").value;
+
+  let row = dataStore.find(r => r.Constituency === selected);
+
+  if (!row) return;
+
+  document.getElementById("ldf").value = row["LDF Votes"] || "";
+  document.getElementById("udf").value = row["UDF Votes"] || "";
+  document.getElementById("nda").value = row["NDA Votes"] || "";
+
+  document.getElementById("candidates").innerHTML = `
+    <p class="ldf">LDF: ${row["LDF Candidate"]}</p>
+    <p class="udf">UDF: ${row["UDF Candidate"]}</p>
+    <p class="nda">NDA: ${row["NDA Candidate"]}</p>
+  `;
+}
+
+// UPDATE
+function updateVotes() {
+
+  let payload = {
+    constituency: document.getElementById("constituency").value,
+    ldf: document.getElementById("ldf").value,
+    udf: document.getElementById("udf").value,
+    nda: document.getElementById("nda").value
+  };
+
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.text())
+  .then(() => {
+    alert("✅ Updated Successfully");
+    loadData();
+  })
+  .catch(() => alert("❌ Update failed"));
+}
+
+</script>
+
+</body>
+</html>

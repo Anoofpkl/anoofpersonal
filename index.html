@@ -1,111 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Anoof K — Dynamic Profile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome for social icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-gradient-to-r from-blue-50 to-green-50 min-h-screen p-6">
+<title>Kerala Legislative Assembly Election 2026</title>
 
-  <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl p-8 mt-8">
-    <!-- Header -->
-    <div class="flex items-center gap-6">
-      <img src="photo_6210470930346527443_x.jpg" alt="Anoof K" class="w-24 h-24 rounded-full shadow-md border-4 border-blue-100">
+<style>
+body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fff; }
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  border-bottom: 1px solid #eee;
+}
+.logo { height: 40px; }
+
+/* SEATS */
+.seatbar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px;
+  background: #fafafa;
+}
+.party-box {
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+}
+.ldf-box { background: #e53935; }
+.udf-box { background: #1e88e5; }
+.nda-box { background: #fb8c00; }
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  padding: 20px;
+  gap: 15px;
+}
+
+.card {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 15px;
+  background: #fafafa;
+}
+
+/* PARTY COLORS */
+.ldf { color: #e53935; font-weight: bold; }
+.udf { color: #1e88e5; font-weight: bold; }
+.nda { color: #fb8c00; font-weight: bold; }
+
+/* LEADING COLORS */
+.leading-ldf { color: #e53935; font-weight: bold; }
+.leading-udf { color: #1e88e5; font-weight: bold; }
+.leading-nda { color: #fb8c00; font-weight: bold; }
+
+.trailing { color: #999; }
+
+/* CARD HIGHLIGHT */
+.highlight-ldf { border: 2px solid #e53935; }
+.highlight-udf { border: 2px solid #1e88e5; }
+.highlight-nda { border: 2px solid #fb8c00; }
+
+/* TICKER */
+.ticker {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: black;
+  color: white;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-label {
+  background: red;
+  padding: 0 20px;
+  font-weight: bold;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-text {
+  position: absolute;
+  white-space: nowrap;
+  animation: scroll 35s linear infinite;
+  font-weight: bold;
+}
+
+.ldf-tick { color: #e53935; }
+.udf-tick { color: #1e88e5; }
+.nda-tick { color: #fb8c00; }
+
+@keyframes scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <img class="logo" src="https://maktoobmedia.com/assets/main/maktoob/img/logo.svg">
+  <div><b>KERALA LEGISLATIVE ASSEMBLY ELECTION 2026</b></div>
+</div>
+
+<div class="seatbar" id="seats"></div>
+<div class="grid" id="results"></div>
+
+<div class="ticker">
+  <div class="ticker-label">LEADS</div>
+  <div class="ticker-wrap">
+    <div class="ticker-text" id="ticker"></div>
+  </div>
+</div>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbyPv2d4xyyVrT7ZGpw-v_Wjbl02oW04Xymoaco-Hedvs6t8rkQeuDuwAumCSh2u10ichA/exec";
+
+let fullData = [];
+let startIndex = 0;
+const VISIBLE_COUNT = 12;
+
+function render() {
+
+  if (!fullData.length) {
+    document.getElementById("results").innerHTML = "No data";
+    return;
+  }
+
+  let html = "";
+  let ticker = "";
+  let ldf=0, udf=0, nda=0;
+
+  // SORT LATEST FIRST
+  fullData.sort((a,b)=> new Date(b["Last Updated"]||0) - new Date(a["Last Updated"]||0));
+
+  // TOTAL SEATS
+  fullData.forEach(row=>{
+    let l=+row["LDF Votes"], u=+row["UDF Votes"], n=+row["NDA Votes"];
+    if(!(l===0 && u===0 && n===0)){
+      let leader="LDF", max=l;
+      if(u>max){leader="UDF";max=u;}
+      if(n>max){leader="NDA";}
+      if(leader==="LDF") ldf++;
+      if(leader==="UDF") udf++;
+      if(leader==="NDA") nda++;
+    }
+  });
+
+  let visible = fullData.slice(startIndex, startIndex+VISIBLE_COUNT);
+
+  visible.forEach(row=>{
+
+    let l=+row["LDF Votes"], u=+row["UDF Votes"], n=+row["NDA Votes"];
+    let leader="Counting";
+
+    if(!(l===0 && u===0 && n===0)){
+      leader="LDF"; let max=l;
+      if(u>max){leader="UDF";max=u;}
+      if(n>max){leader="NDA";}
+    }
+
+    let leadCandidate =
+      leader==="LDF"?row["LDF Candidate"]:
+      leader==="UDF"?row["UDF Candidate"]:
+      leader==="NDA"?row["NDA Candidate"]:"";
+
+    let partyClass =
+      leader==="LDF"?"ldf-tick":
+      leader==="UDF"?"udf-tick":
+      leader==="NDA"?"nda-tick":"";
+
+    ticker += `
+      <span>
+        ${row.Constituency}:
+        ${
+          leader==="Counting"
+          ? "<span style='color:gray'>Counting Not Started</span>"
+          : `<span class="${partyClass}">${leader}</span> (${leadCandidate})`
+        }
+      </span> &nbsp; | &nbsp;
+    `;
+
+    function cls(p){
+      if(p!==leader) return "trailing";
+      return leader==="LDF"?"leading-ldf":
+             leader==="UDF"?"leading-udf":
+             "leading-nda";
+    }
+
+    let highlight =
+      leader==="LDF"?"highlight-ldf":
+      leader==="UDF"?"highlight-udf":
+      leader==="NDA"?"highlight-nda":"";
+
+    html += `
+    <div class="card ${highlight}">
+      <div><b>${row.Constituency}</b></div>
+      <div style="font-size:12px;color:gray">${row.District}</div>
+
+      <p class="ldf ${cls("LDF")}">LDF: ${l} (${row["LDF Candidate"]})</p>
+      <p class="udf ${cls("UDF")}">UDF: ${u} (${row["UDF Candidate"]})</p>
+      <p class="nda ${cls("NDA")}">NDA: ${n} (${row["NDA Candidate"]})</p>
+
       <div>
-        <h1 class="text-3xl font-extrabold text-gray-900">Anoof K</h1>
-        <p class="text-lg text-gray-600 font-medium mb-2">Independent Researcher & Web Analyst</p>
-        <div class="flex gap-3 text-xl">
-          <a href="https://www.linkedin.com/in/anoof-k-b69a1a338/" target="_blank"><i class="fab fa-linkedin hover:text-blue-700 transition"></i></a>
-          <a href="https://www.instagram.com/anoof_pulikkal" target="_blank"><i class="fab fa-instagram hover:text-pink-500 transition"></i></a>
-          <a href="https://www.facebook.com/Anoofpulikkal" target="_blank"><i class="fab fa-facebook hover:text-blue-600 transition"></i></a>
-          <a href="https://wa.me/919809438620" target="_blank"><i class="fab fa-whatsapp hover:text-green-600 transition"></i></a>
-        </div>
+        ${leader==="Counting"
+          ? "<span class='trailing'>Counting Not Started</span>"
+          : `<span class="${cls(leader)}">Leading: ${leader}</span>`
+        }
       </div>
     </div>
+    `;
+  });
 
-    <!-- Profile Summary -->
-    <section class="mt-10">
-      <h2 class="text-xl font-semibold mb-1">Profile Summary</h2>
-      <p class="text-gray-800">
-        BA B.Ed. (Economics, ITEP) student at Central University of Kerala.<br>
-        Focus on Macroeconomics, Social Policy, Environmental & Gender Economics.<br>
-        Passionate about real-world research, content creation, and digital analysis.
-      </p>
-    </section>
+  document.getElementById("results").innerHTML = html;
 
-    <!-- Experience Section -->
-    <section class="mt-8">
-      <h2 class="text-xl font-semibold mb-4">Experience</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-green-100 p-4 rounded-xl shadow-sm">
-          <h3 class="font-bold text-green-900">Intern – CDS Trivandrum</h3>
-          <p class="text-sm">Project: Social Mobility among Dalits in Tamil Nadu</p>
-        </div>
-        <div class="bg-blue-100 p-4 rounded-xl shadow-sm">
-          <h3 class="font-bold text-blue-900">Intern – Q Factory</h3>
-          <p class="text-sm">Content Creation, Academic Support, Documentation</p>
-        </div>
-        <div class="bg-yellow-100 p-4 rounded-xl shadow-sm md:col-span-2">
-          <h3 class="font-bold text-yellow-800">Contributor — THRIVE Project</h3>
-          <p class="text-sm">Life skills training & educational workshops for tribal students</p>
-        </div>
-      </div>
-    </section>
+  document.getElementById("seats").innerHTML =
+    `<div class="party-box ldf-box">LDF ${ldf}</div>
+     <div class="party-box udf-box">UDF ${udf}</div>
+     <div class="party-box nda-box">NDA ${nda}</div>`;
 
-    <!-- Research Papers -->
-    <section class="mt-8">
-      <h2 class="text-xl font-semibold mb-1">Research Papers</h2>
-      <ul class="list-disc pl-6 text-gray-700">
-        <li>Reason Behind the Rapid Growth of Wellness Industry in the 21st Century</li>
-        <li>Perception Towards Primary School Teachers Towards ICT</li>
-      </ul>
-    </section>
+  document.getElementById("ticker").innerHTML =
+    ticker ? ticker + ticker : "Counting yet to begin...";
+}
 
-    <!-- Skills & Languages -->
-    <section class="mt-8 flex flex-col md:flex-row gap-8">
-      <div>
-        <h3 class="font-semibold mb-2">Skills & Tools</h3>
-        <span class="inline-block bg-indigo-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Stata</span>
-        <span class="inline-block bg-pink-200 px-3 py-1 rounded-full m-1 text-sm font-medium">SPSS</span>
-        <span class="inline-block bg-blue-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Jamovi</span>
-        <span class="inline-block bg-green-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Web Analysis</span>
-        <span class="inline-block bg-green-200 px-3 py-1 rounded-full m-1 text-sm font-medium">Content Creation</span>
-      </div>
-      <div>
-        <h3 class="font-semibold mb-2">Languages</h3>
-        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">English</span>
-        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">Malayalam</span>
-        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">Hindi</span>
-        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">German (Beginner)</span>
-        <span class="inline-block bg-yellow-100 px-3 py-1 rounded-full m-1 text-sm font-medium">Urdu (Beginner)</span>
-      </div>
-    </section>
+// LOAD
+function loadData(){
+  fetch(API)
+  .then(r=>r.json())
+  .then(d=>{ fullData=d; render(); })
+  .catch(()=> document.getElementById("results").innerHTML="⚠️ Error loading");
+}
 
-    <!-- Articles & Contact -->
-    <section class="mt-8">
-      <a href="https://www.mediaoneonline.com/anoof-k-37740"
-         target="_blank"
-         class="underline text-blue-600 font-semibold">
-        MediaOne — Profile & Articles
-      </a>
-      <div class="mt-3 flex flex-col gap-1 text-gray-700">
-        <span><strong>Email:</strong> ankpkl500@gmail.com</span>
-        <span><strong>Phone:</strong> +91 98094 38620</span>
-        <span><strong>Location:</strong> Malappuram, Kerala</span>
-      </div>
-    </section>
+// ROTATE
+setInterval(()=>{
+  startIndex+=VISIBLE_COUNT;
+  if(startIndex>=fullData.length) startIndex=0;
+  render();
+},30000);
 
-    <footer class="mt-10 text-gray-500 text-center text-sm">
-      &copy; <span id="year"></span> Anoof K. All rights reserved.
-    </footer>
-  </div>
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+// REFRESH
+setInterval(loadData,10000);
+
+loadData();
+
+</script>
 </body>
 </html>
- 
