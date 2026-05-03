@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #f5f6fa;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  padding: 15px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.logo { height: 40px; }
+
+/* CARD */
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 320px;
+  text-align: center;
+}
+
+/* INPUTS */
+select, input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* PREVIEW */
+.preview {
+  margin-top: 15px;
+  background: #fafafa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* STATUS */
+.success { color: green; }
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <img class="logo" src="https://maktoobmedia.com/assets/main/maktoob/img/logo.svg">
+  <h3>Admin Dashboard</h3>
+</div>
+
+<div class="container">
+  <div class="card">
+
+    <h3>Update Seats</h3>
+
+    <select id="state"></select>
+    <select id="alliance"></select>
+
+    <input type="number" id="seats" placeholder="Enter seats">
+
+    <button onclick="update()">Update</button>
+
+    <div id="msg" class="success"></div>
+
+    <div id="preview" class="preview"></div>
+
+  </div>
+</div>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbyDLq11aLNLLWBCvZnch8DhbjcqF96GYl-mR1w9f2gIC_qjjFNOwYmWQ_twDh2N8jRs/exec";
+
+let dataStore = [];
+
+// LOAD DATA
+function loadData(){
+
+  fetch(API)
+  .then(res => res.json())
+  .then(data => {
+
+    dataStore = data;
+
+    let states = [...new Set(data.map(x=>x.State))];
+    let alliances = [...new Set(data.map(x=>x.Alliance))];
+
+    let s = document.getElementById("state");
+    let a = document.getElementById("alliance");
+
+    s.innerHTML = "";
+    a.innerHTML = "";
+
+    states.forEach(x=>{
+      s.innerHTML += `<option>${x}</option>`;
+    });
+
+    alliances.forEach(x=>{
+      a.innerHTML += `<option>${x}</option>`;
+    });
+
+    updatePreview();
+  });
+}
+
+// PREVIEW
+function updatePreview(){
+
+  let st = state.value;
+  let al = alliance.value;
+
+  let row = dataStore.find(r => r.State===st && r.Alliance===al);
+
+  if(row){
+    preview.innerHTML = `<b>${st}</b><br>${al}: ${row.Seats}`;
+  }
+}
+
+// LISTENERS
+state.addEventListener("change", updatePreview);
+alliance.addEventListener("change", updatePreview);
+
+// UPDATE FUNCTION
+function update(){
+
+  let payload = {
+    state: state.value,
+    alliance: alliance.value,
+    seats: seats.value
+  };
+
+  fetch(API,{
+    method:"POST",
+    body: JSON.stringify(payload)
+  })
+  .then(()=>{
+    msg.innerText = "✅ Updated successfully";
+    loadData();
+  })
+  .catch(()=>{
+    msg.innerText = "❌ Error updating";
+  });
+}
+
+// INIT
+loadData();
+
+</script>
+
+</body>
+</html>
