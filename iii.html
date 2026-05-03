@@ -27,7 +27,19 @@ body {
   margin-top: 50px;
 }
 
+/* LOGIN BOX */
+.login-box {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 300px;
+  text-align: center;
+}
+
+/* DASHBOARD CARD */
 .card {
+  display: none;
   background: white;
   padding: 25px;
   border-radius: 14px;
@@ -65,11 +77,13 @@ button {
 
 /* STATUS */
 .success { color: green; }
+.error { color: red; }
+
 </style>
 
 </head>
 
-<body>
+<body oncontextmenu="return false">
 
 <div class="header">
   <img class="logo" src="https://maktoobmedia.com/assets/main/maktoob/img/logo.svg">
@@ -77,7 +91,17 @@ button {
 </div>
 
 <div class="container">
-  <div class="card">
+
+  <!-- LOGIN -->
+  <div class="login-box" id="loginBox">
+    <h3>Admin Login</h3>
+    <input type="password" id="password" placeholder="Enter password">
+    <button onclick="login()">Login</button>
+    <div id="loginMsg" class="error"></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="card" id="dashboard">
 
     <h3>Update Seats</h3>
 
@@ -93,17 +117,33 @@ button {
     <div id="preview" class="preview"></div>
 
   </div>
+
 </div>
 
 <script>
 
 const API = "https://script.google.com/macros/s/AKfycbyDLq11aLNLLWBCvZnch8DhbjcqF96GYl-mR1w9f2gIC_qjjFNOwYmWQ_twDh2N8jRs/exec";
 
+/* 🔐 CHANGE PASSWORD HERE */
+const ADMIN_PASSWORD = "12345";
+
 let dataStore = [];
 
-// LOAD DATA
-function loadData(){
+/* LOGIN FUNCTION */
+function login(){
+  let pass = document.getElementById("password").value;
 
+  if(pass === ADMIN_PASSWORD){
+    loginBox.style.display = "none";
+    dashboard.style.display = "block";
+    loadData();
+  } else {
+    loginMsg.innerText = "❌ Wrong password";
+  }
+}
+
+/* LOAD DATA */
+function loadData(){
   fetch(API)
   .then(res => res.json())
   .then(data => {
@@ -113,27 +153,23 @@ function loadData(){
     let states = [...new Set(data.map(x=>x.State))];
     let alliances = [...new Set(data.map(x=>x.Alliance))];
 
-    let s = document.getElementById("state");
-    let a = document.getElementById("alliance");
-
-    s.innerHTML = "";
-    a.innerHTML = "";
+    state.innerHTML = "";
+    alliance.innerHTML = "";
 
     states.forEach(x=>{
-      s.innerHTML += `<option>${x}</option>`;
+      state.innerHTML += `<option>${x}</option>`;
     });
 
     alliances.forEach(x=>{
-      a.innerHTML += `<option>${x}</option>`;
+      alliance.innerHTML += `<option>${x}</option>`;
     });
 
     updatePreview();
   });
 }
 
-// PREVIEW
+/* PREVIEW */
 function updatePreview(){
-
   let st = state.value;
   let al = alliance.value;
 
@@ -144,13 +180,12 @@ function updatePreview(){
   }
 }
 
-// LISTENERS
+/* LISTENERS */
 state.addEventListener("change", updatePreview);
 alliance.addEventListener("change", updatePreview);
 
-// UPDATE FUNCTION
+/* UPDATE */
 function update(){
-
   let payload = {
     state: state.value,
     alliance: alliance.value,
@@ -170,8 +205,16 @@ function update(){
   });
 }
 
-// INIT
-loadData();
+/* ❌ BLOCK INSPECT SHORTCUTS (basic deterrent only) */
+document.onkeydown = function(e) {
+  if (
+    e.keyCode == 123 || // F12
+    (e.ctrlKey && e.shiftKey && e.keyCode == 73) || // Ctrl+Shift+I
+    (e.ctrlKey && e.keyCode == 85) // Ctrl+U
+  ) {
+    return false;
+  }
+};
 
 </script>
 
