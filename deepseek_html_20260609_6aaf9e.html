@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Agriculture Policy Quiz | 100 MCQs with Answer Feedback</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef5e9 0%, #d4e2ce 100%);
+            padding: 1.5rem 1rem;
+            min-height: 100vh;
+        }
+
+        .quiz-wrapper {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .quiz-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            border-radius: 2.5rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .quiz-header h1 {
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #1b4d1f, #3a8c3e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .sub {
+            color: #2b5e2f;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        /* stats bar */
+        .stats-panel {
+            background: white;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+        }
+        .stat {
+            background: #eef3ec;
+            padding: 0.4rem 1.1rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            color: #1f5427;
+        }
+        .score-badge {
+            background: #2c6e2f;
+            color: white;
+        }
+
+        /* main card */
+        .question-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+            transition: 0.2s;
+        }
+
+        .q-num {
+            display: inline-block;
+            background: #256f29;
+            color: white;
+            border-radius: 40px;
+            padding: 0.2rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.45rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 1.7rem;
+            color: #1c2e1a;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-item {
+            background: #fafdf8;
+            border: 2px solid #daecd6;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background: #eff7ec;
+            border-color: #8fb887;
+            transform: translateX(4px);
+        }
+        .option-item.selected {
+            background: #e0f2dc;
+            border-color: #2c6e2f;
+        }
+        .option-item input {
+            margin-right: 1rem;
+            accent-color: #2c6e2f;
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+        }
+        .option-item label {
+            font-weight: 500;
+            color: #1f3a1d;
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.98rem;
+        }
+
+        .feedback {
+            background: #fff4e0;
+            border-left: 6px solid #e67e22;
+            padding: 0.9rem 1.2rem;
+            border-radius: 1rem;
+            margin: 1rem 0 1.5rem;
+            font-weight: 500;
+            display: none;
+        }
+        .feedback.correct-feedback {
+            background: #e2f3e2;
+            border-left-color: #2e7d32;
+            color: #145214;
+        }
+        .feedback.wrong-feedback {
+            background: #ffe6e6;
+            border-left-color: #c62828;
+            color: #a12222;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        button {
+            background: #2c6e2f;
+            border: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        button.secondary {
+            background: #5f6c64;
+        }
+        button.reset-btn {
+            background: #c97e2c;
+        }
+        button:active {
+            transform: scale(0.96);
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #3f6140;
+        }
+
+        @media (max-width: 620px) {
+            .question-text {
+                font-size: 1.2rem;
+            }
+            .stats-panel {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-wrapper">
+    <div class="quiz-header">
+        <h1>🌾 Agricultural Policy & Economy</h1>
+        <div class="sub">100 MCQs | Instant feedback + correct answer if wrong</div>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stat">📋 Q<span id="currentIdxDisplay">1</span>/<span id="totalQDisplay">100</span></div>
+        <div class="stat score-badge">✅ Score: <span id="scoreDisplay">0</span> / <span id="totalPossible">100</span></div>
+        <div class="stat">✍️ Attempted: <span id="attemptedDisplay">0</span></div>
+        <button id="resetAllBtn" class="reset-btn" style="padding: 0.4rem 1rem;">⟳ Reset Quiz</button>
+    </div>
+
+    <div class="question-card">
+        <div class="q-num" id="qNumLabel">Question 1</div>
+        <div class="question-text" id="questionText">Loading questions...</div>
+        <div class="options-list" id="optionsContainer"></div>
+        <div class="feedback" id="feedbackMessage"></div>
+        <div class="nav-group">
+            <button id="prevBtn" class="secondary">◀ Previous</button>
+            <button id="submitBtn" style="background:#1e5622;">✓ Submit Answer</button>
+            <button id="nextBtn">Next ▶</button>
+        </div>
+    </div>
+    <footer>✔️ Select option → Submit → If wrong, correct answer will be shown. Score updates automatically.</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 100 MCQs based strictly on the provided PDF (Unit-4)
+    // Each object: question, options array, correct (exact string)
+    // --------------------------------------------------------------
+    const QUESTIONS_DATA = [
+        { text: "What was the share of the agriculture sector in national economy in 2020‑21?", options: ["55%", "19.9%", "35%", "44%"], correct: "19.9%" },
+        { text: "Which of the following is an example of forward linkage?", options: ["Industry supplying fertilisers to agriculture", "Banks providing loans to farmers", "Agriculture supplying raw materials to industries", "Transporters carrying inputs to farms"], correct: "Agriculture supplying raw materials to industries" },
+        { text: "An increase in food prices affects other sectors because:", options: ["People spend more on food, leaving less for other goods", "Industrial output automatically increases", "Government reduces taxes", "Farmers stop producing"], correct: "People spend more on food, leaving less for other goods" },
+        { text: "Which sector provides fertilisers, machinery, and transport to agriculture?", options: ["Tertiary sector only", "Industrial sector (backward linkage)", "Foreign sector", "Service sector only"], correct: "Industrial sector (backward linkage)" },
+        { text: "The linkage in which agriculture depends on other sectors for its survival is called:", options: ["Forward linkage", "Backward linkage", "Horizontal linkage", "Vertical integration"], correct: "Backward linkage" },
+        { text: "Foodgrain production in India increased from 50 million tonnes (1950‑51) to:", options: ["150 million tonnes in 2019‑20", "297.5 million tonnes in 2019‑20", "100 million tonnes in 2000", "400 million tonnes in 2020"], correct: "297.5 million tonnes in 2019‑20" },
+        { text: "The decline in agriculture’s share in GDP from 55% to 19.9% indicates:", options: ["Agriculture is no longer important", "Other sectors have grown faster", "Farmers stopped working", "Government closed farms"], correct: "Other sectors have grown faster" },
+        { text: "What happens if input prices (e.g., fertilisers) increase?", options: ["Cost of agricultural production falls", "Farm commodity prices also rise", "Farmers benefit immediately", "Consumer prices remain unchanged"], correct: "Farm commodity prices also rise" },
+        { text: "Which of the following sectors depends heavily on agriculture for its business?", options: ["Banking sector", "Transport sector", "Trading sector", "All of the above"], correct: "All of the above" },
+        { text: "The balance between agricultural and non‑agricultural sectors is maintained mainly by:", options: ["International organisations", "Government policies", "Private traders", "Farmers’ unions"], correct: "Government policies" },
+
+        { text: "Which commission was established in 1965 to advise on agricultural price policy?", options: ["NITI Aayog", "Agricultural Prices Commission (later CACP)", "Finance Commission", "Planning Commission"], correct: "Agricultural Prices Commission (later CACP)" },
+        { text: "Since March 1985, the Agricultural Prices Commission is known as:", options: ["Food Corporation of India", "Commission for Agricultural Costs and Prices (CACP)", "Minimum Support Price Committee", "National Farmers’ Commission"], correct: "Commission for Agricultural Costs and Prices (CACP)" },
+        { text: "Who fixes the Minimum Support Price (MSP) for major agricultural commodities?", options: ["State Governments alone", "Ministry of Agriculture after considering CACP recommendations", "World Trade Organisation", "Private agribusiness firms"], correct: "Ministry of Agriculture after considering CACP recommendations" },
+        { text: "Why is a remunerative price environment important for farmers?", options: ["To reduce their cost of production", "To provide incentive to adopt modern technology", "To discourage multiple cropping", "To decrease crop acreage"], correct: "To provide incentive to adopt modern technology" },
+        { text: "According to the PDF, MSP for paddy (Common) in 2019‑20 was:", options: ["₹1525", "₹1815", "₹1835", "₹1750"], correct: "₹1835" },
+        { text: "MSP for wheat in 2013‑14 was:", options: ["₹1310", "₹1350", "₹1525", "₹1840"], correct: "₹1350" },
+        { text: "MSP for paddy (Grade‑A) in 2016‑17 was:", options: ["₹1470", "₹1510", "₹1525", "₹1470"], correct: "₹1510" },
+        { text: "MSPs have continuously increased mainly because:", options: ["Government wants to reduce production", "Increased cost of production (labour, inputs)", "Farmers are rich and demand higher prices", "International pressure"], correct: "Increased cost of production (labour, inputs)" },
+        { text: "India was the first country in Asia to:", options: ["Introduce green revolution", "Set up permanent institutional arrangements for agricultural price policy", "Abolish subsidies", "Nationalise banks"], correct: "Set up permanent institutional arrangements for agricultural price policy" },
+        { text: "CACP also advises on issue prices of:", options: ["Only foodgrains", "Fertilisers, pesticides, quality seeds and other inputs", "Only wheat and paddy", "Industrial goods"], correct: "Fertilisers, pesticides, quality seeds and other inputs" },
+
+        { text: "A subsidy is defined as:", options: ["Additional tax on commodities", "That component of total price which a buyer need not pay", "A compulsory payment to government", "Market price minus profit"], correct: "That component of total price which a buyer need not pay" },
+        { text: "If seed price is ₹11 and 20% subsidy is given, the net price paid is:", options: ["₹9.80", "₹8.80", "₹10.00", "₹7.80"], correct: "₹8.80" },
+        { text: "Approximately what percentage of Indian farmers are small and marginal?", options: ["50%", "72%", "85%", "60%"], correct: "72%" },
+        { text: "Why are subsidies given to agricultural inputs?", options: ["To help poor farmers buy better quality inputs", "To increase government revenue", "To discourage use of fertilisers", "To reduce production"], correct: "To help poor farmers buy better quality inputs" },
+        { text: "According to WTO, agricultural production subsidies are divided into:", options: ["Direct and indirect", "Product specific and non‑product specific", "Cash and kind", "Short‑term and long‑term"], correct: "Product specific and non‑product specific" },
+        { text: "Product specific subsidy refers to:", options: ["Subsidy on electricity", "Price support programme for specific crops (e.g., MSP)", "Subsidy on seeds", "Subsidy on irrigation"], correct: "Price support programme for specific crops (e.g., MSP)" },
+        { text: "Non‑product specific subsidy refers to:", options: ["Separate support price for each commodity", "Subsidies on inputs like irrigation, electricity, seeds, credit", "Only fertiliser subsidy", "Export subsidy"], correct: "Subsidies on inputs like irrigation, electricity, seeds, credit" },
+        { text: "Which of the following is an example of non‑product specific subsidy?", options: ["MSP for wheat", "Subsidy on agricultural credit", "MSP for paddy", "Price support for sugarcane"], correct: "Subsidy on agricultural credit" },
+        { text: "The high yielding variety (HYV) programme was launched with Mexican varieties of wheat in:", options: ["1950‑51", "1964‑65", "1971‑72", "1980‑81"], correct: "1964‑65" },
+        { text: "Nationalisation of 14 major commercial banks in July 1969 was done to:", options: ["Reduce subsidies", "Ensure sufficient funds as loans to farmers", "Close rural branches", "Increase interest rates"], correct: "Ensure sufficient funds as loans to farmers" },
+
+        { text: "The correct sequence of seed production is:", options: ["Certified → Foundation → Breeder", "Breeder → Foundation → Certified", "Foundation → Breeder → Certified", "Certified → Breeder → Foundation"], correct: "Breeder → Foundation → Certified" },
+        { text: "Breeder seeds are:", options: ["Seeds certified by National Seeds Corporation", "Good quality seeds evolved by scientists on research farms", "Seeds used by farmers directly", "Seeds imported from abroad"], correct: "Good quality seeds evolved by scientists on research farms" },
+        { text: "Foundation seeds are obtained by:", options: ["Growing breeder seeds on a large scale", "Directly selling to farmers", "Mixing breeder and certified seeds", "Importing from other countries"], correct: "Growing breeder seeds on a large scale" },
+        { text: "Certified seeds are:", options: ["Seeds produced by farmers without any check", "Seeds certified by certification agencies and used by farmers", "Seeds only for export", "Seeds that are not subsidised"], correct: "Seeds certified by certification agencies and used by farmers" },
+        { text: "The major portion of fertiliser subsidy comes in the form of:", options: ["Direct cash transfer to farmers", "Absorption of import costs and transportation costs", "Reducing GST", "Giving free fertilisers to all"], correct: "Absorption of import costs and transportation costs" },
+        { text: "The annual total subsidy on fertilisers (as per PDF estimate) is around:", options: ["₹500 crores", "₹2000 crores", "₹10,000 crores", "₹5000 crores"], correct: "₹2000 crores" },
+        { text: "Subsidies on water (irrigation) are usually given by:", options: ["Central Government", "State Governments", "World Bank", "Private companies"], correct: "State Governments" },
+        { text: "Major and medium irrigation projects are treated as:", options: ["Profit‑making enterprises", "Social utility projects", "Private investments", "Foreign aided projects"], correct: "Social utility projects" },
+        { text: "Water cess charged to farmers is just enough to meet:", options: ["Capital cost of the project", "Maintenance cost of the projects", "Farmers’ profit", "Interest on loans"], correct: "Maintenance cost of the projects" },
+        { text: "Nearly what percentage of Indian villages are supplied with electricity?", options: ["50%", "80%", "95%", "60%"], correct: "80%" },
+
+        { text: "Electricity charges for irrigation purposes are:", options: ["Higher than industrial rates", "Lower than industrial rates", "Same as domestic rates", "Same as commercial rates"], correct: "Lower than industrial rates" },
+        { text: "Subsidies on agricultural implements aim to:", options: ["Discourage scientific cultivation", "Encourage scientific methods of cultivation", "Increase import of machinery", "Reduce farm output"], correct: "Encourage scientific methods of cultivation" },
+        { text: "Under a special scheme, small farmers could get loans at:", options: ["0%", "4% while others pay 12‑13%", "10%", "2%"], correct: "4% while others pay 12‑13%" },
+        { text: "During drought or floods, State Governments may:", options: ["Increase interest rates", "Write off loans or waive interest", "Seize farmers’ land", "Stop all subsidies"], correct: "Write off loans or waive interest" },
+        { text: "Mini‑kits provided by Government contain:", options: ["Only seeds", "Package of seeds, fertilisers, chemicals – free or very low cost", "Only fertilisers", "Only pesticides"], correct: "Package of seeds, fertilisers, chemicals – free or very low cost" },
+        { text: "Which region was given mini‑kits to increase rice production?", options: ["Punjab", "North‑eastern states", "Kerala", "Gujarat"], correct: "North‑eastern states" },
+        { text: "The cost of educating farmers through extension programmes is:", options: ["Measurable in specific units", "Unaccountable (not measurable as specific units)", "Always recovered from farmers", "Paid by World Bank"], correct: "Unaccountable (not measurable as specific units)" },
+        { text: "Regulated markets, all‑weather roads, market information are examples of:", options: ["Direct subsidies", "Indirect subsidies / support to farmers", "Product specific subsidies", "Taxes"], correct: "Indirect subsidies / support to farmers" },
+        { text: "How do consumers benefit from agricultural subsidies?", options: ["They pay higher taxes", "Cost of production is lowered, so food prices are lower", "Farmers stop producing", "Government earns more profit"], correct: "Cost of production is lowered, so food prices are lower" },
+        { text: "According to Figure 4.1, input subsidies lead to:", options: ["Higher cost of production", "Lower cost of production and increased production → consumer benefits", "Decreased agricultural production", "No effect on consumer prices"], correct: "Lower cost of production and increased production → consumer benefits" },
+
+        { text: "At the time of independence, the three land tenure systems were:", options: ["Zamindari, Mahalwari, Ryotwari", "Zamindari, Janmari, Ryotwari", "Mahalwari, Patelwari, Zamindari", "Ryotwari, Malguzari, Zamindari"], correct: "Zamindari, Mahalwari, Ryotwari" },
+        { text: "One of the main objectives of land reforms was:", options: ["To increase the power of zamindars", "To eliminate exploitation and provide security to actual cultivators", "To promote only large farms", "To discourage cooperative farming"], correct: "To eliminate exploitation and provide security to actual cultivators" },
+        { text: "Ceiling on agricultural holdings means:", options: ["No limit on land ownership", "Statutory limit on the area an individual can keep", "All land must be owned by government", "Farmers cannot sell land"], correct: "Statutory limit on the area an individual can keep" },
+        { text: "Which article of the Indian Constitution stipulates that states should ensure adequate means of livelihood and equitable distribution?", options: ["Article 14", "Article 21", "Article 39", "Article 32"], correct: "Article 39" },
+        { text: "How many times has the Constitution been amended to remove legal obstacles to land reform?", options: ["5 times", "13 times", "10 times", "20 times"], correct: "13 times" },
+        { text: "The right to property was deleted from the list of fundamental rights by which amendment?", options: ["24th Amendment", "42nd Amendment", "44th Amendment", "73rd Amendment"], correct: "44th Amendment" },
+        { text: "Which was the first state to impose a ceiling on agricultural landholdings?", options: ["Punjab", "Uttar Pradesh", "West Bengal", "Tamil Nadu"], correct: "West Bengal" },
+        { text: "The West Bengal Land Reforms Act was enacted in:", options: ["1947", "1955", "1965", "1972"], correct: "1955" },
+        { text: "In which year were ceiling limits further brought down due to acute food crisis?", options: ["1965‑66", "1974‑75", "1980‑81", "1990‑91"], correct: "1974‑75" },
+        { text: "Over how many laws related to land reforms have been enacted in all states?", options: ["100", "200", "270", "500"], correct: "270" },
+
+        { text: "Which of the following is a direct tax in agriculture?", options: ["GST on fertilisers", "Land revenue", "Excise duty on farm machinery", "Import duty on seeds"], correct: "Land revenue" },
+        { text: "Direct taxes in agriculture are levied and collected by:", options: ["Central Government", "State Governments", "Local panchayats", "Cooperative societies"], correct: "State Governments" },
+        { text: "In 1951‑52, agriculture contributed what ratio of direct+indirect taxes compared to non‑agriculture?", options: ["20:80", "44:56", "60:40", "30:70"], correct: "44:56" },
+        { text: "In 1997‑98, agriculture’s contribution to total taxes was estimated at:", options: ["₹46,100 crores", "₹1,77,900 crores", "₹200 crores", "₹450 crores"], correct: "₹46,100 crores" },
+        { text: "Between 1951 and 1998, average tax on the agricultural sector has:", options: ["Increased steeply", "Fallen steeply", "Remained constant", "Doubled"], correct: "Fallen steeply" },
+
+        { text: "How many types of extension programmes are mentioned in the PDF?", options: ["Two", "Three", "Four", "Five"], correct: "Four" },
+        { text: "Which of the following is NOT a type of extension programme in India?", options: ["Extension Service of State Departments of Agriculture", "Extension activity of ICAR and SAUs", "Extension programme of private telecom companies", "Special rural development programmes"], correct: "Extension programme of private telecom companies" },
+        { text: "The main extension system comprises directorate of extension at:", options: ["District level only", "Union ministry of agriculture and state governments", "Block level only", "Village level only"], correct: "Union ministry of agriculture and state governments" },
+        { text: "The extension system of ICAR/SAU plays which role?", options: ["Direct production of foodgrains", "Catalytic and supportive role, developing extension methodology", "Collecting land revenue", "Setting MSP"], correct: "Catalytic and supportive role, developing extension methodology" },
+        { text: "ATMA stands for:", options: ["Agricultural Technology Management Agency", "Agriculture Training and Marketing Authority", "All India Technical Management Agency", "Agricultural Trade and Market Association"], correct: "Agricultural Technology Management Agency" },
+        { text: "ATMA is established at which level?", options: ["National level", "State level", "District level", "Village level"], correct: "District level" },
+        { text: "ATMA is an autonomous agency to:", options: ["Fix MSP", "Assess extension needs of farmers in a participatory mode", "Import fertilisers", "Regulate land ceiling"], correct: "Assess extension needs of farmers in a participatory mode" },
+        { text: "Private input companies are involved in transfer of technologies related to:", options: ["Only seeds", "Chemicals, mechanical and biological technologies", "Only irrigation", "Only land reforms"], correct: "Chemicals, mechanical and biological technologies" },
+        { text: "Which of the following also promotes commodity‑specific extension activities?", options: ["KVK", "Commodity groups/boards", "RBI", "CACP"], correct: "Commodity groups/boards" },
+        { text: "Some NGOs are managing which ICAR‑supported institutions?", options: ["Agricultural colleges", "KVKs (Krishi Vigyan Kendras)", "Seed corporations", "Regulated markets"], correct: "KVKs (Krishi Vigyan Kendras)" },
+
+        { text: "Which fund was set up during 1990s to increase resource availability for rural infrastructure?", options: ["NABARD", "Rural Infrastructure Development Fund (RIDF)", "Bharat Nirman Fund", "Farmer Investment Fund"], correct: "Rural Infrastructure Development Fund (RIDF)" },
+        { text: "The agro‑industry policy aims to increase food processing from present 3% to ____ by 2010 and ____ by 2025.", options: ["5%, 15%", "10%, 25%", "15%, 30%", "20%, 40%"], correct: "10%, 25%" },
+        { text: "Rural infrastructure does NOT include:", options: ["Power", "Storage", "Urban shopping malls", "Market facilities"], correct: "Urban shopping malls" },
+        { text: "The Bharat Nirman Programme focuses on:", options: ["Only urban development", "Road, irrigation, power, telecommunication in rural areas", "Industrialisation of cities", "Export promotion"], correct: "Road, irrigation, power, telecommunication in rural areas" },
+        { text: "Which new policy measures encourage private investment in agro‑processing?", options: ["Higher taxes on processed food", "Fiscal policy changes, export‑import relaxations, contract farming", "Ban on private investment", "Nationalisation of food industry"], correct: "Fiscal policy changes, export‑import relaxations, contract farming" },
+        { text: "Contract farming and land leasing arrangements have been allowed to encourage:", options: ["Greater private investment in rural sector", "Reduction in farm output", "Migration to cities", "Land ceiling violations"], correct: "Greater private investment in rural sector" },
+        { text: "At present, agricultural investment policy is:", options: ["A separate standalone policy", "Imbedded with sub‑sector policies on water, seed, agro‑industry, marketing, etc.", "Controlled entirely by World Bank", "Not existent"], correct: "Imbedded with sub‑sector policies on water, seed, agro‑industry, marketing, etc." },
+
+        { text: "The National Agriculture Policy (NAP) was implemented in which year?", options: ["1991", "2000", "2007", "2015"], correct: "2000" },
+        { text: "NAP aims to achieve a growth rate in excess of ____ per annum in agriculture.", options: ["2%", "3%", "4%", "5%"], correct: "4%" },
+        { text: "Which of the following is NOT a stated aim of NAP?", options: ["Growth based on efficient use of resources", "Growth with equity", "Demand driven growth", "Maximising imports of agricultural products"], correct: "Maximising imports of agricultural products" },
+        { text: "NAP aims to face challenges arising from:", options: ["Only climate change", "Economic liberalisation and globalisation", "Decreasing population", "Nationalisation of banks"], correct: "Economic liberalisation and globalisation" },
+        { text: "Which of the following is a component of NAP as per the PDF?", options: ["Sustainable agriculture", "Food and nutritional security", "Generation and transfer of technology", "All of the above"], correct: "All of the above" },
+        { text: "Under NAP, 'Inputs management' refers to:", options: ["Banning all chemical inputs", "Efficient use and availability of inputs like seeds, fertilisers, water", "Only labour management", "Only land management"], correct: "Efficient use and availability of inputs like seeds, fertilisers, water" },
+        { text: "NAP emphasises 'Risk management' for farmers. This includes:", options: ["Crop insurance and other risk mitigation", "Removing all risks", "Only price risk", "Only weather risk"], correct: "Crop insurance and other risk mitigation" },
+        { text: "Which NAP component focuses on creating storage, processing, and marketing infrastructure?", options: ["Sustainable agriculture", "Investment in agriculture", "Institutional structure", "Management reforms"], correct: "Investment in agriculture" },
+        { text: "NAP aims to maximise benefits from:", options: ["Domestic markets only", "Exports of agricultural products", "Import of cheap grains", "Subsidies from WTO"], correct: "Exports of agricultural products" },
+        { text: "According to NAP, growth must be sustainable in which three ways?", options: ["Technologically, environmentally, economically", "Socially, politically, culturally", "Financially, monetarily, fiscally", "Locally, regionally, nationally"], correct: "Technologically, environmentally, economically" },
+
+        { text: "The National Commission on Farmers was first set up under the chairmanship of:", options: ["Prof. M.S. Swaminathan", "Sh. Sompal", "Dr. C. Rangarajan", "Sh. Sharad Pawar"], correct: "Sh. Sompal" },
+        { text: "The National Commission on Farmers was reconstituted under the chairmanship of:", options: ["Sh. Sompal", "Prof. M.S. Swaminathan", "Dr. Manmohan Singh", "Sh. Narendra Modi"], correct: "Prof. M.S. Swaminathan" },
+        { text: "How many reports did the National Commission on Farmers produce?", options: ["Three", "Four", "Five", "Six"], correct: "Five" },
+        { text: "The National Policy for Farmers was approved by the Government of India in:", options: ["2000", "2004", "2007", "2010"], correct: "2007" },
+        { text: "The National Policy for Farmers is based on the draft prepared by:", options: ["CACP", "National Commission on Farmers (NCF)", "ICAR", "Ministry of Finance"], correct: "National Commission on Farmers (NCF)" },
+        { text: "Which of the following is a practical activity suggested in the PDF?", options: ["Collect data on subsidies from block development officer", "Visit an agricultural research station on a field day", "Visit Department of Agriculture to list training programmes", "All of the above"], correct: "All of the above" },
+        { text: "According to the PDF, education and training are the foundation for:", options: ["Only production", "Prosperous production, distribution, and consumption for nourishment", "Only export", "Only marketing"], correct: "Prosperous production, distribution, and consumption for nourishment" },
+        { text: "The phrase 'unaccountable cost' in the context of subsidies refers to:", options: ["Costs that are hidden", "The cost of educating farmers which is not measurable as specific units", "Illegal subsidies", "Costs paid by foreign governments"], correct: "The cost of educating farmers which is not measurable as specific units" }
+    ];
+
+    const TOTAL = QUESTIONS_DATA.length;
+    let userSelections = new Array(TOTAL).fill(null);      // stores selected answer string
+    let answerStatus = new Array(TOTAL).fill(null);        // true=correct, false=wrong, null=not submitted
+    let currentIndex = 0;
+
+    // DOM elements
+    const questionTextEl = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const feedbackDiv = document.getElementById("feedbackMessage");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const resetBtn = document.getElementById("resetAllBtn");
+    const currentIdxSpan = document.getElementById("currentIdxDisplay");
+    const totalQSpan = document.getElementById("totalQDisplay");
+    const scoreSpan = document.getElementById("scoreDisplay");
+    const attemptedSpan = document.getElementById("attemptedDisplay");
+    const totalPossibleSpan = document.getElementById("totalPossible");
+    totalPossibleSpan.innerText = TOTAL;
+    totalQSpan.innerText = TOTAL;
+
+    function updateStats() {
+        let correctCount = 0;
+        let attempted = 0;
+        for (let i = 0; i < TOTAL; i++) {
+            if (answerStatus[i] === true) correctCount++;
+            if (answerStatus[i] !== null) attempted++;
+        }
+        scoreSpan.innerText = correctCount;
+        attemptedSpan.innerText = attempted;
+    }
+
+    function renderCurrentQuestion() {
+        const q = QUESTIONS_DATA[currentIndex];
+        questionTextEl.innerText = q.text;
+        document.getElementById("qNumLabel").innerText = `Question ${currentIndex+1}`;
+        currentIdxSpan.innerText = currentIndex+1;
+
+        const savedSelection = userSelections[currentIndex];
+        let optsHtml = "";
+        q.options.forEach((opt, idx) => {
+            const isChecked = (savedSelection === opt);
+            const checkedAttr = isChecked ? 'checked' : '';
+            optsHtml += `
+                <div class="option-item ${isChecked ? 'selected' : ''}" data-opt-val="${opt.replace(/"/g, '&quot;')}">
+                    <input type="radio" name="quizOption" id="opt_${idx}" value="${opt.replace(/"/g, '&quot;')}" ${checkedAttr}>
+                    <label for="opt_${idx}">${opt}</label>
+                </div>
+            `;
+        });
+        optionsContainer.innerHTML = optsHtml;
+
+        // attach click for radio styling
+        document.querySelectorAll('.option-item').forEach(div => {
+            const radio = div.querySelector('input[type="radio"]');
+            div.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    radio.checked = true;
+                    const changeEv = new Event('change', { bubbles: true });
+                    radio.dispatchEvent(changeEv);
+                }
+            });
+            radio.addEventListener('change', () => {
+                document.querySelectorAll('.option-item').forEach(d => d.classList.remove('selected'));
+                if (radio.checked) div.classList.add('selected');
+                // update temporary selection variable when radio changes (but not submitted yet)
+                const selectedVal = radio.value;
+                userSelections[currentIndex] = selectedVal;
+            });
+        });
+
+        // Show feedback if already answered
+        if (answerStatus[currentIndex] !== null) {
+            const isCorrect = answerStatus[currentIndex];
+            const correctAns = QUESTIONS_DATA[currentIndex].correct;
+            feedbackDiv.style.display = "block";
+            if (isCorrect) {
+                feedbackDiv.className = "feedback correct-feedback";
+                feedbackDiv.innerHTML = `✅ Correct!`;
+            } else {
+                feedbackDiv.className = "feedback wrong-feedback";
+                feedbackDiv.innerHTML = `❌ Wrong. Correct answer: ${correctAns}`;
+            }
+        } else {
+            feedbackDiv.style.display = "none";
+            feedbackDiv.innerHTML = "";
+        }
+        updateStats();
+    }
+
+    function submitCurrent() {
+        const selectedRadio = document.querySelector('input[name="quizOption"]:checked');
+        if (!selectedRadio) {
+            feedbackDiv.style.display = "block";
+            feedbackDiv.className = "feedback wrong-feedback";
+            feedbackDiv.innerHTML = "⚠️ Please select an option before submitting.";
+            return;
+        }
+        const selectedAnswer = selectedRadio.value;
+        const currentQ = QUESTIONS_DATA[currentIndex];
+        const isAnsCorrect = (selectedAnswer === currentQ.correct);
+        // store selection & status
+        userSelections[currentIndex] = selectedAnswer;
+        answerStatus[currentIndex] = isAnsCorrect;
+        // show feedback
+        feedbackDiv.style.display = "block";
+        if (isAnsCorrect) {
+            feedbackDiv.className = "feedback correct-feedback";
+            feedbackDiv.innerHTML = `✅ Correct!`;
+        } else {
+            feedbackDiv.className = "feedback wrong-feedback";
+            feedbackDiv.innerHTML = `❌ Wrong. Correct answer: ${currentQ.correct}`;
+        }
+        updateStats();
+        renderCurrentQuestion();   // re-render to persist selection highlight & keep feedback
+    }
+
+    function nextQuestion() {
+        if (currentIndex < TOTAL - 1) {
+            currentIndex++;
+            renderCurrentQuestion();
+        } else {
+            feedbackDiv.style.display = "block";
+            feedbackDiv.className = "feedback";
+            feedbackDiv.innerHTML = "🏁 You've completed all questions! Press Reset to try again.";
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderCurrentQuestion();
+        } else {
+            feedbackDiv.style.display = "block";
+            feedbackDiv.className = "feedback";
+            feedbackDiv.innerHTML = "📌 This is the first question.";
+            setTimeout(() => {
+                if (answerStatus[currentIndex] === null) feedbackDiv.style.display = "none";
+            }, 1500);
+        }
+    }
+
+    function resetQuiz() {
+        userSelections = new Array(TOTAL).fill(null);
+        answerStatus = new Array(TOTAL).fill(null);
+        currentIndex = 0;
+        updateStats();
+        renderCurrentQuestion();
+        feedbackDiv.style.display = "none";
+        feedbackDiv.innerHTML = "";
+    }
+
+    submitBtn.addEventListener("click", submitCurrent);
+    nextBtn.addEventListener("click", nextQuestion);
+    prevBtn.addEventListener("click", prevQuestion);
+    resetBtn.addEventListener("click", resetQuiz);
+
+    // initial render
+    renderCurrentQuestion();
+    updateStats();
+</script>
+</body>
+</html>
