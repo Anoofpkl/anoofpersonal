@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EcoLens — economics, written like it matters</title>
+<meta name="description" content="Economics for people who have better things to do. Real numbers, no jargon, written like it matters." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,680&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --ink:#14110F;
+    --moss:#3D5A3D;
+    --stone:#9B8B6F;
+    --stone-line: rgba(20,17,15,0.12);
+    --ink-dim: rgba(20,17,15,0.58);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; }
+  }
+  a{ color:inherit; }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    max-width:980px;
+    margin:0 auto;
+    padding:56px 28px 0;
+  }
+  .masthead-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    border-bottom:1px solid var(--stone-line);
+    padding-bottom:18px;
+    margin-bottom:46px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--moss);
+  }
+  .eyebrow::before{
+    content:'No. ';
+  }
+  .masthead-date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+
+  .wordmark{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:680;
+    font-size:clamp(56px, 11vw, 132px);
+    line-height:0.88;
+    letter-spacing:-0.02em;
+    margin-bottom:22px;
+  }
+  .wordmark .eco{ color:var(--ink); }
+  .wordmark .lens{ font-style:italic; font-weight:450; color:var(--moss); }
+
+  .standfirst{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:300;
+    font-style:italic;
+    font-size:clamp(19px, 2.4vw, 25px);
+    line-height:1.45;
+    color:var(--ink-dim);
+    max-width:600px;
+    margin-bottom:54px;
+  }
+
+  /* ---------- index / toc ---------- */
+  main{ max-width:980px; margin:0 auto; padding:0 28px 140px; }
+
+  .index-label{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    padding-bottom:14px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:4px;
+  }
+
+  .entry{
+    display:grid;
+    grid-template-columns: 64px 1fr auto;
+    gap:28px;
+    align-items:start;
+    padding:38px 0;
+    border-bottom:1px solid var(--stone-line);
+    text-decoration:none;
+    color:inherit;
+    transition: opacity 0.15s ease;
+  }
+  .entry:hover{ opacity:0.72; }
+  .entry-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--stone);
+    padding-top:10px;
+  }
+  .entry-body{ min-width:0; }
+  .entry-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--moss);
+    display:block;
+    margin-bottom:10px;
+  }
+  .entry-title{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(24px, 3.4vw, 36px);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin-bottom:12px;
+  }
+  .entry-thumb{
+    float:right;
+    width:104px;
+    height:104px;
+    object-fit:cover;
+    margin-left:22px;
+    margin-bottom:8px;
+    filter:grayscale(0.15);
+  }
+  .entry-take{
+    font-size:15.5px;
+    line-height:1.6;
+    color:var(--ink-dim);
+    max-width:560px;
+  }
+  .entry-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--stone);
+    text-align:right;
+    white-space:nowrap;
+    padding-top:12px;
+  }
+  @media (max-width:680px){
+    .entry{ grid-template-columns: 1fr; gap:10px; padding:30px 0; }
+    .entry-num{ padding-top:0; }
+    .entry-meta{ text-align:left; }
+    .entry-thumb{ float:none; width:100%; height:160px; margin:14px 0 0; }
+  }
+
+  .empty{
+    padding:70px 0;
+    text-align:center;
+    color:var(--ink-dim);
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:19px;
+  }
+  .empty a{ color:var(--moss); text-decoration:underline; }
+
+  footer{
+    max-width:980px;
+    margin:0 auto;
+    padding:40px 28px 70px;
+    border-top:1px solid var(--stone-line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+  }
+  footer a{ text-decoration:none; }
+  footer a:hover{ color:var(--moss); }
+
+  /* ---------- article ---------- */
+  .article{ max-width:680px; margin:0 auto; padding:64px 28px 120px; }
+  .back-link{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    text-decoration:none;
+    display:inline-block;
+    margin-bottom:40px;
+  }
+  .back-link:hover{ color:var(--moss); }
+  .article-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--moss);
+    margin-bottom:18px;
+  }
+  .article h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:680;
+    font-size:clamp(36px, 7vw, 58px);
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    margin-bottom:24px;
+  }
+  .article-cover{
+    width:100%;
+    max-height:420px;
+    object-fit:cover;
+    margin-bottom:32px;
+  }
+  .article-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--stone);
+    border-top:1px solid var(--stone-line);
+    border-bottom:1px solid var(--stone-line);
+    padding:14px 0;
+    margin-bottom:44px;
+  }
+  .article-body{
+    font-size:19px;
+    line-height:1.78;
+    color: rgba(20,17,15,0.9);
+  }
+  .article-body p{ margin-bottom:26px; }
+  .article-body p:first-of-type::first-letter{
+    font-family:'Fraunces', serif;
+    font-weight:680;
+    font-size:64px;
+    line-height:0.8;
+    float:left;
+    margin:6px 8px 0 0;
+    color:var(--moss);
+  }
+  .loading{
+    color:var(--ink-dim);
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:18px;
+    padding:70px 0;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="masthead">
+    <div class="masthead-top">
+      <span class="eyebrow" id="issue-no">001</span>
+      <span class="masthead-date" id="today"></span>
+    </div>
+    <h1 class="wordmark"><span class="eco">Eco</span><span class="lens">Lens</span></h1>
+    <p class="standfirst">Economics, written like your smartest friend is explaining it over coffee — not a textbook, not a TikTok. Just the numbers that actually touch your life, and why.</p>
+  </div>
+
+  <main>
+    <div class="index-label"><span>Index</span><span id="post-count"></span></div>
+    <div id="feed">
+      <div class="loading">gathering the issue…</div>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <span>EcoLens, est. 2026</span>
+  <a href="admin.html">admin →</a>
+</footer>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const SUPABASE_URL = 'https://ojlmwlqrkbctlpexrufs.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_2aMsITRDeO8MfFHiWIkNzQ_JENBP08R';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  document.getElementById('today').textContent = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+  const app = document.getElementById('app');
+
+  function escapeHtml(str){
+    return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  function timeAgo(dateStr){
+    const d = new Date(dateStr);
+    const diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+    if (diff < 86400*30) return Math.floor(diff/86400) + 'd ago';
+    return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  }
+
+  function pad3(n){ return String(n).padStart(3, '0'); }
+
+  function getSlugFromUrl(){
+    const params = new URLSearchParams(window.location.search);
+    return params.get('post');
+  }
+
+  async function renderFeed(){
+    const feed = document.getElementById('feed');
+    const postCount = document.getElementById('post-count');
+    const issueNo = document.getElementById('issue-no');
+
+    const { data, error } = await supabase
+      .from('posts')
+      .select('slug, title, excerpt, tag, image_emoji, image_url, read_time, views, created_at')
+      .order('created_at', { ascending:false });
+
+    if (error){
+      feed.innerHTML = `<div class="empty">Couldn't load the index — ${escapeHtml(error.message)}</div>`;
+      return;
+    }
+
+    if (!data || data.length === 0){
+      feed.innerHTML = `<div class="empty">Nothing published yet. <a href="admin.html">Write the first piece →</a></div>`;
+      postCount.textContent = '';
+      issueNo.textContent = pad3(0);
+      return;
+    }
+
+    postCount.textContent = data.length + (data.length === 1 ? ' piece' : ' pieces');
+    issueNo.textContent = pad3(data.length);
+
+    feed.innerHTML = data.map((post, i) => `
+      <a class="entry" href="?post=${encodeURIComponent(post.slug)}" data-slug="${escapeHtml(post.slug)}">
+        <span class="entry-num">${pad3(data.length - i)}</span>
+        <div class="entry-body">
+          ${post.image_url ? `<img class="entry-thumb" src="${escapeHtml(post.image_url)}" alt="" loading="lazy" />` : ''}
+          <span class="entry-tag">${escapeHtml(post.tag || 'econ')}</span>
+          <div class="entry-title">${(!post.image_url && post.image_emoji) ? post.image_emoji + ' ' : ''}${escapeHtml(post.title)}</div>
+          <div class="entry-take">${escapeHtml(post.excerpt || '')}</div>
+        </div>
+        <div class="entry-meta">${escapeHtml(String(post.read_time || 5))} min<br/>${timeAgo(post.created_at)}</div>
+      </a>
+    `).join('');
+
+    feed.querySelectorAll('.entry').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slug = el.getAttribute('data-slug');
+        history.pushState({}, '', '?post=' + encodeURIComponent(slug));
+        renderArticle(slug);
+      });
+    });
+  }
+
+  async function renderArticle(slug){
+    app.innerHTML = `<div class="article"><div class="loading">loading piece…</div></div>`;
+
+    const { data: post, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+
+    if (error || !post){
+      app.innerHTML = `
+        <div class="article">
+          <a class="back-link" href="./" id="back">← Back to the index</a>
+          <div class="empty">Couldn't find that piece. It may have been unpublished.</div>
+        </div>`;
+      document.getElementById('back').addEventListener('click', goHome);
+      return;
+    }
+
+    supabase.from('posts').update({ views: (post.views || 0) + 1 }).eq('slug', slug).then(()=>{});
+
+    const paragraphs = (post.content || '').split(/\n\s*\n/).filter(Boolean)
+      .map(p => `<p>${escapeHtml(p)}</p>`).join('');
+
+    app.innerHTML = `
+      <div class="article">
+        <a class="back-link" href="./" id="back">← Back to the index</a>
+        <div class="article-tag">${escapeHtml(post.tag || 'econ')}</div>
+        <h1>${(!post.image_url && post.image_emoji) ? post.image_emoji + ' ' : ''}${escapeHtml(post.title)}</h1>
+        ${post.image_url ? `<img class="article-cover" src="${escapeHtml(post.image_url)}" alt="" />` : ''}
+        <div class="article-meta">${timeAgo(post.created_at)} · ${escapeHtml(String(post.read_time || 5))} min read · ${escapeHtml(String(post.views || 0))} views</div>
+        <div class="article-body">${paragraphs || '<p>(this piece has no body yet)</p>'}</div>
+      </div>
+    `;
+    document.getElementById('back').addEventListener('click', goHome);
+    document.title = post.title + ' — EcoLens';
+    window.scrollTo(0,0);
+  }
+
+  function goHome(e){
+    if (e) e.preventDefault();
+    history.pushState({}, '', window.location.pathname);
+    route();
+  }
+
+  function route(){
+    const slug = getSlugFromUrl();
+    if (slug){
+      renderArticle(slug);
+    } else {
+      app.innerHTML = `
+        <div class="masthead">
+          <div class="masthead-top">
+            <span class="eyebrow" id="issue-no">001</span>
+            <span class="masthead-date" id="today"></span>
+          </div>
+          <h1 class="wordmark"><span class="eco">Eco</span><span class="lens">Lens</span></h1>
+          <p class="standfirst">Economics, written like your smartest friend is explaining it over coffee — not a textbook, not a TikTok. Just the numbers that actually touch your life, and why.</p>
+        </div>
+        <main>
+          <div class="index-label"><span>Index</span><span id="post-count"></span></div>
+          <div id="feed"><div class="loading">gathering the issue…</div></div>
+        </main>`;
+      document.getElementById('today').textContent = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+      document.title = 'EcoLens — economics, written like it matters';
+      renderFeed();
+    }
+  }
+
+  window.addEventListener('popstate', route);
+  route();
+</script>
+</body>
+</html>
