@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — EcoLens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,600;9..144,680&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --ink:#14110F;
+    --moss:#3D5A3D;
+    --stone:#9B8B6F;
+    --stone-line: rgba(20,17,15,0.14);
+    --ink-dim: rgba(20,17,15,0.58);
+    --rust:#B3492B;
+    --panel: rgba(20,17,15,0.025);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .wrap{ max-width:880px; margin:0 auto; padding:48px 24px 100px; }
+
+  .topbar{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom:1px solid var(--stone-line);
+    padding-bottom:18px;
+    margin-bottom:44px;
+  }
+  .brand{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:680;
+    font-size:26px;
+    letter-spacing:-0.01em;
+  }
+  .brand .lens{ font-style:italic; font-weight:450; color:var(--moss); }
+  .brand-sub{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:var(--moss);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-top:2px;
+  }
+  .back-site{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+    text-decoration:none;
+  }
+  .back-site:hover{ color:var(--moss); }
+
+  /* ---------- login ---------- */
+  .login-box{
+    max-width:400px;
+    margin:90px auto 0;
+    padding:44px 40px;
+    border:1px solid var(--stone-line);
+  }
+  .login-box h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:28px;
+    margin-bottom:8px;
+  }
+  .login-box p.sub{
+    color:var(--ink-dim);
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:30px;
+  }
+  label{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+  input, textarea{
+    width:100%;
+    background:#fff;
+    border:1px solid var(--stone-line);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    padding:12px 14px;
+    margin-bottom:20px;
+    outline:none;
+    transition:border-color 0.15s ease;
+  }
+  input:focus, textarea:focus{ border-color:var(--moss); }
+  input::placeholder, textarea::placeholder{ color:rgba(20,17,15,0.32); }
+
+  button{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    letter-spacing:0.01em;
+    border:none;
+    padding:13px 22px;
+    cursor:pointer;
+    transition: opacity 0.12s ease;
+  }
+  button:active{ opacity:0.85; }
+  button:focus-visible{ outline:2px solid var(--moss); outline-offset:2px; }
+  .btn-primary{ background:var(--ink); color:var(--paper); width:100%; }
+  .btn-primary:hover{ background:var(--moss); }
+  .btn-primary:disabled{ opacity:0.45; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--ink-dim); border:1px solid var(--stone-line); }
+  .btn-ghost:hover{ color:var(--ink); border-color:var(--ink); }
+  .btn-danger{ background:transparent; color:var(--rust); border:1px solid var(--rust); }
+  .btn-danger:hover{ background:rgba(179,73,43,0.08); }
+  .btn-small{ font-size:12px; padding:8px 14px; }
+
+  .error-msg{
+    color:var(--rust);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    margin:-8px 0 16px;
+    min-height:16px;
+  }
+  .status-msg{
+    color:var(--moss);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    margin:-8px 0 16px;
+    min-height:16px;
+  }
+
+  /* ---------- dashboard ---------- */
+  .dash-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:34px;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .dash-head h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:34px;
+    letter-spacing:-0.01em;
+  }
+  .who{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-dim);
+  }
+  .who button{ margin-left:10px; }
+
+  .panel{
+    border:1px solid var(--stone-line);
+    background:var(--panel);
+    padding:32px;
+    margin-bottom:36px;
+  }
+  .panel h2{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:19px;
+    margin-bottom:24px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .panel h2 .pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    background:var(--moss);
+    color:var(--paper);
+    padding:3px 9px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:560px){ .row2{ grid-template-columns:1fr; } }
+  .slug-preview{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--moss);
+    margin:-13px 0 18px;
+    word-break:break-all;
+  }
+  textarea{ min-height:220px; resize:vertical; line-height:1.6; font-size:15.5px; }
+  .form-actions{ display:flex; gap:10px; align-items:center; }
+
+  /* image upload */
+  .image-field{
+    border:1px dashed var(--stone-line);
+    padding:18px;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .image-preview{
+    width:72px; height:72px;
+    object-fit:cover;
+    background:var(--stone-line);
+    flex-shrink:0;
+    display:none;
+  }
+  .image-preview.has-img{ display:block; }
+  .image-field-body{ flex:1; min-width:0; }
+  .image-field-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+  .image-hint{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--stone);
+    margin-top:6px;
+  }
+  input[type="file"]{
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    border:none;
+    padding:0;
+    margin-bottom:0;
+    background:transparent;
+  }
+
+  .post-list-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    padding:18px 0;
+    border-bottom:1px solid var(--stone-line);
+  }
+  .post-list-item:last-child{ border-bottom:none; }
+  .pli-main{ min-width:0; display:flex; align-items:center; gap:14px; }
+  .pli-thumb{
+    width:48px; height:48px;
+    object-fit:cover;
+    flex-shrink:0;
+  }
+  .pli-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:16.5px;
+    margin-bottom:4px;
+  }
+  .pli-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--ink-dim);
+  }
+  .pli-actions{ display:flex; gap:8px; flex-shrink:0; }
+  .empty-list{ color:var(--ink-dim); font-size:14px; padding:20px 0; font-family:'JetBrains Mono', monospace; }
+  .loading{ color:var(--ink-dim); font-family:'JetBrains Mono', monospace; font-size:12.5px; padding:20px 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <div class="brand">Eco<span class="lens">Lens</span></div>
+      <div class="brand-sub">Admin</div>
+    </div>
+    <a class="back-site" href="index.html">← View live site</a>
+  </div>
+
+  <div id="app"><div class="loading">Checking session…</div></div>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const SUPABASE_URL = 'https://ojlmwlqrkbctlpexrufs.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_2aMsITRDeO8MfFHiWIkNzQ_JENBP08R';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const app = document.getElementById('app');
+
+  function escapeHtml(str){
+    return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  function slugify(str){
+    return String(str || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  // ---------- LOGIN VIEW ----------
+  function renderLogin(){
+    app.innerHTML = `
+      <div class="login-box">
+        <h1>Sign in</h1>
+        <p class="sub">Authenticated users can publish. Use your Supabase account.</p>
+        <form id="login-form">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+          <div class="error-msg" id="login-error"></div>
+          <button type="submit" class="btn-primary" id="login-btn">Sign in</button>
+        </form>
+      </div>
+    `;
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const errEl = document.getElementById('login-error');
+      errEl.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error){
+        errEl.textContent = error.message;
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+        return;
+      }
+      await renderDashboard();
+    });
+  }
+
+  // ---------- DASHBOARD VIEW ----------
+  async function renderDashboard(){
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session){ renderLogin(); return; }
+
+    app.innerHTML = `
+      <div class="dash-head">
+        <h1>Write &amp; manage posts</h1>
+        <div class="who">${escapeHtml(session.user.email)}<button class="btn-ghost btn-small" id="logout-btn">Sign out</button></div>
+      </div>
+
+      <div class="panel" id="editor-panel">
+        <h2 id="editor-heading">New post <span class="pill">draft</span></h2>
+        <form id="post-form">
+          <input type="hidden" id="edit-id" value="" />
+          <label for="f-title">Title</label>
+          <input id="f-title" placeholder="Why your rent went up again" required />
+
+          <label for="f-slug">Slug (the URL)</label>
+          <input id="f-slug" placeholder="auto-generated from title" />
+          <div class="slug-preview" id="slug-preview">index.html?post=</div>
+
+          <div class="row2">
+            <div>
+              <label for="f-tag">Tag</label>
+              <input id="f-tag" placeholder="e.g. inflation, jobs, vibes" />
+            </div>
+            <div>
+              <label for="f-emoji">Emoji (fallback if no image)</label>
+              <input id="f-emoji" placeholder="📰" maxlength="4" />
+            </div>
+          </div>
+
+          <label for="f-image">Cover image</label>
+          <div class="image-field">
+            <img class="image-preview" id="image-preview" alt="" />
+            <div class="image-field-body">
+              <input type="file" id="f-image" accept="image/*" />
+              <input type="hidden" id="f-image-url" value="" />
+              <div class="image-hint" id="image-status">No image uploaded</div>
+            </div>
+          </div>
+
+          <label for="f-excerpt">One-line take (shows on the feed)</label>
+          <input id="f-excerpt" placeholder="the tl;dr that makes someone click" maxlength="160" />
+
+          <label for="f-readtime">Read time (minutes)</label>
+          <input id="f-readtime" type="number" min="1" max="60" value="5" style="max-width:120px" />
+
+          <label for="f-content">Body</label>
+          <textarea id="f-content" placeholder="Write it like you're explaining it to a smart friend. Separate paragraphs with a blank line."></textarea>
+
+          <div class="error-msg" id="form-error"></div>
+          <div class="status-msg" id="form-status"></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="save-btn">Publish</button>
+            <button type="button" class="btn-ghost" id="cancel-edit-btn" style="display:none">Cancel edit</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Published posts</h2>
+        <div id="post-list"><div class="loading">loading…</div></div>
+      </div>
+    `;
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      renderLogin();
+    });
+
+    const slugInput = document.getElementById('f-slug');
+    const titleInput = document.getElementById('f-title');
+    const slugPreview = document.getElementById('slug-preview');
+    let slugManuallyEdited = false;
+
+    function updateSlugPreview(){
+      slugPreview.textContent = 'index.html?post=' + (slugInput.value || slugify(titleInput.value) || '…');
+    }
+    titleInput.addEventListener('input', () => {
+      if (!slugManuallyEdited) slugInput.value = slugify(titleInput.value);
+      updateSlugPreview();
+    });
+    slugInput.addEventListener('input', () => {
+      slugManuallyEdited = true;
+      slugInput.value = slugify(slugInput.value);
+      updateSlugPreview();
+    });
+    updateSlugPreview();
+
+    document.getElementById('cancel-edit-btn').addEventListener('click', () => resetForm());
+
+    const fileInput = document.getElementById('f-image');
+    const imageUrlInput = document.getElementById('f-image-url');
+    const imagePreview = document.getElementById('image-preview');
+    const imageStatus = document.getElementById('image-status');
+
+    function setImagePreview(url){
+      if (url){
+        imagePreview.src = url;
+        imagePreview.classList.add('has-img');
+      } else {
+        imagePreview.src = '';
+        imagePreview.classList.remove('has-img');
+      }
+    }
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')){
+        imageStatus.textContent = 'Please choose an image file.';
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024){
+        imageStatus.textContent = 'Image must be under 5MB.';
+        return;
+      }
+
+      imageStatus.textContent = 'Uploading…';
+      const ext = file.name.split('.').pop() || 'jpg';
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+      const { error: uploadError } = await supabase
+        .storage
+        .from('post-images')
+        .upload(path, file, { cacheControl: '3600', upsert: false });
+
+      if (uploadError){
+        imageStatus.textContent = 'Upload failed: ' + uploadError.message;
+        return;
+      }
+
+      const { data: pub } = supabase.storage.from('post-images').getPublicUrl(path);
+      imageUrlInput.value = pub.publicUrl;
+      setImagePreview(pub.publicUrl);
+      imageStatus.textContent = 'Uploaded.';
+    });
+
+    document.getElementById('post-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('form-error');
+      const statusEl = document.getElementById('form-status');
+      const saveBtn = document.getElementById('save-btn');
+      errEl.textContent = '';
+      statusEl.textContent = '';
+
+      const editId = document.getElementById('edit-id').value;
+      const title = titleInput.value.trim();
+      const slug = slugify(slugInput.value || titleInput.value);
+
+      if (!title || !slug){
+        errEl.textContent = 'Title and slug are required.';
+        return;
+      }
+
+      const payload = {
+        title,
+        slug,
+        tag: document.getElementById('f-tag').value.trim() || 'econ',
+        image_emoji: document.getElementById('f-emoji').value.trim() || '📰',
+        image_url: imageUrlInput.value || null,
+        excerpt: document.getElementById('f-excerpt').value.trim(),
+        read_time: parseInt(document.getElementById('f-readtime').value, 10) || 5,
+        content: document.getElementById('f-content').value.trim(),
+      };
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = editId ? 'Saving…' : 'Publishing…';
+
+      let result;
+      if (editId){
+        result = await supabase.from('posts').update(payload).eq('id', editId).select();
+      } else {
+        result = await supabase.from('posts').insert(payload).select();
+      }
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Publish';
+
+      if (result.error){
+        if (result.error.code === '23505'){
+          errEl.textContent = 'That slug is already taken — pick a different one.';
+        } else {
+          errEl.textContent = result.error.message;
+        }
+        return;
+      }
+
+      statusEl.textContent = editId ? 'Saved.' : 'Published.';
+      resetForm();
+      loadPostList();
+    });
+
+    function resetForm(){
+      document.getElementById('post-form').reset();
+      document.getElementById('edit-id').value = '';
+      document.getElementById('f-readtime').value = 5;
+      document.getElementById('f-image-url').value = '';
+      document.getElementById('image-status').textContent = 'No image uploaded';
+      setImagePreview(null);
+      document.getElementById('editor-heading').innerHTML = 'New post <span class="pill">draft</span>';
+      document.getElementById('cancel-edit-btn').style.display = 'none';
+      slugManuallyEdited = false;
+      updateSlugPreview();
+      document.getElementById('form-error').textContent = '';
+    }
+
+    async function loadPostList(){
+      const listEl = document.getElementById('post-list');
+      const { data, error } = await supabase
+        .from('posts')
+        .select('id, title, slug, tag, image_url, views, created_at')
+        .order('created_at', { ascending:false });
+
+      if (error){
+        listEl.innerHTML = `<div class="empty-list">couldn't load posts: ${escapeHtml(error.message)}</div>`;
+        return;
+      }
+      if (!data || data.length === 0){
+        listEl.innerHTML = `<div class="empty-list">No posts yet. Write your first one above.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = data.map(p => `
+        <div class="post-list-item" data-id="${p.id}">
+          <div class="pli-main">
+            ${p.image_url ? `<img class="pli-thumb" src="${escapeHtml(p.image_url)}" alt="" />` : ''}
+            <div>
+              <div class="pli-title">${escapeHtml(p.title)}</div>
+              <div class="pli-meta">/${escapeHtml(p.slug)} · ${escapeHtml(p.tag || 'econ')} · ${p.views || 0} views</div>
+            </div>
+          </div>
+          <div class="pli-actions">
+            <button class="btn-ghost btn-small" data-action="edit" data-id="${p.id}">Edit</button>
+            <button class="btn-danger btn-small" data-action="delete" data-id="${p.id}" data-title="${escapeHtml(p.title)}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      listEl.querySelectorAll('[data-action="edit"]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const { data: post, error } = await supabase.from('posts').select('*').eq('id', btn.dataset.id).single();
+          if (error || !post) return;
+          document.getElementById('edit-id').value = post.id;
+          document.getElementById('f-title').value = post.title || '';
+          document.getElementById('f-slug').value = post.slug || '';
+          document.getElementById('f-tag').value = post.tag || '';
+          document.getElementById('f-emoji').value = post.image_emoji || '';
+          document.getElementById('f-excerpt').value = post.excerpt || '';
+          document.getElementById('f-readtime').value = post.read_time || 5;
+          document.getElementById('f-content').value = post.content || '';
+          document.getElementById('f-image-url').value = post.image_url || '';
+          document.getElementById('image-status').textContent = post.image_url ? 'Current cover image:' : 'No image uploaded';
+          setImagePreview(post.image_url || null);
+          slugManuallyEdited = true;
+          updateSlugPreview();
+          document.getElementById('editor-heading').innerHTML = 'Editing <span class="pill">' + escapeHtml(post.slug) + '</span>';
+          document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+          document.getElementById('editor-panel').scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+      });
+
+      listEl.querySelectorAll('[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm(`Delete "${btn.dataset.title}"? This can't be undone.`)) return;
+          const { error } = await supabase.from('posts').delete().eq('id', btn.dataset.id);
+          if (error){ alert('Delete failed: ' + error.message); return; }
+          loadPostList();
+        });
+      });
+    }
+
+    loadPostList();
+  }
+
+  // ---------- BOOT ----------
+  (async function init(){
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session){
+      renderDashboard();
+    } else {
+      renderLogin();
+    }
+  })();
+
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === 'SIGNED_OUT') renderLogin();
+  });
+</script>
+</body>
+</html>
