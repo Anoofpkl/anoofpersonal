@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Library — My Account</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f1830; --navy-2:#151f3d; --navy-3:#1c2850;
+    --blue:#3b6fed; --blue-dim:#e8edfe;
+    --green:#16a34a; --green-dim:#e8f7ee;
+    --amber:#d97706; --amber-dim:#fdf1e0;
+    --red:#dc2626; --red-dim:#fde8e8;
+    --bg:#f4f6fb; --card:#ffffff; --line:#e7eaf3;
+    --ink:#0f1830; --ink-2:#5b6478; --ink-3:#9aa2b6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
+  a{text-decoration:none; color:inherit; cursor:pointer;}
+  button{font-family:inherit; cursor:pointer;}
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-thumb{background:#d5dae8; border-radius:4px;}
+
+  /* ---------- AUTH ---------- */
+  #authView{min-height:100vh; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 20% 20%, #17224a, var(--navy) 60%); padding:20px;}
+  .auth-card{width:380px; background:var(--card); border-radius:16px; padding:36px 32px; box-shadow:0 24px 60px rgba(10,15,35,.35);}
+  .auth-logo{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+  .auth-logo .mark{width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--blue),#2447c9); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-family:'Manrope';}
+  .auth-logo .name{font-weight:800; font-size:16px;}
+  .auth-logo .sub{font-size:11px; color:var(--ink-3); font-weight:600; letter-spacing:.03em;}
+  .auth-title{font-size:15px; font-weight:700; margin:20px 0 4px;}
+  .auth-desc{font-size:12.5px; color:var(--ink-2); margin-bottom:18px; line-height:1.5;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; font-weight:600; color:var(--ink-2); margin-bottom:6px;}
+  .field input{width:100%; padding:11px 13px; border:1.5px solid var(--line); border-radius:9px; font-size:14px; outline:none; transition:.15s; font-family:inherit;}
+  .field input:focus{border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-dim);}
+  .code-input{letter-spacing:8px; font-size:20px; font-weight:700; text-align:center; font-family:'JetBrains Mono',monospace;}
+  .btn-primary{width:100%; background:var(--navy); color:#fff; border:none; padding:12px; border-radius:9px; font-weight:700; font-size:14px; margin-top:4px;}
+  .btn-primary:hover{background:var(--navy-3);}
+  .btn-primary:disabled{opacity:.6; cursor:not-allowed;}
+  .btn-link{background:none; border:none; color:var(--blue); font-weight:600; font-size:12.5px; padding:0; margin-top:14px; display:block; width:100%; text-align:center;}
+  .err-msg{background:var(--red-dim); color:var(--red); font-size:12.5px; padding:9px 11px; border-radius:8px; margin-bottom:12px; display:none;}
+  .ok-msg{background:var(--green-dim); color:var(--green); font-size:12.5px; padding:9px 11px; border-radius:8px; margin-bottom:12px; display:none;}
+
+  /* ---------- APP SHELL ---------- */
+  #appView{display:none;}
+  .topbar{background:var(--navy); padding:16px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:5;}
+  .topbar .brand-row{display:flex; align-items:center; gap:10px;}
+  .topbar .mark{width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,var(--blue),#2447c9); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px;}
+  .topbar .name{color:#fff; font-weight:800; font-size:14.5px;}
+  .topbar-right{display:flex; align-items:center; gap:14px;}
+  .avatar{width:32px; height:32px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12.5px; flex-shrink:0;}
+  .signout-btn{color:#aab2cc; font-size:12.5px; font-weight:600; background:none; border:none;}
+  .signout-btn:hover{color:#fff;}
+
+  .tabs{display:flex; gap:4px; background:#fff; border-bottom:1px solid var(--line); padding:0 24px; overflow-x:auto;}
+  .tab{padding:14px 16px; font-size:13.5px; font-weight:700; color:var(--ink-2); border-bottom:2.5px solid transparent; white-space:nowrap;}
+  .tab.active{color:var(--blue); border-color:var(--blue);}
+
+  .content{max-width:900px; margin:0 auto; padding:24px 20px 60px;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .page-head{margin-bottom:18px;}
+  .page-head h1{font-size:19px; font-weight:800;}
+  .page-head p{font-size:13px; color:var(--ink-2); margin-top:3px;}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px;}
+  .stat-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px;}
+  .stat-card .lbl{font-size:11.5px; color:var(--ink-2); font-weight:600;}
+  .stat-card .val{font-size:22px; font-weight:800; margin-top:4px;}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px;}
+  .card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .card-head h3{font-size:14.5px; font-weight:800;}
+
+  table{width:100%; border-collapse:collapse;}
+  th{text-align:left; font-size:11px; color:var(--ink-3); font-weight:700; text-transform:uppercase; letter-spacing:.03em; padding:8px 10px; border-bottom:1px solid var(--line);}
+  td{padding:11px 10px; font-size:13px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  .cell-title{font-weight:700; font-size:13.5px;}
+  .cell-sub{color:var(--ink-2); font-size:12px;}
+  .badge{display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700;}
+  .badge-blue{background:var(--blue-dim); color:var(--blue);}
+  .badge-green{background:var(--green-dim); color:var(--green);}
+  .badge-amber{background:var(--amber-dim); color:var(--amber);}
+  .badge-red{background:var(--red-dim); color:var(--red);}
+
+  .search-box{display:flex; align-items:center; gap:8px; background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:9px 13px; width:100%; color:var(--ink-3); font-size:13px; margin-bottom:14px;}
+  .search-box input{border:none; background:transparent; outline:none; width:100%; font-size:13px; color:var(--ink); font-family:inherit;}
+
+  .btn{padding:10px 16px; border-radius:9px; font-size:13px; font-weight:700; border:1px solid var(--line); background:#fff;}
+  .btn:hover{background:var(--bg);}
+  .btn-blue{background:var(--blue); color:#fff; border-color:var(--blue);}
+  .btn-blue:hover{background:#2f5fd8;}
+  .btn-blue:disabled{opacity:.6; cursor:not-allowed;}
+
+  .book-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px;}
+  .book-tile{border:1px solid var(--line); border-radius:12px; padding:12px; background:#fff;}
+  .book-tile .cover{width:100%; aspect-ratio:2/3; border-radius:8px; background:var(--blue-dim); display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:8px; overflow:hidden;}
+  .book-tile .cover img{width:100%; height:100%; object-fit:cover;}
+  .book-tile .t{font-size:12.5px; font-weight:700; line-height:1.3; margin-bottom:2px;}
+  .book-tile .a{font-size:11px; color:var(--ink-2);}
+  .book-tile .avail{font-size:10.5px; margin-top:6px; font-weight:700;}
+
+  .empty{text-align:center; color:var(--ink-3); padding:26px 10px; font-size:13px;}
+  .toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--navy); color:#fff; padding:11px 20px; border-radius:9px; font-size:13px; font-weight:600; display:none; z-index:50; box-shadow:0 10px 30px rgba(0,0,0,.25);}
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH / OTP LOGIN & SIGN-UP ============ -->
+<div id="authView">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="mark">HL</div>
+      <div>
+        <div class="name">Home Library</div>
+        <div class="sub">MEMBER ACCOUNT</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: EMAIL -->
+    <div id="stepEmail">
+      <div class="auth-title">Sign in or create an account</div>
+      <div class="auth-desc">Enter your email — we'll send you a one-time code. New here? This also creates your account automatically, no separate sign-up needed.</div>
+      <div class="err-msg" id="emailErr"></div>
+      <div class="field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')sendCode()"></div>
+      <button class="btn-primary" id="sendCodeBtn" onclick="sendCode()">Send code</button>
+    </div>
+
+    <!-- STEP 2: CODE -->
+    <div id="stepCode" style="display:none;">
+      <div class="auth-title">Enter your code</div>
+      <div class="auth-desc" id="codeSentTo">We emailed a 6-digit code.</div>
+      <div class="err-msg" id="codeErr"></div>
+      <div class="ok-msg" id="codeOk"></div>
+      <div class="field"><label>6-digit code</label><input class="code-input" maxlength="6" inputmode="numeric" id="authCode" placeholder="••••••" onkeydown="if(event.key==='Enter')verifyCode()"></div>
+      <button class="btn-primary" id="verifyBtn" onclick="verifyCode()">Verify & sign in</button>
+      <button class="btn-link" onclick="backToEmail()">Use a different email</button>
+      <button class="btn-link" id="resendBtn" onclick="sendCode(true)">Resend code</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MEMBER APP ============ -->
+<div id="appView">
+  <div class="topbar">
+    <div class="brand-row">
+      <div class="mark">HL</div>
+      <div class="name">Home Library</div>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar" id="userInitial">M</div>
+      <button class="signout-btn" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="dashboard" onclick="navTo('dashboard')">Dashboard</div>
+    <div class="tab" data-tab="loans" onclick="navTo('loans')">My Loans</div>
+    <div class="tab" data-tab="browse" onclick="navTo('browse')">Browse Books</div>
+    <div class="tab" data-tab="profile" onclick="navTo('profile')">Profile</div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="page-head"><h1 id="welcomeMsg">Welcome 👋</h1><p>Here's a snapshot of your library account.</p></div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="lbl">Books borrowed</div><div class="val" id="statBorrowed">–</div></div>
+        <div class="stat-card"><div class="lbl">Overdue</div><div class="val" id="statOverdue">–</div></div>
+        <div class="stat-card"><div class="lbl">Total fines</div><div class="val" id="statFines">–</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Current Loans</h3><a onclick="navTo('loans')" style="font-size:12.5px;font-weight:700;color:var(--blue);">View all</a></div>
+        <table><tbody id="dashLoansBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- MY LOANS -->
+    <div class="view" id="view-loans">
+      <div class="page-head"><h1>My Loans</h1><p>All books you've borrowed, past and present.</p></div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Book</th><th>Issued</th><th>Due</th><th>Status</th><th>Fine</th></tr></thead>
+          <tbody id="loansBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BROWSE BOOKS -->
+    <div class="view" id="view-browse">
+      <div class="page-head"><h1>Browse Books</h1><p>See what's available in the catalog.</p></div>
+      <div class="search-box"><span>🔍</span><input id="bookSearch" placeholder="Search title, author, category..." oninput="renderBrowse()"></div>
+      <div class="book-grid" id="browseGrid"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="view" id="view-profile">
+      <div class="page-head"><h1>Profile</h1><p>Keep your contact details up to date.</p></div>
+      <div class="card" style="max-width:420px;">
+        <div class="field"><label>Full name</label><input id="pName" placeholder="Your name"></div>
+        <div class="field"><label>Email</label><input id="pEmail" disabled></div>
+        <div class="field"><label>Phone</label><input id="pPhone" placeholder="98765 43210"></div>
+        <div class="field"><label>Address</label><input id="pAddress" placeholder="Optional"></div>
+        <div class="field"><label>Member code</label><input id="pCode" disabled class="mono"></div>
+        <button class="btn btn-blue" id="saveProfileBtn" onclick="saveProfile()">Save changes</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SUPABASE_URL = "https://girozhmjsyrqnbhacmwc.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdpcm96aG1qc3lycW5iaGFjbXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MjQ3NTgsImV4cCI6MjA5ODMwMDc1OH0.llw8ZjQxZ8Sxz-tVmh0GNBAF26-llWI12jDZipCldC0";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let STATE = { member:null, loans:[], books:[] };
+let pendingEmail = '';
+
+/* ============================================================
+   AUTH — OTP sign-up + sign-in (same flow, backend auto-creates
+   the member account on first successful code verification)
+   ============================================================ */
+async function sendCode(isResend){
+  const emailInput = document.getElementById('authEmail');
+  const email = (isResend ? pendingEmail : emailInput.value.trim());
+  hideMsg('emailErr'); hideMsg('codeErr');
+  if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    showMsg('emailErr', 'Enter a valid email address.'); return;
+  }
+  const btn = isResend ? document.getElementById('resendBtn') : document.getElementById('sendCodeBtn');
+  const originalText = btn.textContent;
+  btn.disabled = true; btn.textContent = isResend ? 'Resending...' : 'Sending...';
+  try{
+    const res = await fetch(SUPABASE_URL + '/functions/v1/lib-send-member-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ email })
+    });
+    const result = await res.json();
+    if(!res.ok) throw new Error(result.error || 'Could not send code');
+    pendingEmail = email;
+    document.getElementById('codeSentTo').textContent = `We emailed a 6-digit code to ${email}.`;
+    document.getElementById('stepEmail').style.display = 'none';
+    document.getElementById('stepCode').style.display = 'block';
+    document.getElementById('authCode').value = '';
+    document.getElementById('authCode').focus();
+    if(isResend) showOk('codeOk', 'A new code was sent.');
+  }catch(e){
+    showMsg('emailErr', e.message);
+  }
+  btn.disabled = false; btn.textContent = originalText;
+}
+function backToEmail(){
+  document.getElementById('stepCode').style.display = 'none';
+  document.getElementById('stepEmail').style.display = 'block';
+  hideMsg('codeErr'); hideMsg('codeOk');
+}
+async function verifyCode(){
+  const code = document.getElementById('authCode').value.trim();
+  hideMsg('codeErr'); hideMsg('codeOk');
+  if(!code || code.length !== 6){ showMsg('codeErr', 'Enter the 6-digit code.'); return; }
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled = true; btn.textContent = 'Verifying...';
+  try{
+    const res = await fetch(SUPABASE_URL + '/functions/v1/lib-verify-member-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ email: pendingEmail, code })
+    });
+    const result = await res.json();
+    if(!res.ok) throw new Error(result.error || 'Verification failed');
+
+    const { data, error } = await sb.auth.verifyOtp({ token_hash: result.token_hash, type: 'magiclink' });
+    if(error) throw error;
+
+    await loadMemberProfile();
+    enterApp();
+  }catch(e){
+    showMsg('codeErr', e.message);
+  }
+  btn.disabled = false; btn.textContent = 'Verify & sign in';
+}
+async function signOut(){
+  await sb.auth.signOut();
+  location.reload();
+}
+async function checkExistingSession(){
+  const { data } = await sb.auth.getSession();
+  if(data.session){
+    await loadMemberProfile();
+    if(STATE.member) enterApp();
+  }
+}
+async function loadMemberProfile(){
+  const { data: sessionData } = await sb.auth.getSession();
+  if(!sessionData.session) return;
+  const { data } = await sb.from('lib_members').select('*').eq('id', sessionData.session.user.id).maybeSingle();
+  STATE.member = data || null;
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+function enterApp(){
+  document.getElementById('authView').style.display = 'none';
+  document.getElementById('appView').style.display = 'block';
+  const name = STATE.member.full_name || STATE.member.email || 'Member';
+  document.getElementById('userInitial').textContent = name[0].toUpperCase();
+  document.getElementById('welcomeMsg').textContent = `Welcome, ${name.split(' ')[0]} 👋`;
+  document.getElementById('pName').value = STATE.member.full_name || '';
+  document.getElementById('pEmail').value = STATE.member.email || '';
+  document.getElementById('pPhone').value = STATE.member.phone || '';
+  document.getElementById('pAddress').value = STATE.member.address || '';
+  document.getElementById('pCode').value = STATE.member.member_code || '';
+  loadAll();
+}
+function navTo(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===id));
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+async function loadAll(){
+  await Promise.all([loadLoans(), loadBooks()]);
+  renderDashboard();
+  renderLoans();
+  renderBrowse();
+}
+async function loadLoans(){
+  const { data } = await sb.from('lib_issues').select('*, lib_books(title,author,book_code)').eq('member_id', STATE.member.id).order('created_at',{ascending:false});
+  STATE.loans = data || [];
+}
+async function loadBooks(){
+  const { data } = await sb.from('lib_books').select('*').order('title');
+  STATE.books = data || [];
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function statusBadge(l){
+  const today = new Date().toISOString().slice(0,10);
+  if(l.status==='returned') return '<span class="badge badge-green">Returned</span>';
+  if(l.status==='lost') return '<span class="badge badge-red">Lost</span>';
+  if(l.due_date < today) return '<span class="badge badge-red">Overdue</span>';
+  return '<span class="badge badge-blue">Issued</span>';
+}
+function renderDashboard(){
+  const active = STATE.loans.filter(l=>l.status==='issued');
+  const today = new Date().toISOString().slice(0,10);
+  const overdue = active.filter(l=>l.due_date < today);
+  const totalFines = STATE.loans.reduce((s,l)=>s+(Number(l.fine_amount)||0),0);
+  document.getElementById('statBorrowed').textContent = active.length;
+  document.getElementById('statOverdue').textContent = overdue.length;
+  document.getElementById('statFines').textContent = '₹' + totalFines.toFixed(2);
+  document.getElementById('dashLoansBody').innerHTML = active.length ? active.slice(0,6).map(l=>`
+    <tr><td><div class="cell-title">${esc(l.lib_books?.title||'—')}</div><div class="cell-sub">Due ${l.due_date}</div></td>
+    <td style="text-align:right;">${statusBadge(l)}</td></tr>`).join('') : '<tr><td class="empty">No books currently borrowed.</td></tr>';
+}
+
+/* ============================================================
+   MY LOANS
+   ============================================================ */
+function renderLoans(){
+  document.getElementById('loansBody').innerHTML = STATE.loans.length ? STATE.loans.map(l=>`
+    <tr>
+      <td><div class="cell-title">${esc(l.lib_books?.title||'—')}</div><div class="cell-sub mono">${l.lib_books?.book_code||''}</div></td>
+      <td class="cell-sub">${l.issue_date}</td>
+      <td class="cell-sub">${l.due_date}</td>
+      <td>${statusBadge(l)}</td>
+      <td class="cell-sub">${l.fine_amount ? '₹'+Number(l.fine_amount).toFixed(2) : '—'}</td>
+    </tr>`).join('') : `<tr><td colspan="5" class="empty">You haven't borrowed any books yet.</td></tr>`;
+}
+
+/* ============================================================
+   BROWSE BOOKS
+   ============================================================ */
+function renderBrowse(){
+  const q = (document.getElementById('bookSearch').value||'').toLowerCase();
+  let list = STATE.books.filter(b => !q || (b.title||'').toLowerCase().includes(q) || (b.author||'').toLowerCase().includes(q) || (b.category||'').toLowerCase().includes(q));
+  document.getElementById('browseGrid').innerHTML = list.length ? list.map(b=>`
+    <div class="book-tile">
+      <div class="cover">${b.cover_url ? `<img src="${esc(b.cover_url)}" alt="">` : '📕'}</div>
+      <div class="t">${esc(b.title)}</div>
+      <div class="a">${esc(b.author||'Unknown author')}</div>
+      <div class="avail" style="color:${b.available_copies>0?'var(--green)':'var(--red)'}">${b.available_copies>0 ? b.available_copies+' available' : 'All checked out'}</div>
+    </div>`).join('') : '<div class="empty">No books match your search.</div>';
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+async function saveProfile(){
+  const full_name = document.getElementById('pName').value.trim();
+  const phone = document.getElementById('pPhone').value.trim();
+  const address = document.getElementById('pAddress').value.trim();
+  const btn = document.getElementById('saveProfileBtn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  const { error } = await sb.from('lib_members').update({ full_name: full_name||null, phone: phone||null, address: address||null }).eq('id', STATE.member.id);
+  btn.disabled = false; btn.textContent = 'Save changes';
+  if(error){ toast('Error: '+error.message); return; }
+  toast('Profile updated');
+  await loadMemberProfile();
+  document.getElementById('userInitial').textContent = (STATE.member.full_name||STATE.member.email||'M')[0].toUpperCase();
+  document.getElementById('welcomeMsg').textContent = `Welcome, ${(STATE.member.full_name||'there').split(' ')[0]} 👋`;
+}
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+function showMsg(id, msg){ const e=document.getElementById(id); e.textContent=msg; e.style.display='block'; }
+function showOk(id, msg){ const e=document.getElementById(id); e.textContent=msg; e.style.display='block'; }
+function hideMsg(id){ document.getElementById(id).style.display='none'; }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none', 3000); }
+function esc(s){ return (s??'').toString().replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+checkExistingSession();
+</script>
+</body>
+</html>
