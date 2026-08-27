@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Vibe Check — Religious Climate Survey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg: #F3EEFF;
+    --ink: #14101F;
+    --pink: #FF4D8D;
+    --yellow: #FFD93D;
+    --green: #33D9A6;
+    --blue: #4D7CFF;
+    --lilac: #CBB8FF;
+    --card: #FFFFFF;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 8% 4%, var(--lilac) 0%, transparent 40%),
+      radial-gradient(circle at 95% 12%, var(--yellow) 0%, transparent 30%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:36px 18px 90px;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom:34px;
+    position:relative;
+  }
+
+  .stamp{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--ink);
+    color:var(--yellow);
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:7px 14px;
+    border-radius:999px;
+    transform:rotate(-3deg);
+    margin-bottom:18px;
+  }
+
+  h1{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:clamp(32px,9vw,46px);
+    line-height:1.02;
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+  }
+
+  h1 .hl{
+    background:var(--pink);
+    padding:0 8px;
+    box-decoration-break:clone;
+    -webkit-box-decoration-break:clone;
+    color:var(--ink);
+  }
+
+  .intro{
+    font-size:15px;
+    font-weight:500;
+    max-width:440px;
+    margin:0 auto;
+    opacity:0.85;
+  }
+
+  .intro b{ color:var(--ink); }
+
+  form{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+
+  fieldset{ border:none; margin:0; padding:0; }
+
+  .q-card{
+    background:var(--card);
+    border:3px solid var(--ink);
+    border-radius:20px;
+    padding:22px 22px 24px;
+    box-shadow:6px 6px 0 var(--ink);
+    position:relative;
+  }
+
+  .q-card::before{
+    content:attr(data-n);
+    position:absolute;
+    top:-16px;
+    left:20px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    background:var(--accent, var(--pink));
+    color:var(--ink);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:3px 12px;
+  }
+
+  .q-card.c-pink{ --accent: var(--pink); }
+  .q-card.c-yellow{ --accent: var(--yellow); }
+  .q-card.c-green{ --accent: var(--green); }
+  .q-card.c-blue{ --accent: var(--blue); }
+
+  .q-text{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:18px;
+    font-weight:700;
+    margin:10px 0 16px;
+    line-height:1.35;
+  }
+
+  .scale{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .scale-item{ position:relative; flex:1; min-width:60px; }
+
+  .scale input{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .scale label{
+    display:block;
+    text-align:center;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--ink);
+    border:2.5px solid var(--ink);
+    border-radius:10px;
+    padding:9px 4px;
+    cursor:pointer;
+    background:#fff;
+    transition:transform 0.1s ease, background 0.1s ease;
+  }
+
+  .scale input:checked + label{
+    background:var(--accent, var(--pink));
+    transform:translate(-2px,-2px);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+
+  .yn{ display:flex; gap:10px; }
+
+  .yn-item{ position:relative; }
+
+  .yn input{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .yn label{
+    display:inline-block;
+    padding:9px 22px;
+    border:2.5px solid var(--ink);
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    background:#fff;
+    transition:transform 0.1s ease, background 0.1s ease;
+  }
+
+  .yn input:checked + label{
+    background:var(--accent, var(--pink));
+    transform:translate(-2px,-2px);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+
+  textarea, input[type="text"]{
+    width:100%;
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    color:var(--ink);
+    border:2.5px solid var(--ink);
+    border-radius:12px;
+    padding:11px 13px;
+    resize:vertical;
+    background:#FBFAFF;
+    margin-top:14px;
+  }
+
+  textarea:focus, input[type="text"]:focus, .scale label:focus-visible, .yn label:focus-visible{
+    outline:3px solid var(--blue);
+    outline-offset:2px;
+  }
+
+  .submit-row{ margin-top:6px; }
+
+  button[type="submit"]{
+    width:100%;
+    background:var(--ink);
+    color:var(--yellow);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    padding:17px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:0.01em;
+    cursor:pointer;
+    box-shadow:6px 6px 0 var(--pink);
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  button[type="submit"]:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:8px 8px 0 var(--pink);
+  }
+
+  button[type="submit"]:active:not(:disabled){
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--pink);
+  }
+
+  button[type="submit"]:disabled{ opacity:0.55; cursor:wait; box-shadow:6px 6px 0 var(--pink); }
+
+  .status{
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    margin-top:14px;
+    min-height:18px;
+  }
+
+  .status.error{ color:var(--pink); }
+  .status.ok{ color:var(--green); }
+
+  .done{
+    text-align:center;
+    padding:70px 20px;
+  }
+
+  .done .stamp{ margin-bottom:22px; }
+
+  .done h2{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:30px;
+    margin:0 0 12px;
+  }
+
+  .done p{
+    font-weight:500;
+    opacity:0.8;
+    font-size:14px;
+    max-width:360px;
+    margin:0 auto;
+  }
+
+  .disclosure{
+    text-align:center;
+    font-size:12px;
+    font-weight:500;
+    opacity:0.55;
+    margin-top:24px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+
+  <header>
+    <div class="stamp">✷ anonymous · 5 min</div>
+    <h1>real talk:<br><span class="hl">campus &amp; islamophobia</span></h1>
+    <p class="intro">8 quick questions on what Muslim students actually deal with on campus. <b>No names, no judgment</b> — just tell it straight.</p>
+  </header>
+
+  <form id="survey-form" novalidate>
+
+    <div class="q-card c-pink" data-n="Q1">
+      <p class="q-text">Have you personally witnessed or experienced Islamophobic remarks, jokes, or slurs on campus?</p>
+      <div class="yn" role="radiogroup" aria-label="Q1 yes or no">
+        <div class="yn-item">
+          <input type="radio" id="q1-yes" name="q1_witnessed" value="yes" required>
+          <label for="q1-yes">Yeah</label>
+        </div>
+        <div class="yn-item">
+          <input type="radio" id="q1-no" name="q1_witnessed" value="no">
+          <label for="q1-no">Nope</label>
+        </div>
+      </div>
+      <textarea name="q1_detail" rows="2" placeholder="If yes — where'd it happen? (class, dorm, IG, IRL...)"></textarea>
+    </div>
+
+    <div class="q-card c-yellow" data-n="Q2">
+      <p class="q-text">Do you feel Islam or Muslim students get stereotyped in classroom discussions or coursework?</p>
+      <div class="scale" role="radiogroup" aria-label="Q2 scale">
+        <div class="scale-item"><input type="radio" id="q2-1" name="q2_stereotype" value="1" required><label for="q2-1">Never</label></div>
+        <div class="scale-item"><input type="radio" id="q2-2" name="q2_stereotype" value="2"><label for="q2-2">Rarely</label></div>
+        <div class="scale-item"><input type="radio" id="q2-3" name="q2_stereotype" value="3"><label for="q2-3">Sometimes</label></div>
+        <div class="scale-item"><input type="radio" id="q2-4" name="q2_stereotype" value="4"><label for="q2-4">Often</label></div>
+        <div class="scale-item"><input type="radio" id="q2-5" name="q2_stereotype" value="5"><label for="q2-5">Always</label></div>
+      </div>
+    </div>
+
+    <div class="q-card c-green" data-n="Q3">
+      <p class="q-text">How comfortable do you feel expressing your religious identity openly on campus?</p>
+      <div class="scale" role="radiogroup" aria-label="Q3 scale">
+        <div class="scale-item"><input type="radio" id="q3-1" name="q3_comfort" value="1" required><label for="q3-1">Not at all</label></div>
+        <div class="scale-item"><input type="radio" id="q3-2" name="q3_comfort" value="2"><label for="q3-2">A little</label></div>
+        <div class="scale-item"><input type="radio" id="q3-3" name="q3_comfort" value="3"><label for="q3-3">Somewhat</label></div>
+        <div class="scale-item"><input type="radio" id="q3-4" name="q3_comfort" value="4"><label for="q3-4">Pretty</label></div>
+        <div class="scale-item"><input type="radio" id="q3-5" name="q3_comfort" value="5"><label for="q3-5">Totally</label></div>
+      </div>
+    </div>
+
+    <div class="q-card c-blue" data-n="Q4">
+      <p class="q-text">Have you or someone you know been excluded from a group or event over religious/cultural bias?</p>
+      <div class="yn" role="radiogroup" aria-label="Q4 yes or no">
+        <div class="yn-item">
+          <input type="radio" id="q4-yes" name="q4_exclusion" value="yes" required>
+          <label for="q4-yes">Yeah</label>
+        </div>
+        <div class="yn-item">
+          <input type="radio" id="q4-no" name="q4_exclusion" value="no">
+          <label for="q4-no">Nope</label>
+        </div>
+      </div>
+      <textarea name="q4_detail" rows="2" placeholder="Optional — quick context"></textarea>
+    </div>
+
+    <div class="q-card c-pink" data-n="Q5">
+      <p class="q-text">Does your school actually provide what you need for religious practice (prayer space, halal food, holiday flexibility)?</p>
+      <div class="scale" role="radiogroup" aria-label="Q5 scale">
+        <div class="scale-item"><input type="radio" id="q5-1" name="q5_resources" value="1" required><label for="q5-1">Not it</label></div>
+        <div class="scale-item"><input type="radio" id="q5-2" name="q5_resources" value="2"><label for="q5-2">Weak</label></div>
+        <div class="scale-item"><input type="radio" id="q5-3" name="q5_resources" value="3"><label for="q5-3">OK-ish</label></div>
+        <div class="scale-item"><input type="radio" id="q5-4" name="q5_resources" value="4"><label for="q5-4">Good</label></div>
+        <div class="scale-item"><input type="radio" id="q5-5" name="q5_resources" value="5"><label for="q5-5">Solid</label></div>
+      </div>
+    </div>
+
+    <div class="q-card c-yellow" data-n="Q6">
+      <p class="q-text">How well does your school's reporting/support system actually handle Islamophobia when it happens?</p>
+      <div class="scale" role="radiogroup" aria-label="Q6 scale">
+        <div class="scale-item"><input type="radio" id="q6-1" name="q6_response" value="1" required><label for="q6-1">Useless</label></div>
+        <div class="scale-item"><input type="radio" id="q6-2" name="q6_response" value="2"><label for="q6-2">Weak</label></div>
+        <div class="scale-item"><input type="radio" id="q6-3" name="q6_response" value="3"><label for="q6-3">Meh</label></div>
+        <div class="scale-item"><input type="radio" id="q6-4" name="q6_response" value="4"><label for="q6-4">Decent</label></div>
+        <div class="scale-item"><input type="radio" id="q6-5" name="q6_response" value="5"><label for="q6-5">Great</label></div>
+      </div>
+    </div>
+
+    <div class="q-card c-green" data-n="Q7">
+      <p class="q-text">Have world events (conflicts, attacks, news coverage) changed how people treat or see you on campus?</p>
+      <div class="yn" role="radiogroup" aria-label="Q7 yes or no">
+        <div class="yn-item">
+          <input type="radio" id="q7-yes" name="q7_events" value="yes" required>
+          <label for="q7-yes">Yeah</label>
+        </div>
+        <div class="yn-item">
+          <input type="radio" id="q7-no" name="q7_events" value="no">
+          <label for="q7-no">Nope</label>
+        </div>
+      </div>
+      <textarea name="q7_detail" rows="2" placeholder="Optional — quick example"></textarea>
+    </div>
+
+    <div class="q-card c-blue" data-n="Q8">
+      <p class="q-text">What should your university actually do to make things better for Muslim students?</p>
+      <textarea name="q8_suggestions" rows="4" placeholder="Your take..." required></textarea>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" id="submit-btn">send it →</button>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <p class="disclosure">Stored anonymously. No identifying info collected unless you write it in yourself.</p>
+
+  </form>
+
+  <div class="done" id="done-screen" style="display:none;">
+    <div class="stamp">✷ received</div>
+    <h2>that's a wrap 🎉</h2>
+    <p>Your answers are in. Thanks for being real — this helps paint an actual picture of what's going on.</p>
+  </div>
+
+</div>
+
+<script>
+  // ---------------------------------------------------------------
+  // SUPABASE SETUP — replace these two placeholders with your own
+  // project values (Project Settings → API in the Supabase dashboard).
+  // ---------------------------------------------------------------
+  const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";
+  const SUPABASE_ANON_KEY = "YOUR-SUPABASE-ANON-KEY";
+
+  // ---------------------------------------------------------------
+  // Expected table (create in Supabase SQL editor before use):
+  //
+  // create table campus_survey_responses (
+  //   id uuid primary key default gen_random_uuid(),
+  //   created_at timestamptz default now(),
+  //   q1_witnessed text,
+  //   q1_detail text,
+  //   q2_stereotype int,
+  //   q3_comfort int,
+  //   q4_exclusion text,
+  //   q4_detail text,
+  //   q5_resources int,
+  //   q6_response int,
+  //   q7_events text,
+  //   q7_detail text,
+  //   q8_suggestions text
+  // );
+  //
+  // Enable RLS and add an insert policy for anon, e.g.:
+  //   alter table campus_survey_responses enable row level security;
+  //   create policy "allow anon insert" on campus_survey_responses
+  //     for insert to anon with check (true);
+  // ---------------------------------------------------------------
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const form = document.getElementById('survey-form');
+  const statusEl = document.getElementById('status');
+  const submitBtn = document.getElementById('submit-btn');
+  const doneScreen = document.getElementById('done-screen');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+
+    const data = new FormData(form);
+    const payload = {
+      q1_witnessed: data.get('q1_witnessed'),
+      q1_detail: data.get('q1_detail') || null,
+      q2_stereotype: Number(data.get('q2_stereotype')),
+      q3_comfort: Number(data.get('q3_comfort')),
+      q4_exclusion: data.get('q4_exclusion'),
+      q4_detail: data.get('q4_detail') || null,
+      q5_resources: Number(data.get('q5_resources')),
+      q6_response: Number(data.get('q6_response')),
+      q7_events: data.get('q7_events'),
+      q7_detail: data.get('q7_detail') || null,
+      q8_suggestions: data.get('q8_suggestions')
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'sending…';
+
+    try {
+      const { error } = await supabaseClient
+        .from('campus_survey_responses')
+        .insert([payload]);
+
+      if (error) throw error;
+
+      form.style.display = 'none';
+      doneScreen.style.display = 'block';
+    } catch (err) {
+      statusEl.textContent = 'oops — ' + err.message + '. try again?';
+      statusEl.className = 'status error';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'send it →';
+    }
+  });
+</script>
+
+</body>
+</html>
