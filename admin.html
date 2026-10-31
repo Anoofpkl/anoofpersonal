@@ -1,193 +1,291 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Admin Dashboard - Kerala Election 2026</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Masjid Suraiya Mohammed — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-  background: #fff;
-  text-align: center;
-}
-
-/* HEADER */
-.header {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.logo {
-  height: 40px;
-}
-
-/* LOGIN */
-.login-box {
-  margin-top: 50px;
-}
-
-input, select {
-  padding: 10px;
-  margin: 10px;
-  width: 260px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-button {
-  padding: 10px 20px;
-  background: black;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* PANEL */
-.panel {
-  display: none;
-  margin-top: 30px;
-}
-
-.card {
-  border: 1px solid #eee;
-  padding: 20px;
-  border-radius: 12px;
-  display: inline-block;
-}
-
-/* PARTY COLORS */
-.ldf { color: #e53935; }
-.udf { color: #1e88e5; }
-.nda { color: #fb8c00; }
-
+  :root{--green:#1F6F45;--green-soft:#EAF4EC;--red:#C23B3B;--red-soft:#FBEAEA;--ink:#1C2420;--muted:#707A73;--line:#E7ECE6;--paper:#fff;--radius:14px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;-webkit-font-smoothing:antialiased;}
+  .shell{max-width:520px;margin:0 auto;padding:20px 18px 80px;}
+  h1{font-family:'Amiri',serif;font-size:22px;}
+  .sub{color:var(--muted);font-size:13px;margin-top:2px;}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .card{margin-top:16px;border:1px solid var(--line);border-radius:var(--radius);padding:16px;}
+  .card h2{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:12px;}
+  .row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .row:last-child{margin-bottom:0;}
+  .row label{flex:0 0 78px;font-weight:600;font-size:14px;}
+  input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-width:0;}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--green);border-color:transparent;}
+  input[type=number]{width:80px;} input[type=time]{width:120px;}
+  input[type=text],input[type=email],input[type=password],textarea{width:100%;}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5;}
+  .col-head{display:flex;gap:10px;font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px;}
+  button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:#fff;padding:9px 14px;font-weight:600;}
+  button.primary{background:var(--green);border-color:var(--green);color:#fff;}
+  button.danger{color:var(--red);padding:6px 10px;}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  .savebar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px;}
+  .savebar .in{max-width:520px;margin:0 auto;display:flex;gap:12px;align-items:center;}
+  .savebar button{flex:1;}
+  .msg{font-size:13px;padding:9px 12px;border-radius:10px;margin-top:12px;display:none;}
+  .msg.ok{display:block;background:var(--green-soft);color:var(--green);}
+  .msg.err{display:block;background:var(--red-soft);color:var(--red);}
+  .ann{display:flex;gap:8px;margin-bottom:8px;}
+  .toggle{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:10px;}
+  .toggle input{width:18px;height:18px;accent-color:var(--green);}
+  #login,#editor{display:none;}
+  .field{margin-bottom:12px;} .field label{display:block;font-weight:600;font-size:13px;margin-bottom:5px;}
 </style>
-
 </head>
-
 <body>
-
-<div class="header">
-  <img class="logo" src="https://maktoobmedia.com/assets/main/maktoob/img/logo.svg">
-  <h3>ADMIN DASHBOARD</h3>
-</div>
-
-<!-- LOGIN -->
-<div id="loginBox" class="login-box">
-  <input type="password" id="password" placeholder="Enter Password"><br>
-  <button onclick="login()">Login</button>
-</div>
-
-<!-- PANEL -->
-<div id="panel" class="panel">
-
-  <div class="card">
-
-    <select id="constituency"></select><br>
-
-    <div id="candidates"></div>
-
-    <input type="number" id="ldf" placeholder="LDF Votes"><br>
-    <input type="number" id="udf" placeholder="UDF Votes"><br>
-    <input type="number" id="nda" placeholder="NDA Votes"><br>
-
-    <button onclick="updateVotes()">Update Votes</button>
-
+<div class="shell">
+  <div class="top">
+    <div>
+      <h1>Masjid Admin</h1>
+      <div class="sub">Masjid Suraiya Mohammed · Prayer times settings</div>
+    </div>
+    <button id="logout" style="display:none">Log out</button>
   </div>
 
+  <!-- Login -->
+  <div id="login" class="card">
+    <h2>Admin login</h2>
+    <div class="field"><label for="email">Email</label><input type="email" id="email" autocomplete="username" /></div>
+    <div class="field"><label for="password">Password</label><input type="password" id="password" autocomplete="current-password" /></div>
+    <button class="primary" id="login-btn" style="width:100%">Log in</button>
+    <div class="msg" id="login-msg"></div>
+  </div>
+
+  <!-- Editor -->
+  <div id="editor">
+    <div class="card">
+      <h2>Prayer time source</h2>
+      <label class="toggle"><input type="radio" name="source" value="api" /> Fetch automatically (Aladhan API)</label>
+      <label class="toggle"><input type="radio" name="source" value="manual" /> Enter times manually</label>
+
+      <div id="api-box" style="margin-top:12px">
+        <div class="row"><label>Latitude</label><input type="number" step="any" id="api-lat" /></div>
+        <div class="row"><label>Longitude</label><input type="number" step="any" id="api-lng" /></div>
+        <div class="row"><label>Method</label>
+          <select id="api-method" style="flex:1">
+            <option value="3">Muslim World League</option>
+            <option value="1">Univ. of Islamic Sciences, Karachi</option>
+            <option value="2">ISNA (North America)</option>
+            <option value="4">Umm al-Qura, Makkah</option>
+            <option value="5">Egyptian General Authority</option>
+            <option value="15">Moonsighting Committee</option>
+            <option value="17">JAKIM (Malaysia)</option>
+            <option value="20">Kemenag (Indonesia)</option>
+          </select></div>
+        <div class="row"><label>Asr</label>
+          <select id="api-school" style="flex:1"><option value="0">Shafi'i / Maliki / Hanbali</option><option value="1">Hanafi</option></select></div>
+        <div class="row"><label>Tune</label><input type="text" id="api-tune" placeholder="optional, e.g. 0,2,0,0,0,0,0,0,0" /></div>
+        <div class="hint">Adhan = API time + the offsets below. Change latitude/longitude only if the masjid location changes.</div>
+      </div>
+
+      <div id="manual-box" style="margin-top:12px;display:none">
+        <div id="manual-times"></div>
+        <div class="hint">These are the exact Adhan times shown every day. Offsets below are not applied in manual mode.</div>
+      </div>
+    </div>
+
+    <div class="card" id="offsets-card">
+      <h2>Adhan offsets (minutes added to calculated time)</h2>
+      <div id="offsets"></div>
+      <div class="hint">Use a negative number to move the Adhan earlier, e.g. -8.</div>
+    </div>
+
+    <div class="card">
+      <h2>Iqamah</h2>
+      <div class="col-head"><span style="flex:0 0 78px">Prayer</span><span style="flex:0 0 130px">Type</span><span>Value</span></div>
+      <div id="iqamah"></div>
+      <div class="hint">"After Adhan" = minutes after that day's Adhan. "Fixed time" = same clock time every day.</div>
+    </div>
+
+    <div class="card">
+      <h2>Jumu'ah (Friday)</h2>
+      <div class="row"><label>Khutbah</label><input type="time" id="khutbah" /></div>
+      <div class="row"><label>Iqamah</label><input type="time" id="jumuah" /></div>
+    </div>
+
+    <div class="card">
+      <h2>Ladies' prayer hall</h2>
+      <label class="toggle"><input type="checkbox" id="ladies-available" /> Available</label>
+      <input type="text" id="ladies-note" placeholder="Note shown on the page" />
+    </div>
+
+    <div class="card">
+      <h2>Announcements</h2>
+      <div id="announcements"></div>
+      <button id="add-ann" style="margin-top:4px">+ Add announcement</button>
+    </div>
+
+    <div class="msg" id="save-msg"></div>
+  </div>
+</div>
+
+<div class="savebar" id="savebar" style="display:none">
+  <div class="in"><button class="primary" id="save">Save changes</button></div>
 </div>
 
 <script>
+const SUPABASE_URL = "https://fyacevzfgsbcifwcpcae.supabase.co";
+const SUPABASE_KEY = "sb_publishable_l2Ym0jI0g8RkVgFtlhrB2w_wK_KFDyy";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔐 CHANGE PASSWORD HERE
-const PASSWORD = "admin123";
+const PRAYERS = [["fajr","Fajr"],["dhuhr","Dhuhr"],["asr","Asr"],["maghrib","Maghrib"],["isha","Isha"]];
+const $ = id => document.getElementById(id);
+let current = null;
 
-// 🔗 YOUR API
-const API = "https://script.google.com/macros/s/AKfycbyPv2d4xyyVrT7ZGpw-v_Wjbl02oW04Xymoaco-Hedvs6t8rkQeuDuwAumCSh2u10ichA/exec";
+function show(el, text, kind){ el.textContent = text; el.className = "msg " + kind; }
 
-let dataStore = [];
+function buildEditor(d){
+  current = d;
+  $("offsets").innerHTML = ""; $("iqamah").innerHTML = ""; $("announcements").innerHTML = "";
 
-// LOGIN
-function login() {
-  let pass = document.getElementById("password").value;
+  PRAYERS.forEach(([k,label])=>{
+    const r = document.createElement("div"); r.className = "row";
+    r.innerHTML = `<label>${label}</label><input type="number" step="1" data-off="${k}" value="${d.adhanOffsets?.[k] ?? 0}" /><span class="sub">min</span>`;
+    $("offsets").appendChild(r);
 
-  if (pass === PASSWORD) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("panel").style.display = "block";
-    loadData();
-  } else {
-    alert("Wrong password");
-  }
-}
-
-// LOAD DATA
-function loadData() {
-  fetch(API)
-  .then(res => res.json())
-  .then(data => {
-
-    dataStore = data;
-
-    let dropdown = document.getElementById("constituency");
-    dropdown.innerHTML = "";
-
-    data.forEach(row => {
-      let opt = document.createElement("option");
-      opt.value = row.Constituency;
-      opt.text = row.Constituency + " (" + row.District + ")";
-      dropdown.appendChild(opt);
-    });
-
-    fillData();
+    const rule = d.iqamahRules?.[k];
+    const fixed = typeof rule === "string";
+    const q = document.createElement("div"); q.className = "row";
+    q.innerHTML = `<label>${label}</label>
+      <select data-iqtype="${k}" style="flex:0 0 130px"><option value="offset">After Adhan</option><option value="fixed">Fixed time</option></select>
+      <span data-iqval="${k}"></span>`;
+    $("iqamah").appendChild(q);
+    const sel = q.querySelector("select"); sel.value = fixed ? "fixed" : "offset";
+    const renderVal = (isFixed, v)=>{
+      q.querySelector(`[data-iqval="${k}"]`).innerHTML = isFixed
+        ? `<input type="time" data-iqin="${k}" value="${v}" />`
+        : `<input type="number" min="0" step="1" data-iqin="${k}" value="${v}" /> <span class="sub">min</span>`;
+    };
+    renderVal(fixed, fixed ? rule : (rule ?? 10));
+    sel.addEventListener("change", ()=> renderVal(sel.value === "fixed", sel.value === "fixed" ? "12:00" : 10));
   });
+
+  const api = d.api || {};
+  $("api-lat").value = api.latitude ?? 12.3081; $("api-lng").value = api.longitude ?? 75.0890;
+  $("api-method").value = String(api.method ?? 3); $("api-school").value = String(api.school ?? 0);
+  $("api-tune").value = api.tune || "";
+  $("manual-times").innerHTML = "";
+  PRAYERS.forEach(([k,label])=>{
+    const r = document.createElement("div"); r.className = "row";
+    r.innerHTML = `<label>${label}</label><input type="time" data-man="${k}" value="${d.manualTimes?.[k] || ""}" />`;
+    $("manual-times").appendChild(r);
+  });
+  document.querySelector(`input[name=source][value=${d.source === "manual" ? "manual" : "api"}]`).checked = true;
+  updateSourceView();
+  $("khutbah").value = d.jumuahKhutbah || "";
+  $("jumuah").value = d.jumuah || "";
+  $("ladies-available").checked = !!d.ladiesHall?.available;
+  $("ladies-note").value = d.ladiesHall?.note || "";
+  (d.announcements || []).forEach(addAnnouncement);
 }
 
-// ON CHANGE
-document.getElementById("constituency").addEventListener("change", fillData);
-
-// FILL CURRENT DATA
-function fillData() {
-
-  let selected = document.getElementById("constituency").value;
-
-  let row = dataStore.find(r => r.Constituency === selected);
-
-  if (!row) return;
-
-  document.getElementById("ldf").value = row["LDF Votes"] || "";
-  document.getElementById("udf").value = row["UDF Votes"] || "";
-  document.getElementById("nda").value = row["NDA Votes"] || "";
-
-  document.getElementById("candidates").innerHTML = `
-    <p class="ldf">LDF: ${row["LDF Candidate"]}</p>
-    <p class="udf">UDF: ${row["UDF Candidate"]}</p>
-    <p class="nda">NDA: ${row["NDA Candidate"]}</p>
-  `;
+function updateSourceView(){
+  const manual = document.querySelector("input[name=source]:checked").value === "manual";
+  $("api-box").style.display = manual ? "none" : "block";
+  $("manual-box").style.display = manual ? "block" : "none";
+  $("offsets-card").style.display = manual ? "none" : "block";
 }
+document.querySelectorAll("input[name=source]").forEach(r=> r.addEventListener("change", updateSourceView));
 
-// UPDATE
-function updateVotes() {
+function addAnnouncement(text = ""){
+  const row = document.createElement("div"); row.className = "ann";
+  const ta = document.createElement("input"); ta.type = "text"; ta.value = text; ta.placeholder = "Announcement text";
+  const del = document.createElement("button"); del.className = "danger"; del.textContent = "✕"; del.title = "Remove";
+  del.onclick = ()=> row.remove();
+  row.append(ta, del);
+  $("announcements").appendChild(row);
+}
+$("add-ann").onclick = ()=> addAnnouncement("");
 
-  let payload = {
-    constituency: document.getElementById("constituency").value,
-    ldf: document.getElementById("ldf").value,
-    udf: document.getElementById("udf").value,
-    nda: document.getElementById("nda").value
+function collect(){
+  const adhanOffsets = {}, iqamahRules = {};
+  PRAYERS.forEach(([k])=>{
+    adhanOffsets[k] = parseInt(document.querySelector(`[data-off="${k}"]`).value, 10) || 0;
+    const type = document.querySelector(`[data-iqtype="${k}"]`).value;
+    const v = document.querySelector(`[data-iqin="${k}"]`).value;
+    if(type === "fixed"){
+      if(!/^\d{2}:\d{2}$/.test(v)) throw new Error(`Set a time for ${k} Iqamah`);
+      iqamahRules[k] = v;
+    } else {
+      iqamahRules[k] = parseInt(v, 10) || 0;
+    }
+  });
+  const source = document.querySelector("input[name=source]:checked").value;
+  const manualTimes = {};
+  PRAYERS.forEach(([k,label])=>{
+    manualTimes[k] = document.querySelector(`[data-man="${k}"]`).value;
+    if(source === "manual" && !manualTimes[k]) throw new Error(`Set the ${label} time`);
+  });
+  const lat = parseFloat($("api-lat").value), lng = parseFloat($("api-lng").value);
+  if(source === "api" && (isNaN(lat) || isNaN(lng))) throw new Error("Enter valid latitude and longitude");
+  return {
+    ...current,
+    source, manualTimes,
+    api: { ...(current.api || {}), latitude: lat, longitude: lng,
+           method: parseInt($("api-method").value, 10), school: parseInt($("api-school").value, 10),
+           tune: $("api-tune").value.trim() },
+    adhanOffsets, iqamahRules,
+    jumuahKhutbah: $("khutbah").value,
+    jumuah: $("jumuah").value,
+    ladiesHall: { available: $("ladies-available").checked, note: $("ladies-note").value.trim() },
+    announcements: [...document.querySelectorAll("#announcements input")].map(i=>i.value.trim()).filter(Boolean)
   };
-
-  fetch(API, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.text())
-  .then(() => {
-    alert("✅ Updated Successfully");
-    loadData();
-  })
-  .catch(() => alert("❌ Update failed"));
 }
 
-</script>
+$("save").onclick = async ()=>{
+  const btn = $("save"); btn.disabled = true; btn.textContent = "Saving…";
+  try{
+    const data = collect();
+    const { data: rows, error } = await sb.from("masjid_settings")
+      .update({ data, updated_at: new Date().toISOString() }).eq("id", 1).select();
+    if(error) throw error;
+    if(!rows || !rows.length) throw new Error("Not saved — this account isn't an approved admin.");
+    current = data;
+    show($("save-msg"), "Saved. The public page updates within 30 minutes (or on reload).", "ok");
+  }catch(e){
+    show($("save-msg"), e.message || "Could not save", "err");
+  }finally{
+    btn.disabled = false; btn.textContent = "Save changes";
+  }
+};
 
+async function loadEditor(){
+  const { data, error } = await sb.from("masjid_settings").select("data").eq("id", 1).single();
+  if(error){ show($("save-msg"), "Couldn't load settings: " + error.message, "err"); return; }
+  buildEditor(data.data);
+}
+
+function setView(loggedIn){
+  $("login").style.display = loggedIn ? "none" : "block";
+  $("editor").style.display = loggedIn ? "block" : "none";
+  $("savebar").style.display = loggedIn ? "block" : "none";
+  $("logout").style.display = loggedIn ? "inline-block" : "none";
+}
+
+$("login-btn").onclick = async ()=>{
+  const { error } = await sb.auth.signInWithPassword({ email: $("email").value.trim(), password: $("password").value });
+  if(error) show($("login-msg"), error.message, "err");
+};
+$("password").addEventListener("keydown", e=>{ if(e.key === "Enter") $("login-btn").click(); });
+$("logout").onclick = ()=> sb.auth.signOut();
+
+sb.auth.onAuthStateChange((_evt, session)=>{
+  setView(!!session);
+  if(session) loadEditor();
+});
+sb.auth.getSession().then(({data})=>{ if(!data.session) setView(false); });
+</script>
 </body>
 </html>
